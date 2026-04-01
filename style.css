@@ -1,0 +1,203 @@
+/* MOULTLOOK OS THEME - MOODBOARD EDITION */
+:root { 
+    --duckblue: #004b49; 
+    --oxblood: #59001b; 
+    --win-grey: #c0c0c0;
+    --win-dark: #808080;
+    --win-light: #ffffff;
+    --text-dark: #000000;
+    --text-bright: #00ff00; /* Terminal green */
+    --magenta: #ff00ff; /* Vaporwave accent */
+}
+
+body, html { 
+    margin: 0; padding: 0; 
+    font-family: 'Courier New', Courier, monospace; /* Brutalist terminal feel */
+    background: var(--duckblue); 
+    color: var(--text-dark); 
+    overflow: hidden; 
+    user-select: none;
+}
+
+/* Base structural setups */
+.screen { height: 100vh; width: 100vw; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+/* ========================================
+   RETRO OS UI COMPONENTS 
+======================================== 
+*/
+.os-window {
+    background: var(--win-grey);
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--text-dark);
+    border-bottom: 2px solid var(--text-dark);
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    min-width: 400px;
+}
+
+.window-title-bar {
+    background: var(--oxblood); /* Using Moodboard Oxblood for title bars */
+    color: white;
+    font-family: 'MS Sans Serif', Arial, sans-serif;
+    font-weight: bold;
+    padding: 3px 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.window-controls button {
+    background: var(--win-grey);
+    border-top: 1px solid var(--win-light);
+    border-left: 1px solid var(--win-light);
+    border-right: 1px solid var(--text-dark);
+    border-bottom: 1px solid var(--text-dark);
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.window-body { padding: 15px; }
+
+.inset-panel {
+    background: var(--win-light);
+    border-top: 2px solid var(--win-dark);
+    border-left: 2px solid var(--win-dark);
+    border-right: 2px solid var(--win-light);
+    border-bottom: 2px solid var(--win-light);
+    overflow-y: auto;
+}
+
+.retro-btn {
+    background: var(--win-grey);
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--win-dark);
+    border-bottom: 2px solid var(--win-dark);
+    padding: 10px 20px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: var(--text-dark);
+    cursor: pointer;
+    text-transform: uppercase;
+}
+.retro-btn:active {
+    border-top: 2px solid var(--win-dark);
+    border-left: 2px solid var(--win-dark);
+    border-right: 2px solid var(--win-light);
+    border-bottom: 2px solid var(--win-light);
+    padding: 11px 19px 9px 21px; /* shift text on click */
+}
+.alt-btn { color: var(--oxblood); }
+
+/* ========================================
+   LOGIN & LOADING 
+======================================== 
+*/
+.login-box { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 20px; }
+.glitch-text { font-family: 'Impact', sans-serif; color: var(--magenta); text-shadow: 2px 2px 0px #000, -2px -2px 0px var(--text-bright); letter-spacing: 2px; text-align: center; margin: 0; }
+.sys-prompt { color: var(--oxblood); font-weight: bold; margin-bottom: 20px; text-align: center; }
+.or-divider { font-size: 0.9em; font-weight: bold; }
+.crab-spinner { font-size: 60px; animation: wobble 0.5s infinite alternate; text-align: center;}
+.text-center { text-align: center; }
+.blink { animation: blinker 1s linear infinite; color: var(--oxblood); }
+
+@keyframes wobble { 0% { transform: rotate(-15deg) scale(1); } 100% { transform: rotate(15deg) scale(1.2); } }
+@keyframes blinker { 50% { opacity: 0; } }
+
+/* ========================================
+   APP LAYOUT & BACKGROUND 
+======================================== 
+*/
+.app-bg { 
+    /* Tiled background effect simulating TempleOS or old web */
+    background-color: var(--duckblue);
+    background-image: repeating-linear-gradient(45deg, var(--duckblue) 25%, transparent 25%, transparent 75%, var(--duckblue) 75%, var(--duckblue)), repeating-linear-gradient(45deg, var(--duckblue) 25%, #00403f 25%, #00403f 75%, var(--duckblue) 75%, var(--duckblue));
+    background-position: 0 0, 10px 10px;
+    background-size: 20px 20px;
+}
+.app-layout { display: flex; height: calc(100vh - 40px); margin-top: 35px; width: 100%; padding: 5px; box-sizing: border-box; gap: 5px;}
+
+/* Panels */
+.win-panel {
+    background: var(--win-grey);
+    border-top: 2px solid var(--win-light);
+    border-left: 2px solid var(--win-light);
+    border-right: 2px solid var(--text-dark);
+    border-bottom: 2px solid var(--text-dark);
+    display: flex; flex-direction: column;
+}
+
+/* Sidebar */
+.sidebar { width: 250px; transition: 0.2s; position: relative; flex-shrink: 0; }
+.sidebar.collapsed { width: 50px; }
+.sidebar.collapsed .label-full, .sidebar.collapsed .txt, .sidebar.collapsed .nav-sub { display: none; }
+.sidebar.collapsed .label-vert { display: block; text-align: center; font-size: 10px; margin-top: 15px; writing-mode: vertical-rl; text-orientation: upright; font-weight: bold;}
+.label-vert { display: none; }
+
+.moult-header { padding: 10px; background: var(--duckblue); color: white; cursor: pointer; display: flex; gap: 10px; border-bottom: 2px solid var(--text-dark); font-weight: bold; }
+.nav-links { flex-grow: 1; margin: 5px; background: white; }
+.nav-item { padding: 8px 10px; cursor: pointer; border-bottom: 1px dotted #ccc; font-size: 0.9em; font-weight: bold; }
+.nav-item:hover { background: var(--win-grey); }
+.nav-item.active { background: var(--oxblood); color: white; }
+.nav-sub { padding-left: 20px; font-size: 0.85em; margin: 0; background: #eee; }
+.nav-sub div { padding: 4px; cursor: pointer; border-bottom: 1px dotted #ddd;}
+.nav-sub div:hover { background: var(--win-grey); }
+.nav-sub div.active { background: var(--duckblue); color: white; font-weight: bold;}
+
+.moult-btn { margin: 5px; text-align: center; color: red; background: var(--win-grey); border-top: 2px solid var(--win-light); border-left: 2px solid var(--win-light); border-right: 2px solid var(--win-dark); border-bottom: 2px solid var(--win-dark); }
+
+/* Middle Row (Inbox list) */
+.middle-row { width: 300px; display: none; } /* Handled by JS inline styles, we just style children */
+#email-list { margin: 5px; flex-grow: 1; background: white; }
+.email-item { padding: 10px; border-bottom: 1px solid var(--win-grey); cursor: pointer; font-family: 'Times New Roman', Times, serif; } /* Mixing serif for that Lacan/Academic vibe */
+.email-item:hover { background: #ffe6f0; }
+.email-item.active { background: var(--duckblue); color: white; border-left: 5px solid var(--magenta); }
+
+/* Content View (Reading Pane) */
+.content-view { flex-grow: 1; }
+.bg-grid { margin: 5px; flex-grow: 1; background-color: #000; color: var(--text-bright); padding: 20px; position: relative; }
+.bg-grid::before {
+    /* Subtle scanline effect inside the terminal view */
+    content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
+}
+
+/* Email Container specific */
+.email-container { background: #fff; color: var(--text-dark); border: 2px inset var(--win-grey); padding: 20px; position: relative; max-width: 800px; margin: auto; z-index: 3; font-family: 'Times New Roman', serif; box-shadow: 10px 10px 0px rgba(0,0,0,0.5);}
+.email-container h2 { font-family: 'Arial', sans-serif; margin-top: 0; color: var(--oxblood); border-bottom: 2px solid var(--text-dark); padding-bottom: 5px;}
+.close-btn { position: absolute; top: 5px; right: 5px; background: var(--win-grey); border: 2px outset var(--win-light); width: 25px; height: 25px; text-align: center; line-height: 20px; cursor: pointer; font-family: Arial; font-weight: bold; }
+.close-btn:active { border-style: inset; }
+
+.mini-profile { display: flex; gap: 15px; border: 2px solid var(--win-dark); background: var(--win-grey); padding: 10px; margin-bottom: 15px; color: black; z-index: 3; position: relative; align-items: center;}
+.mini-img { border: 2px inset var(--win-light); image-rendering: pixelated; width: 50px; height: 50px;}
+
+/* Search */
+.search-hero { position: relative; z-index: 3; text-align: center; margin-top: 10%; }
+.search-hero h1 { color: var(--magenta); text-shadow: 2px 2px white; font-family: 'Impact'; font-size: 3em;}
+.search-input-wrap { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+#search-input { border: 2px inset var(--win-dark); padding: 10px; width: 300px; font-family: monospace; background: #000; color: var(--text-bright); }
+.search-card { background: white; color: black; border: 2px outset var(--win-light); padding: 15px; margin-bottom: 10px; text-align: left; }
+.read-btn { background: var(--oxblood); color: white; border: 2px outset var(--win-light); cursor: pointer; padding: 5px 10px; }
+
+/* ========================================
+   MISC & FOOTER 
+======================================== 
+*/
+.mirror-footer { position: fixed; bottom: 5px; right: 5px; z-index: 100; }
+.mirror-footer button { font-size: 10px; padding: 5px 10px; background: var(--duckblue); color: white;}
+
+.scrolling-banner { position: fixed; top: 0; left: 0; width: 100%; height: 30px; background: yellow; color: black; line-height: 30px; font-weight: bold; overflow: hidden; border-bottom: 2px solid black; font-family: 'MS Sans Serif', Arial; z-index: 50;}
+.banner-text { display: inline-block; white-space: nowrap; animation: scroll 20s linear infinite; }
+@keyframes scroll { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
+
+/* Alternate Reality Theme (French Mode overrides) */
+.mode-fr { 
+    --duckblue: #000080; /* Classic Win95 Navy */
+    --oxblood: #ff0000;  /* Harsh Red */
+    --magenta: #ffff00;
+}
+.mode-fr .app-bg { background-image: none; background-color: #008080; } /* Dark cyan desktop */
