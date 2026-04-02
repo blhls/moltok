@@ -1,731 +1,289 @@
 /* ================================================================
-   MOULTLOOK.CSS — Aesthetic System v3.0 (FUSION REWRITE)
-   GBA Pokedex × Mac OS X Cheetah × TempleOS × Y2K Tumblr
-   Palette: Mortuum Violet, Duck Blue, Indigo, Dusty Pale Pink
+   MOULTLOOK.CSS — Aesthetics Clash
+   Tumblr Y2K Base × TempleOS Containers × GBA Fire Emblem Navigation × Mac OS X Cheetah UI
    ================================================================ */
 
-/* ── Variables ──────────────────────────────────────────────────── */
 :root {
-    /* Core Moodboard Palette */
-    --mort:        #59001B;       /* Mortuum Violet / Burgundy */
+    /* Colors */
+    --mort:        #59001B;       /* Bout Mortuur */
     --duckblue:    #004B49;       /* Duck Blue */
-    --duck-lit:    #008f8c;       /* Aqua Duck Highlight */
-    --indigo:      #2A1B38;       /* Deep GBA Plastic Indigo */
-    --indigo-light:#4A3B58;
-    --pink-dusty:  #E8C0D8;       /* Y2K Tumblr Dusty Pink */
-    --pink-pale:   #F7EAF1;       /* Light Tumblr BG */
-    --temple-blue: #0000AA;       /* TempleOS Blue */
-    --temple-cyan: #00AAAA;
+    --indigo:      #2A2A5A;       /* Fire Emblem GBA Dark Blue */
+    --gold:        #b8a058;       /* GBA Trim */
+    --pink:        #ffb6c1;       /* Y2K Dusty Pink */
     
-    /* GBA/OSX Highlights */
-    --y2k-silver:  #E5E5E5;
-    --pixel-red:   #FF5555;
-    --pixel-yellow:#FFFF55;
-    
+    /* TempleOS Stark Palette */
+    --temple-white: #FFFFFF;
+    --temple-blue:  #0000AA;
+    --temple-cyan:  #00AAAA;
+    --temple-red:   #AA0000;
+
+    /* Mac OS X Cheetah Aqua Gradients */
+    --aqua-light:  #f2f9fe;
+    --aqua-mid1:   #d6f0fd;
+    --aqua-mid2:   #bee6fd;
+    --aqua-dark:   #a7d8f5;
+
     /* Typography */
-    --font-vt:     'VT323', 'Courier New', monospace;          /* Terminal/TempleOS */
-    --font-pixel:  'Press Start 2P', monospace;                /* GBA/Fire Emblem */
-    --font-type:   'Times New Roman', 'Special Elite', serif;  /* Y2K Tumblr text */
+    --font-vt:     'VT323', 'Courier New', monospace;
+    --font-pixel:  'Press Start 2P', monospace;
+    --font-type:   'Special Elite', 'Courier New', serif;
+    --font-aqua:   'Lucida Grande', 'Segoe UI', sans-serif;
 }
 
-/* ── Reset ──────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
+
+/* ── Tumblr Y2K Acceleration Glitter Base ───────────────────────── */
 html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: var(--pink-dusty);
-    color: var(--indigo);
+    margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+    color: #000;
     font-family: var(--font-vt);
     font-size: 18px;
+    background-color: var(--pink);
+    /* Animated glitter SVGs + radial glow */
+    background-image: 
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10 L32 28 L50 30 L32 32 L30 50 L28 32 L10 30 L28 28 Z' fill='%23ffffff' opacity='0.5'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='2' fill='%23ffffff' opacity='0.8'/%3E%3Ccircle cx='20' cy='80' r='1' fill='%23ffffff' opacity='0.6'/%3E%3C/svg%3E"),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 60%);
+    background-size: 60px 60px, 100px 100px, 100vw 100vh;
+    animation: accelerationGlitter 12s linear infinite;
 }
 
-/* ── CRT Scanlines (TempleOS/GBA Screen feel) ───────────────────── */
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent 0px,
-        transparent 2px,
-        rgba(42, 27, 56, 0.08) 2px,
-        rgba(42, 27, 56, 0.08) 4px
-    );
-    pointer-events: none;
-    z-index: 99999;
+@keyframes accelerationGlitter {
+    0%   { background-position: 0 0, 0 0, center; }
+    100% { background-position: 60px 60px, -100px 100px, center; }
 }
 
-/* ── Screen Base (OSX Cheetah Pinstripes) ───────────────────────── */
-.screen {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--pink-dusty);
-    background-image: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(255, 255, 255, 0.3) 2px,
-        rgba(255, 255, 255, 0.3) 4px
-    );
-}
+.screen { position: fixed; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 
-/* ── Mac OS X / GBA Hybrid Windows ──────────────────────────────── */
-.win-window {
-    background: var(--y2k-silver);
-    /* GBA chunky plastic border */
-    border: 4px solid var(--indigo);
-    border-radius: 12px;
-    box-shadow: 4px 4px 0 rgba(42, 27, 56, 0.5), inset 2px 2px 0 rgba(255,255,255,0.8);
-    overflow: hidden;
-}
-
-/* Cheetah Aqua Titlebar */
-.win-titlebar {
-    background: linear-gradient(180deg, #FFFFFF 0%, var(--y2k-silver) 40%, #CCCCCC 45%, var(--y2k-silver) 100%);
-    border-bottom: 2px solid var(--indigo);
+/* ── Cheetah OS X Window Controls & Bars ────────────────────────── */
+.win-titlebar, .app-titlebar {
+    background: linear-gradient(180deg, var(--aqua-light) 0%, var(--aqua-mid1) 49%, var(--aqua-mid2) 50%, var(--aqua-dark) 100%);
+    border-bottom: 2px solid #759ec1;
     padding: 6px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 12px;
-    user-select: none;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top-left-radius: 8px; border-top-right-radius: 8px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
 }
 
 .win-title-text {
-    font-family: var(--font-pixel);
-    font-size: 10px;
-    color: var(--indigo);
-    white-space: nowrap;
-    text-shadow: 1px 1px 0 #FFF;
-    letter-spacing: 1px;
+    font-family: var(--font-aqua);
+    font-weight: bold; font-size: 14px; color: #333;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+    letter-spacing: 0.5px;
 }
 
-/* Mac OSX "Traffic Light" Buttons */
-.win-btn-group { display: flex; gap: 6px; flex-shrink: 0; }
+.win-btn-group { display: flex; gap: 6px; }
 .win-btn {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    border: 1px solid var(--indigo);
-    cursor: pointer;
-    padding: 0;
-    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.3), inset 2px 2px 4px rgba(255,255,255,0.8);
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.4);
+    box-shadow: inset 0 1px 3px rgba(255,255,255,0.8), 0 1px 1px rgba(0,0,0,0.1);
+    cursor: pointer; padding: 0; margin: 0;
 }
-.btn-red { background: #FF5F56; }
-.btn-yellow { background: #FFBD2E; }
-.btn-green { background: #27C93F; }
+.win-btn-min { background: #ffbd2e; }
+.win-btn-max { background: #28c940; }
+.win-btn-cls { background: #ff5f56; }
+.win-btn:active { filter: brightness(0.8); box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); }
 
-.win-body {
-    background: var(--pink-pale);
-    padding: 22px 28px 20px;
-}
-
-/* TempleOS Status Bar */
-.win-statusbar {
-    background: var(--temple-blue);
-    border-top: 2px solid var(--indigo);
-    padding: 4px 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--font-vt);
-    font-size: 16px;
-    color: var(--pixel-yellow);
-    text-transform: uppercase;
-}
-.blink-text { animation: blink 1s step-end infinite; }
-@keyframes blink { 50% { opacity: 0; } }
-
-/* ── LOGIN SCREEN ───────────────────────────────────────────────── */
-.login-window { width: min(480px, 92vw); }
-.login-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-    padding: 32px 36px 28px;
-    background: repeating-linear-gradient(45deg, var(--pink-pale), var(--pink-pale) 10px, #ffffff 10px, #ffffff 20px);
-}
-
-/* Y2K Sparkle/Glitch Title */
-.glitch {
-    font-family: var(--font-pixel);
-    font-size: clamp(14px, 3.2vw, 18px);
-    color: var(--mort);
-    margin: 8px 0 4px;
-    text-align: center;
-    text-shadow: 2px 2px 0 var(--pink-dusty), -1px -1px 0 var(--duckblue);
-}
-
-.login-sub {
-    font-family: var(--font-type);
-    font-style: italic;
-    font-size: 18px;
-    color: var(--duckblue);
-    margin: 8px 0 18px;
-    text-align: center;
-}
-.login-divider-line {
-    width: 100%;
-    border-top: 2px dashed var(--pink-dusty);
-    margin-bottom: 22px;
-}
-.login-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    width: 100%;
-}
-
-/* Jelly Buttons (OSX Aqua x Y2K) */
-.jelly-btn {
-    font-family: var(--font-vt);
-    font-size: 22px;
-    cursor: pointer;
-    padding: 10px 28px;
-    width: 280px;
-    text-align: center;
-    letter-spacing: 1px;
+/* ── Aqua Cheetah Buttons ───────────────────────────────────────── */
+.aqua-btn, .aqua-btn-small {
+    background: linear-gradient(180deg, #ffffff 0%, #e6f0fa 45%, #80b4e6 50%, #cce6ff 100%);
+    border: 1px solid #004B49;
     border-radius: 20px;
-    border: 2px solid var(--indigo);
-    color: #FFF;
-    text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
-    transition: transform 0.1s;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.9), 0 4px 6px rgba(0,0,0,0.2);
+    color: #004B49;
+    font-family: var(--font-aqua); font-weight: bold;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+    cursor: pointer; transition: transform 0.05s;
 }
-.main-btn {
-    background: linear-gradient(180deg, var(--duck-lit) 0%, var(--duckblue) 50%, #00302E 100%);
-    box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 4px 0 var(--indigo);
-}
-.french-btn {
-    background: linear-gradient(180deg, #D45B78 0%, var(--mort) 50%, #3A0010 100%);
-    box-shadow: inset 0 3px 6px rgba(255,255,255,0.4), 0 4px 0 var(--indigo);
-}
-.jelly-btn:active {
-    transform: translateY(4px);
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), 0 0 0 var(--indigo);
-}
-.jelly-btn small { display: block; font-size: 14px; opacity: 0.8; font-family: var(--font-type); }
-
-.or-divider {
-    font-family: var(--font-type);
-    font-size: 14px;
-    color: var(--indigo);
-    font-style: italic;
+.aqua-btn { font-size: 16px; padding: 12px 28px; width: 280px; }
+.aqua-btn small { font-weight: normal; font-size: 11px; opacity: 0.8; }
+.aqua-btn-small { font-size: 12px; padding: 6px 16px; }
+.aqua-btn:active, .aqua-btn-small:active {
+    background: linear-gradient(180deg, #80b4e6 0%, #e6f0fa 45%, #ffffff 100%);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    transform: translateY(2px);
 }
 
-/* ── LOADING SCREEN (GBA Link style) ────────────────────────────── */
-.loading-window { width: min(380px, 90vw); background: var(--duckblue); }
-.loading-body {
-    background: var(--indigo);
-    color: var(--pixel-yellow);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    padding: 28px 32px;
-    border-top: 2px solid #000;
+/* ── TempleOS Brutalist Containers ──────────────────────────────── */
+.win-window, .app-window {
+    background: var(--temple-white);
+    border: 4px solid var(--temple-blue);
+    border-radius: 12px;
+    box-shadow: 12px 12px 0 var(--mort);
 }
-.crab-spinner {
-    font-size: 46px;
-    animation: crab-rock 0.7s ease-in-out infinite;
-    display: block;
-    filter: drop-shadow(0 0 5px var(--pink-dusty));
+.win-body { padding: 30px; }
+.win-statusbar, .app-menubar {
+    background: var(--temple-white);
+    border-top: 2px solid var(--temple-blue);
+    border-bottom: 2px solid var(--temple-blue);
+    font-family: var(--font-vt); color: var(--temple-blue);
+    padding: 4px 10px; font-weight: bold; font-size: 18px;
 }
-@keyframes crab-rock {
-    0%, 100% { transform: rotate(-12deg) scale(1); }
-    50%       { transform: rotate(12deg) scale(1.1); }
+.menubar-item { padding: 2px 12px; cursor: pointer; }
+.menubar-item:hover { background: var(--temple-blue); color: var(--temple-white); }
+
+/* ── LOGIN ──────────────────────────────────────────────────────── */
+.login-window { width: min(480px, 92vw); }
+.glitch {
+    font-family: var(--font-pixel); font-size: 20px;
+    color: var(--temple-blue); margin: 0 0 10px; text-align: center;
 }
-.loading-body h2 {
-    font-family: var(--font-pixel);
-    font-size: 12px;
-    margin: 0;
-    color: var(--pink-dusty);
-    letter-spacing: 2px;
-}
+.login-sub { font-family: var(--font-vt); color: var(--temple-red); text-align: center; font-size: 18px; }
+.login-divider-line { border-bottom: 4px dashed var(--temple-blue); margin-bottom: 22px; }
+.login-box { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.or-divider { font-family: var(--font-vt); color: var(--temple-cyan); font-weight: bold; }
+
+/* ── LOADING ────────────────────────────────────────────────────── */
+.crab-spinner { font-size: 50px; display: block; animation: spin 2s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
 .win-progress-outer {
-    width: 100%;
-    height: 16px;
-    border: 2px solid var(--pink-dusty);
-    background: #000;
-    border-radius: 8px;
-    overflow: hidden;
+    width: 100%; height: 24px;
+    border: 3px solid var(--temple-blue); background: #000;
 }
 .win-progress-inner {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--mort), var(--pink-dusty));
-    transition: width 0.38s cubic-bezier(.4,0,.6,1);
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--temple-cyan), var(--duckblue), var(--temple-cyan));
+    background-size: 200% 100%;
+    animation: gradient-shift 1s linear infinite;
+    transition: width 0.2s;
 }
-.loading-sub {
-    font-family: var(--font-vt);
-    font-size: 16px;
-    color: var(--y2k-silver);
-    margin: 0;
-    min-height: 22px;
-    text-align: center;
-}
+@keyframes gradient-shift { 100% { background-position: 200% 0; } }
 
 /* ── APP SCREEN ─────────────────────────────────────────────────── */
 .screen-app {
-    justify-content: flex-start;
-    align-items: stretch;
-    padding: 38px 10px 40px; 
+    padding-top: 36px; padding-bottom: 40px; padding-left: 10px; padding-right: 10px;
 }
-
-/* ── Scrolling Banner (TempleOS style) ───────────────────────────── */
 .scrolling-banner {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 30px;
-    background: var(--temple-blue);
-    color: var(--pixel-yellow);
-    font-family: var(--font-vt);
-    font-size: 20px;
-    line-height: 30px;
-    overflow: hidden;
-    z-index: 1000;
-    border-bottom: 2px solid var(--pixel-red);
+    position: fixed; top: 0; left: 0; right: 0; height: 32px;
+    background: var(--temple-cyan); color: var(--temple-white);
+    font-family: var(--font-pixel); font-size: 12px; line-height: 32px;
+    border-bottom: 4px solid var(--temple-blue); z-index: 1000;
 }
-.banner-text {
-    display: inline-block;
-    white-space: nowrap;
-    padding-right: 120px;
-    animation: bannertick 25s linear infinite;
-}
-@keyframes bannertick {
-    from { transform: translateX(100vw); }
-    to   { transform: translateX(-100%); }
-}
+.banner-text { display: inline-block; white-space: nowrap; animation: bannertick 20s linear infinite; }
+@keyframes bannertick { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
 
-/* ── App Window Base ─────────────────────────────────────────────── */
-.app-window {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    background: var(--y2k-silver);
-    border: 4px solid var(--indigo);
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(42,27,56,0.3);
-    overflow: hidden;
-    margin: 0 auto;
-    width: 100%;
-    max-width: 1200px;
-}
+.app-window { flex-grow: 1; display: flex; flex-direction: column; width: 100%; overflow: hidden; }
+.app-layout { display: flex; flex-grow: 1; overflow: hidden; background: var(--temple-white); }
 
-/* Mac OSX Menu Bar */
-.app-menubar {
-    background: linear-gradient(180deg, #fff 0%, #e0e0e0 100%);
-    padding: 2px 10px;
-    border-bottom: 2px solid var(--indigo);
-    display: flex;
-    gap: 12px;
-    flex-shrink: 0;
-}
-.menubar-item {
-    font-family: var(--font-type);
-    font-size: 14px;
-    color: var(--indigo);
-    padding: 2px 8px;
-    cursor: default;
-    border-radius: 4px;
-}
-.menubar-item:hover {
-    background: var(--duckblue);
-    color: #fff;
-}
-
-/* ── Three-Column Layout ─────────────────────────────────────────── */
-.app-layout {
-    display: flex;
-    flex-grow: 1;
-    overflow: hidden;
-    background: var(--pink-pale);
-}
-
-/* ── Sidebar (Fire Emblem Stats Style) ───────────────────────────── */
+/* ── Sidebar (GBA Fire Emblem) ──────────────────────────────────── */
 .sidebar {
-    width: 220px;
-    flex-shrink: 0;
-    background: var(--indigo);
-    border-right: 4px solid var(--indigo-light);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transition: width 0.18s ease;
-    color: var(--pink-dusty);
+    width: 240px; flex-shrink: 0;
+    background: linear-gradient(180deg, var(--indigo) 0%, var(--mort) 100%);
+    border-right: 6px solid var(--gold);
+    display: flex; flex-direction: column;
+    color: #FFF; font-family: var(--font-pixel); font-size: 10px; line-height: 1.8;
+    box-shadow: inset -4px 0 10px rgba(0,0,0,0.5);
+    transition: width 0.2s ease;
 }
-.sidebar.collapsed { width: 44px; }
-.sidebar.collapsed .label-full,
-.sidebar.collapsed .txt,
-.sidebar.collapsed .nav-sub { display: none; }
-.sidebar.collapsed .label-vert {
-    display: block;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    font-size: 10px;
-    font-family: var(--font-pixel);
-    color: var(--duck-lit);
-    margin: 10px auto;
-}
+.sidebar.collapsed { width: 50px; }
+.sidebar.collapsed .label-full, .sidebar.collapsed .txt, .sidebar.collapsed .nav-sub { display: none; }
+.sidebar.collapsed .label-vert { display: block; writing-mode: vertical-rl; margin: 10px auto; color: var(--gold); }
 
 .moult-header {
-    background: var(--mort);
-    padding: 12px 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 2px solid var(--pink-dusty);
-    flex-shrink: 0;
+    background: #111; border-bottom: 4px solid var(--gold);
+    padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer;
 }
-.moult-header .hamburger {
-    font-family: var(--font-pixel);
-    font-size: 10px;
-    color: var(--pixel-yellow);
-}
-.moult-header .label-full {
-    font-family: var(--font-pixel);
-    font-size: 10px;
-    color: #FFF;
-    letter-spacing: 1px;
-}
+.moult-header .hamburger { font-size: 20px; color: var(--gold); }
+.moult-header .label-full { color: var(--gold); letter-spacing: 1px; }
 .moult-header .label-vert { display: none; }
 
-.nav-links {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 10px 0;
-}
+.nav-links { flex-grow: 1; overflow-y: auto; padding: 10px 6px; }
 .nav-item {
-    font-family: var(--font-vt);
-    font-size: 20px;
-    padding: 8px 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--pink-dusty);
-    border-left: 4px solid transparent;
-    transition: 0.1s;
+    padding: 8px 10px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+    color: #c0c0d0; text-shadow: 1px 1px 0 #000; border: 2px solid transparent; border-radius: 6px;
 }
-.nav-item:hover { background: var(--indigo-light); border-left-color: var(--duck-lit); }
-.nav-item.active { background: var(--mort); color: #fff; border-left-color: var(--pixel-yellow); }
+.nav-item:hover { color: #FFF; }
+.nav-item.active {
+    background: var(--duckblue); border-color: var(--gold); color: #FFF;
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.4);
+}
+.nav-sub { padding-left: 20px; padding-top: 5px; padding-bottom: 10px; }
+.nav-sub div { padding: 6px; cursor: pointer; color: #a0a0b0; }
+.nav-sub div:hover { color: #FFF; }
+.nav-sub div.active { color: var(--gold); text-shadow: 1px 1px 0 #000; }
 
-.nav-sub {
-    padding: 4px 0 10px 34px;
-    font-family: var(--font-vt);
-    font-size: 18px;
-    color: #A090B0;
-}
-.nav-sub div {
-    padding: 4px 8px;
-    cursor: pointer;
-    border-left: 2px solid transparent;
-}
-.nav-sub div:hover { color: var(--pink-pale); border-left-color: var(--duck-lit); }
-.nav-sub div.active { color: var(--pixel-yellow); font-weight: bold; }
+.moult-btn { background: #000; color: var(--temple-red) !important; border-top: 4px solid var(--gold); border-radius: 0; padding: 15px;}
 
-.moult-btn {
-    background: var(--duckblue);
-    color: #FFF !important;
-    border-top: 2px solid var(--duck-lit);
-    font-family: var(--font-pixel);
-    font-size: 10px;
-    padding: 14px 10px;
-    justify-content: center;
-}
-.moult-btn:hover { background: var(--duck-lit); }
-
-/* ── Middle Column (Pokedex Screen) ──────────────────────────────── */
+/* ── Middle Column (TempleOS) ───────────────────────────────────── */
 .middle-row {
-    width: 280px;
-    flex-shrink: 0;
-    background: #E8F0F0;
-    border-right: 4px solid var(--indigo);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+    width: 280px; flex-shrink: 0;
+    background: var(--temple-white);
+    border-right: 4px solid var(--temple-blue);
+    overflow-y: auto; display: flex; flex-direction: column;
 }
 .email-item {
-    padding: 14px 16px;
-    border-bottom: 2px solid #C0D0D0;
-    cursor: pointer;
-    font-family: var(--font-vt);
-    color: var(--duckblue);
-    background: #F4F8F8;
-    transition: 0.1s;
+    padding: 12px 15px; border-bottom: 2px dashed var(--temple-cyan);
+    cursor: pointer; font-family: var(--font-vt); color: var(--temple-blue);
 }
-.email-item:hover { background: #FFFFFF; transform: translateX(2px); }
-.email-item.active {
-    background: var(--duckblue);
-    color: var(--pixel-yellow);
-    border-left: 6px solid var(--mort);
-}
-.email-item strong { display: block; font-size: 20px; font-family: var(--font-pixel); font-size: 10px; margin-bottom: 6px; line-height: 1.4; }
-.email-item small { font-size: 16px; font-family: var(--font-type); }
-.email-item.active small { color: #FFF; }
+.email-item strong { display: block; font-size: 20px; }
+.email-item small { font-size: 16px; color: var(--temple-red); }
+.email-item:hover { background: #eef; }
+.email-item.active { background: var(--temple-blue); color: var(--temple-white); }
+.email-item.active small { color: #fff; }
 
-/* ── Content View (Tumblr Dashboard x TempleOS) ──────────────────── */
-.content-view {
-    flex-grow: 1;
-    background: var(--pink-pale);
-    background-image: radial-gradient(var(--pink-dusty) 1px, transparent 1px);
-    background-size: 20px 20px;
-    overflow-y: auto;
-    padding: 30px;
+/* ── Content View (TempleOS + Y2K accents) ──────────────────────── */
+.content-view { flex-grow: 1; background: #fdfdfd; overflow-y: auto; padding: 25px; }
+
+.email-container, .home-panel, .shell-panel, .demiurge-profile {
+    background: var(--temple-white);
+    border: 4px solid var(--temple-blue);
+    padding: 25px; margin: 0 auto; max-width: 800px;
+    box-shadow: 6px 6px 0 var(--temple-red);
 }
 
-/* Y2K Tumblr Email Pane */
-.email-container {
-    background: #FFF;
-    border: 2px dashed var(--pink-dusty);
-    border-radius: 16px;
-    padding: 30px;
-    position: relative;
-    max-width: 760px;
-    margin: 0 auto;
-    box-shadow: 0 4px 15px rgba(89,0,27,0.08);
-}
-.email-header h2 {
-    font-family: var(--font-type);
-    font-size: 32px;
-    margin: 0 0 8px;
-    color: var(--mort);
-}
-.email-header p {
-    font-family: var(--font-vt);
-    font-size: 18px;
-    color: var(--duckblue);
-    margin: 0;
-}
-.email-body {
-    font-family: var(--font-type);
-    font-size: 18px;
-    line-height: 1.8;
-    color: var(--indigo);
-    margin-top: 20px;
-}
+.email-header h2 { font-family: var(--font-vt); font-size: 32px; margin: 0; color: var(--temple-red); }
+.email-header p { font-family: var(--font-vt); font-size: 18px; color: var(--temple-blue); margin-top: 5px; }
+.email-body { font-family: var(--font-type); font-size: 18px; line-height: 1.6; color: #000; border-top: 2px dashed var(--temple-blue); padding-top: 15px; }
 
 .close-btn {
-    position: absolute;
-    top: 15px; right: 15px;
-    font-family: var(--font-pixel);
-    font-size: 12px;
-    color: var(--pixel-red);
-    cursor: pointer;
-    background: var(--pink-pale);
-    border: 2px solid var(--pink-dusty);
-    border-radius: 50%;
-    width: 30px; height: 30px;
-    display: flex; align-items: center; justify-content: center;
+    position: absolute; top: 15px; right: 20px;
+    font-family: var(--font-pixel); font-size: 16px; color: var(--temple-white);
+    background: var(--temple-red); border: 2px solid #000; padding: 5px 10px; cursor: pointer;
 }
-.close-btn:hover { background: var(--pixel-red); color: #FFF; border-color: var(--mort); }
+.close-btn:hover { background: #f00; }
 
-/* Profile Box (Tumblr Style) */
 .mini-profile {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    background: rgba(255,255,255,0.6);
-    border: 1px solid var(--pink-dusty);
-    border-radius: 40px;
-    padding: 8px 20px 8px 8px;
-    margin-bottom: 20px;
-    max-width: 760px;
-    margin-left: auto;
-    margin-right: auto;
+    display: flex; gap: 15px; align-items: center;
+    background: var(--temple-white); border: 4px solid var(--temple-cyan);
+    padding: 10px 15px; max-width: 800px; margin: 0 auto 20px;
+    box-shadow: 4px 4px 0 var(--temple-blue);
 }
-.mini-img {
-    width: 60px; height: 60px;
-    border-radius: 50%;
-    border: 2px solid var(--duckblue);
-    object-fit: cover;
-}
-.mini-profile strong {
-    font-family: var(--font-pixel);
-    font-size: 10px;
-    color: var(--indigo);
-    display: block;
-    margin-bottom: 4px;
-}
-.mini-profile small {
-    font-family: var(--font-type);
-    font-size: 15px;
-    color: var(--mort);
-    font-style: italic;
-}
+.mini-img { width: 64px; height: 64px; border: 2px solid #000; image-rendering: pixelated; }
+.mini-profile strong { font-family: var(--font-vt); font-size: 24px; color: var(--temple-blue); display: block; }
+.mini-profile small { font-family: var(--font-type); font-size: 16px; color: var(--temple-red); }
 
-/* TempleOS Terminal Style Demiurge Profile */
-.demiurge-profile, .shell-panel {
-    max-width: 660px;
-    margin: 0 auto;
-    padding: 30px;
-    background: var(--temple-blue);
-    border: 4px solid var(--pixel-red);
-    box-shadow: 8px 8px 0 var(--indigo);
-    color: #FFF;
-}
-.demiurge-profile h2, .shell-panel h2 {
-    font-family: var(--font-pixel);
-    font-size: 24px;
-    color: var(--pixel-yellow);
-    text-shadow: 2px 2px 0 var(--mort);
-    margin: 0 0 16px;
-    text-transform: uppercase;
-    animation: blink 2s step-end infinite;
-}
-.demiurge-profile .demi-quote {
-    font-family: var(--font-vt);
-    font-size: 22px;
-    color: var(--temple-cyan);
-    margin: 0 0 20px;
-}
-.demiurge-profile p, .shell-panel p {
-    font-family: var(--font-vt);
-    font-size: 20px;
-    line-height: 1.5;
-    color: #FFF;
-}
+.empty-state { text-align: center; font-family: var(--font-pixel); font-size: 16px; color: var(--temple-cyan); margin-top: 100px; animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
 
-.home-panel {
-    max-width: 660px;
-    margin: 0 auto;
-    padding: 40px;
-    background: #FFF;
-    border-radius: 20px;
-    border: 2px dashed var(--duckblue);
-    text-align: center;
-}
-.home-panel h2 {
-    font-family: var(--font-pixel);
-    font-size: 18px;
-    color: var(--mort);
-    margin-bottom: 20px;
-}
-.home-panel p {
-    font-family: var(--font-type);
-    font-size: 20px;
-    color: var(--indigo);
-}
-
-.empty-state {
-    text-align: center;
-    font-family: var(--font-pixel);
-    font-size: 12px;
-    color: var(--pink-dusty);
-    margin-top: 100px;
-    line-height: 2;
-}
-
-/* ── Search (Y2K / GBA) ─────────────────────────────────────────── */
-.search-hero { max-width: 700px; margin: 0 auto; padding: 20px; }
-.search-hero h1 {
-    font-family: var(--font-pixel);
-    font-size: 16px;
-    color: var(--duckblue);
-    margin-bottom: 20px;
-}
-.search-input-wrap { display: flex; gap: 10px; margin-bottom: 30px; }
+/* ── Search ─────────────────────────────────────────────────────── */
+.search-hero { max-width: 700px; margin: 0 auto; }
+.search-hero h1 { font-family: var(--font-pixel); font-size: 14px; color: var(--temple-blue); }
+.search-input-wrap { display: flex; gap: 10px; margin-bottom: 20px; }
 .search-input-wrap input {
-    flex-grow: 1;
-    font-family: var(--font-type);
-    font-size: 20px;
-    padding: 10px 15px;
-    border: 2px solid var(--indigo);
-    border-radius: 8px;
-    background: #FFF;
-    color: var(--indigo);
-    outline: none;
+    flex-grow: 1; font-family: var(--font-vt); font-size: 22px; padding: 10px;
+    border: 4px solid var(--temple-blue); outline: none;
 }
-.search-input-wrap input:focus { border-color: var(--mort); box-shadow: 0 0 8px var(--pink-dusty); }
-.search-input-wrap button {
-    font-family: var(--font-pixel);
-    font-size: 10px;
-    padding: 0 20px;
-    background: var(--duckblue);
-    border: 2px solid var(--indigo);
-    border-radius: 8px;
-    color: #FFF;
-    cursor: pointer;
-}
-.search-input-wrap button:hover { background: var(--duck-lit); }
-
+.search-input-wrap input:focus { border-color: var(--temple-red); }
 .search-card {
-    background: #FFF;
-    padding: 20px;
-    border-radius: 12px;
-    border: 2px solid var(--pink-dusty);
-    margin-bottom: 15px;
+    background: #fff; padding: 15px; border: 2px solid var(--temple-blue); margin-bottom: 10px;
 }
-.search-card h3 { font-family: var(--font-type); font-size: 24px; color: var(--mort); margin: 0 0 10px; }
-.search-card p { font-family: var(--font-type); font-size: 16px; color: #555; }
-.read-btn {
-    margin-top: 10px;
-    font-family: var(--font-pixel);
-    font-size: 8px;
-    padding: 8px 12px;
-    background: var(--pink-pale);
-    border: 1px solid var(--mort);
-    border-radius: 4px;
-    cursor: pointer;
-    color: var(--mort);
-}
-.read-btn:hover { background: var(--mort); color: #FFF; }
+.search-card h3 { font-family: var(--font-vt); font-size: 24px; margin: 0; color: var(--temple-red); }
+.read-btn { background: var(--temple-cyan); color: #FFF; border: 2px solid #000; font-family: var(--font-pixel); font-size: 10px; padding: 8px 12px; cursor: pointer; margin-top: 10px;}
 
-/* ── Footer ──────────────────────────────────────────────────────── */
-.mirror-footer { position: fixed; bottom: 15px; right: 15px; z-index: 500; }
-.mirror-footer button {
-    font-size: 14px;
-    padding: 8px 16px;
-    width: auto;
-    border-radius: 30px;
-}
+/* ── Custom Scrollbars (TempleOS blocky style) ──────────────────── */
+::-webkit-scrollbar { width: 18px; height: 18px; }
+::-webkit-scrollbar-track { background: var(--temple-white); border-left: 2px solid var(--temple-blue); }
+::-webkit-scrollbar-thumb { background: var(--temple-cyan); border: 2px solid var(--temple-blue); }
+::-webkit-scrollbar-corner { background: var(--temple-white); }
 
-/* ── HR ─────────────────────────────────────────────────────────── */
-hr {
-    border: none;
-    border-top: 2px dashed var(--pink-dusty);
-    margin: 20px 0;
-}
+/* ── Footer / Language Toggle ───────────────────────────────────── */
+.mirror-footer { position: fixed; bottom: 10px; right: 15px; z-index: 500; }
 
-/* ── FRENCH MODE (Gascogne Tricolore Y2K) ───────────────────────── */
-.mode-fr {
-    --duckblue: #002395; /* French Blue */
-    --mort: #ED2939;     /* French Red */
-    --pink-dusty: #C0C8E0;
-    --pink-pale: #EAEFF8;
+/* ── French Mode Overrides ──────────────────────────────────────── */
+.mode-fr { --pink: #e6b3b3; --temple-blue: #002395; --temple-red: #ed2939; }
+.mode-fr .app-titlebar, .mode-fr .win-titlebar {
+    background: linear-gradient(90deg, #002395 33.3%, #fff 33.3%, #fff 66.6%, #ed2939 66.6%); border: none;
 }
-.mode-fr .app-menubar { background: linear-gradient(90deg, #002395, #FFF, #ED2939); color: #000; }
-.mode-fr .menubar-item { color: #000; font-weight: bold; }
-.mode-fr .scrolling-banner { background: #ED2939; color: #FFF; border-bottom-color: #002395; }
-.mode-fr .moult-header { background: #002395; }
-.mode-fr .sidebar { background: #0A1535; border-right-color: #ED2939; }
-.mode-fr .nav-item.active { background: #ED2939; }
-.mode-fr .email-item.active { background: #002395; border-left-color: #ED2939; }
-.mode-fr .glitch { color: #002395; text-shadow: 2px 2px 0 #ED2939, -1px -1px 0 #FFF; }
-
-/* ── Global Scrollbar (OSX Style) ────────────────────────────────── */
-::-webkit-scrollbar { width: 12px; height: 12px; }
-::-webkit-scrollbar-track { background: var(--pink-pale); border-left: 1px solid var(--pink-dusty); }
-::-webkit-scrollbar-thumb {
-    background: #C0C0C0;
-    border-radius: 10px;
-    border: 2px solid var(--pink-pale);
-}
-::-webkit-scrollbar-thumb:hover { background: var(--duckblue); }
-
-/* ── Iframe (PDF viewer) ──────────────────────────────────────────── */
-iframe {
-    border: 2px solid var(--indigo);
-    border-radius: 8px;
-    display: block;
-    margin-top: 20px;
-}
+.mode-fr .win-title-text { color: #000; text-shadow: 0 0 4px #FFF, 0 0 4px #FFF; }
+.mode-fr .sidebar { border-right-color: #ed2939; }
+.mode-fr .scrolling-banner { background: #002395; }
