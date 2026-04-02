@@ -11,18 +11,15 @@
 </head>
 <body class="theme-default">
 
-    <!-- ═══════════════════════════════════════
-         SCREEN: LOGIN
-    ═══════════════════════════════════════ -->
     <section id="screen-login" class="screen screen-login">
         <div class="win-window login-window">
             <div class="win-titlebar">
-                <span class="win-title-text">🦀&nbsp;&nbsp;MOULTLOOK.COM &mdash; Identification Required</span>
                 <div class="win-btn-group">
-                    <button class="win-btn" tabindex="-1">_</button>
-                    <button class="win-btn" tabindex="-1">□</button>
-                    <button class="win-btn win-btn-cls" tabindex="-1">✕</button>
+                    <button class="win-btn win-btn-cls" tabindex="-1"></button>
+                    <button class="win-btn win-btn-min" tabindex="-1"></button>
+                    <button class="win-btn win-btn-max" tabindex="-1"></button>
                 </div>
+                <span class="win-title-text">🦀&nbsp;&nbsp;MOULTLOOK.COM &mdash; Identification Required</span>
             </div>
             <div class="win-body login-body">
                 <h1 class="glitch" data-text="MOULTLOOK.COM">MOULTLOOK.COM</h1>
@@ -32,7 +29,7 @@
                     <button class="main-btn" onclick="startLoading('en')">
                         CHECK MY CRABS<br><small>(International)</small>
                     </button>
-                    <div class="or-divider">— OR —</div>
+                    <div class="or-divider">⋆｡°✩ OR ✩°｡⋆</div>
                     <button class="french-btn" onclick="startLoading('fr')">
                         CRABE M'A TUER<br><small>(Gascogne Occupée)</small>
                     </button>
@@ -46,43 +43,43 @@
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════════
-         SCREEN: LOADING
-    ═══════════════════════════════════════ -->
     <section id="screen-loading" class="screen screen-loading" style="display:none;">
         <div class="win-window loading-window">
             <div class="win-titlebar">
+                <div class="win-btn-group">
+                    <button class="win-btn win-btn-cls" tabindex="-1"></button>
+                    <button class="win-btn win-btn-min" tabindex="-1"></button>
+                    <button class="win-btn win-btn-max" tabindex="-1"></button>
+                </div>
                 <span class="win-title-text">⚙️&nbsp;&nbsp;System Initialisation — MOULTLOOK v1.0</span>
             </div>
             <div class="win-body loading-body">
-                <div class="crab-spinner">🦀</div>
-                <h2 id="loading-title">Hardening...</h2>
-                <div class="win-progress-outer">
-                    <div class="win-progress-inner" id="progress-bar"></div>
+                <div class="gba-screen-inner">
+                    <div class="crab-spinner">🦀</div>
+                    <h2 id="loading-title">Hardening...</h2>
+                    <div class="win-progress-outer">
+                        <div class="win-progress-inner" id="progress-bar"></div>
+                    </div>
+                    <p class="loading-sub" id="loading-sub">Loading modules...</p>
                 </div>
-                <p class="loading-sub" id="loading-sub">Loading modules...</p>
             </div>
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════════
-         SCREEN: APP
-    ═══════════════════════════════════════ -->
     <section id="screen-app" class="screen screen-app" style="display:none;">
 
-        <!-- Top scrolling banner -->
         <div class="scrolling-banner">
             <div id="banner-text" class="banner-text"></div>
         </div>
 
-        <!-- Main application window -->
-        <div class="app-window">
+        <div class="app-window win-window">
             <div class="app-titlebar win-titlebar">
-                <span class="win-title-text">🦀&nbsp;&nbsp;<span id="app-win-title">MOULTLOOK</span></span>
                 <div class="win-btn-group">
-                    <button class="win-btn" tabindex="-1">_</button>
-                    <button class="win-btn" tabindex="-1">□</button>
+                    <button class="win-btn win-btn-cls" tabindex="-1"></button>
+                    <button class="win-btn win-btn-min" tabindex="-1"></button>
+                    <button class="win-btn win-btn-max" tabindex="-1"></button>
                 </div>
+                <span class="win-title-text">🦀&nbsp;&nbsp;<span id="app-win-title">MOULTLOOK</span></span>
             </div>
             <div class="app-menubar">
                 <span class="menubar-item">Fichier</span>
@@ -96,7 +93,7 @@
                     <div id="sidebar-toggle" class="moult-header">
                         <span class="hamburger">≡</span>
                         <span class="label-full">MOULTLOOK</span>
-                        <span class="label-vert">M O U L T L O O K</span>
+                        <span class="label-vert">M O U L T</span>
                     </div>
                     <nav class="nav-links" id="sidebar-nav"></nav>
                     <div class="nav-item moult-btn" onclick="moult()">
@@ -119,7 +116,6 @@
     <script src="script.js"></script>
 
     <script>
-        // Live clock on login screen
         function updateClock() {
             const el = document.getElementById('login-clock');
             if (el) el.innerText = new Date().toLocaleTimeString();
