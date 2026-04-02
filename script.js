@@ -1,4 +1,4 @@
-let currentLang = 'en';
+let currentLang = 'en'; 
 let currentSection = 'home';
 let currentCategory = null;
 let selectedEmailId = null;
@@ -6,452 +6,305 @@ let selectedEmailId = null;
 window.addEventListener('hashchange', handleRouting);
 
 function handleRouting() {
-  const hash = window.location.hash.replace('#', '');
-  if (!hash) return;
-  const parts = hash.split('-');
-  currentSection = parts[0];
-  currentCategory = parts[1] || null;
-  updateUI();
+    const hash = window.location.hash.replace('#', '');
+    if (!hash) return;
+    const parts = hash.split('-');
+    currentSection = parts[0];
+    currentCategory = parts[1] || null;
+    updateUI();
 }
 
 function startLoading(lang) {
-  currentLang = lang;
+    currentLang = lang;
+    document.getElementById('screen-login').style.display = 'none';
+    document.getElementById('screen-loading').style.display = 'flex';
+    document.getElementById('loading-title').innerText = lang === 'en' ? "Hardening chitin..." : "Mue en cours...";
+    document.getElementById('banner-text').innerText = bannerContent[lang];
+    document.body.className = lang === 'fr' ? 'mode-fr' : 'theme-default';
 
-  // screen swaps
-  document.getElementById('screen-login').style.display = 'none';
-  document.getElementById('screen-loading').style.display = 'flex';
+    animateProgress(lang);
 
-  // copy
-  document.getElementById('loading-title').innerText = lang === 'en' ? 'Hardening chitin…' : 'Mue en cours…';
-  document.getElementById('loading-hint').innerText = lang === 'en' ? 'Indexing mailbox…' : 'Indexation de la boîte…';
+    setTimeout(() => {
+        document.getElementById('screen-loading').style.display = 'none';
+        document.getElementById('screen-app').style.display = 'flex';
+        window.location.hash = 'home';
+        handleRouting();
+    }, 2600);
+}
 
-  // banner + theme
-  document.getElementById('banner-text').innerText = bannerContent?.[lang] ?? '';
-  document.body.className = lang === 'fr' ? 'mode-fr' : 'theme-default';
-  document.documentElement.lang = lang === 'fr' ? 'fr' : 'en';
+function animateProgress(lang) {
+    const bar = document.getElementById('progress-bar');
+    const sub = document.getElementById('loading-sub');
+    const messages = {
+        en: [
+            "Initialising chitin protocols...",
+            "Loading crustacean database...",
+            "Establishing shell integrity...",
+            "Decoding demiurge signals...",
+            "Compiling subjective reality...",
+            "Ready."
+        ],
+        fr: [
+            "Initialisation des protocoles chitineux...",
+            "Chargement de la base de données gasconnes...",
+            "Vérification de l'intégrité de la carapace...",
+            "Décodage des signaux demiurgiques...",
+            "Prêt."
+        ]
+    };
+    const msgs = messages[lang] || messages.en;
+    let progress = 0;
+    let msgIdx = 0;
+    if (bar) bar.style.width = '0%';
+    if (sub) sub.innerText = msgs[0];
 
-  // cute fake progress
-  const fill = document.querySelector('.loader-bar-fill');
-  if (fill) {
-    fill.style.width = '0%';
-    requestAnimationFrame(() => {
-      fill.style.width = '100%';
-    });
-  }
+    const interval = setInterval(() => {
+        const jump = Math.random() * 18 + 7;
+        progress = Math.min(100, progress + jump);
+        if (bar) bar.style.width = progress + '%';
 
-  setTimeout(() => {
-    document.getElementById('screen-loading').style.display = 'none';
-    document.getElementById('screen-app').style.display = 'block';
-    window.location.hash = 'home';
-    handleRouting();
-  }, 1400);
+        const targetIdx = Math.min(
+            Math.floor((progress / 100) * msgs.length),
+            msgs.length - 1
+        );
+        if (targetIdx > msgIdx) {
+            msgIdx = targetIdx;
+            if (sub) sub.innerText = msgs[msgIdx];
+        }
+        if (progress >= 100) {
+            if (sub) sub.innerText = msgs[msgs.length - 1];
+            clearInterval(interval);
+        }
+    }, 400);
 }
 
 function updateUI() {
-  renderSidebar();
+    renderSidebar();
+    const middleRow = document.getElementById('email-list');
+    const langBtn = document.getElementById('lang-toggle-btn');
+    if (langBtn) {
+        langBtn.innerText = currentLang === 'en'
+            ? "🇫🇷  CRABE M'A TUER"
+            : "🌐  INTERNATIONAL";
+    }
 
-  const middleRow = document.getElementById('email-list');
-  const langBtn = document.getElementById('lang-toggle-btn');
+    // Update title bar
+    const titleEl = document.getElementById('app-win-title');
+    if (titleEl) {
+        let title = 'MOULTLOOK — ' + currentSection.toUpperCase();
+        if (currentCategory) title += ' › ' + currentCategory.toUpperCase();
+        titleEl.innerText = title;
+    }
 
-  langBtn.innerText =
-    currentLang === 'en'
-      ? "CRABE M'A TUER — basculer vers FR"
-      : 'CHECK MY CRABS — switch to EN';
-
-  // hide list on static pages
-  const isStatic = ['home', 'shell', 'search', 'contact'].includes(currentSection);
-  middleRow.style.display = isStatic ? 'none' : 'block';
-
-  if (currentSection === 'search') {
-    renderSearchView();
-    return;
-  }
-
-  if (currentSection === 'contact') {
-    renderContactView();
-    return;
-  }
-
-  if (isStatic) {
-    renderStaticContent();
-    return;
-  }
-
-  renderEmailList();
-  renderEmailContent();
+    if (['home', 'shell', 'search'].includes(currentSection)) {
+        middleRow.style.display = 'none';
+        if (currentSection === 'search') renderSearchView();
+        else renderStaticContent();
+    } else {
+        middleRow.style.display = 'flex';
+        middleRow.style.flexDirection = 'column';
+        renderEmailList();
+        renderEmailContent();
+    }
 }
 
 function renderSidebar() {
-  const nav = document.getElementById('sidebar-nav');
+    const nav = document.getElementById('sidebar-nav');
+    const menus = {
+        en: {
+            home:    '🏠 HOME',
+            unread:  '🆕 UNREAD',
+            search:  '🔍 SEARCH',
+            inbox:   '📥 INBOX',
+            sent:    '📤 SENT',
+            drafts:  '📝 DRAFTS',
+            archive: '🗄️ ARCHIVE',
+            shell:   '🐚 YOUR SHELL'
+        },
+        fr: {
+            home:    '🏠 ADISHATZ',
+            search:  '🔍 RECHERCHER',
+            inbox:   '📥 REÇUS',
+            sent:    '📤 ENVOYÉS',
+            archive: '🗄️ ARCHIVE'
+        }
+    };
 
-  const menus = {
-    en: {
-      home: '🏠 HOME',
-      unread: '🆕 UNREAD',
-      search: '🔍 SEARCH',
-      inbox: '📥 INBOX',
-      sent: '📤 SENT',
-      drafts: '📝 DRAFTS',
-      archive: '🗄️ ARCHIVE',
-      contact: '✉️ CONTACT',
-      shell: '🐚 YOUR SHELL',
-    },
-    fr: {
-      home: '🏠 ADISHATZ',
-      search: '🔍 RECHERCHER',
-      inbox: '📥 REÇUS',
-      sent: '📤 ENVOYÉS',
-      archive: '🗄️ ARCHIVE',
-      contact: '✉️ CONTACT',
-      shell: '🐚 COQUILLE',
-    },
-  };
-
-  let html = '';
-  for (const [key, label] of Object.entries(menus[currentLang])) {
-    html += `
-      <div class="nav-item ${currentSection === key ? 'active' : ''}" onclick="navigate('${key}')">
-        <span class="txt">${label}</span>
-      </div>
-    `;
-
-    // Only show subsections for English Inbox
-    if (key === 'inbox' && currentLang === 'en') {
-      const cats = ['patriarchy', 'imperialism', 'capitalism', 'notes'];
-      html +=
-        `<div class="nav-sub">` +
-        cats
-          .map(
-            (c) =>
-              `<div class="${currentCategory === c ? 'active' : ''}" onclick="navigate('inbox', '${c}')">↳ ${c}</div>`
-          )
-          .join('') +
-        `</div>`;
+    let html = '';
+    for (const [key, label] of Object.entries(menus[currentLang])) {
+        html += `<div class="nav-item ${currentSection === key ? 'active' : ''}" onclick="navigate('${key}')">
+            <span class="txt">${label}</span>
+        </div>`;
+        if (key === 'inbox' && currentLang === 'en') {
+            const cats = ['patriarchy', 'imperialism', 'capitalism', 'notes'];
+            html += `<div class="nav-sub">` +
+                cats.map(c =>
+                    `<div class="${currentCategory === c ? 'active' : ''}" onclick="navigate('inbox', '${c}')">
+                        ↳ ${c}
+                    </div>`
+                ).join('') +
+            `</div>`;
+        }
     }
-  }
-  nav.innerHTML = html;
+    nav.innerHTML = html;
 }
 
 function renderEmailList() {
-  const container = document.getElementById('email-list');
+    const container = document.getElementById('email-list');
+    let list = emails.filter(e =>
+        e.lang === currentLang &&
+        e.section === (currentSection === 'unread' ? 'inbox' : currentSection)
+    );
+    if (currentCategory && currentLang === 'en') {
+        list = list.filter(e => e.category === currentCategory);
+    }
+    if (currentSection === 'unread' && !selectedEmailId && list.length > 0) {
+        selectedEmailId = list[0].id;
+    }
 
-  let list = (emails || []).filter(
-    (e) => e.lang === currentLang && e.section === (currentSection === 'unread' ? 'inbox' : currentSection)
-  );
+    if (list.length === 0) {
+        container.innerHTML = `<div style="padding:16px; font-family:var(--font-vt); font-size:17px; color:#888; font-style:italic;">
+            [ Empty. ]
+        </div>`;
+        return;
+    }
 
-  if (currentCategory && currentLang === 'en') list = list.filter((e) => e.category === currentCategory);
-
-  if (list.length === 0) {
-    container.innerHTML = `
-      <div class="email-item empty">
-        <strong>${currentLang === 'en' ? 'No messages here.' : 'Aucun message.'}</strong><br>
-        <small>${currentLang === 'en' ? 'Content intentionally blank for now.' : 'Contenu volontairement vide.'}</small>
-      </div>
-    `;
-    return;
-  }
-
-  if (currentSection === 'unread' && !selectedEmailId) selectedEmailId = list[0].id;
-
-  container.innerHTML = list
-    .map(
-      (e) => `
+    container.innerHTML = list.map(e => `
         <div class="email-item ${selectedEmailId === e.id ? 'active' : ''}" onclick="selectEmail(${e.id})">
-          <strong>${escapeHTML(e.subject || '') || '&nbsp;'}</strong><br>
-          <small>${escapeHTML(e.from || '')} | ${escapeHTML(e.date || '')}</small>
+            <strong>${e.subject}</strong>
+            <small>${e.from} &nbsp;|&nbsp; ${e.date}</small>
         </div>`
-    )
-    .join('');
+    ).join('');
 }
 
 function renderEmailContent() {
-  const view = document.getElementById('content-view');
+    const view = document.getElementById('content-view');
+    if (selectedEmailId) {
+        const email = emails.find(e => e.id === selectedEmailId);
+        const demi = demiurges[email.category] || {
+            name: email.from,
+            catchphrase: "",
+            image: "https://via.placeholder.com/52x52/808080/fff?text=?"
+        };
 
-  if (!selectedEmailId) {
-    // Category profiles (English inbox)
-    if (currentCategory && currentLang === 'en') {
-      const demi = demiurges?.[currentCategory] || { name: '', description: '' };
-      view.innerHTML = `
-        <div class="window">
-          <div class="window-titlebar">
-            <span class="window-title">PROFILE</span>
-            <span class="window-controls" aria-hidden="true">▢ ✕</span>
-          </div>
-          <div class="window-body">
-            <h2 class="mono-title">${escapeHTML(demi.name) || '&nbsp;'}</h2>
-            <div class="rule"></div>
-            <p class="muted">${escapeHTML(demi.description) || '&nbsp;'}</p>
-          </div>
-        </div>
-      `;
-      return;
+        let bodyContent = `<div class="email-body">${email.body}</div>`;
+        if (email.type === 'pdf') {
+            bodyContent = `<iframe src="${email.url}" width="100%" height="500px"></iframe>`;
+        }
+
+        view.innerHTML = `
+            <div class="mini-profile">
+                <img src="${demi.image}" class="mini-img" alt="${demi.name}">
+                <div>
+                    <strong>${demi.name}</strong>
+                    <small>${demi.catchphrase}</small>
+                </div>
+            </div>
+            <div class="email-container">
+                <div class="close-btn" onclick="closeEmail()">✕</div>
+                <div class="email-header">
+                    <h2>${email.subject}</h2>
+                    <p>${email.date} &nbsp;&middot;&nbsp; ${email.from}</p>
+                </div>
+                <hr>
+                ${bodyContent}
+            </div>`;
+    } else if (currentCategory && currentLang === 'en') {
+        const demi = demiurges[currentCategory];
+        view.innerHTML = `
+            <div class="demiurge-profile">
+                <h2>${demi.name}</h2>
+                <p class="demi-quote">"${demi.catchphrase}"</p>
+                <hr>
+                <p>${demi.description}</p>
+            </div>`;
+    } else {
+        view.innerHTML = `<div class="empty-state">[ Select an item to view. ]</div>`;
     }
-
-    view.innerHTML = `
-      <div class="window">
-        <div class="window-titlebar">
-          <span class="window-title">VIEWER</span>
-          <span class="window-controls" aria-hidden="true">▢ ✕</span>
-        </div>
-        <div class="window-body">
-          <div class="empty-state">${currentLang === 'en' ? 'Select a message.' : 'Sélectionnez un message.'}</div>
-        </div>
-      </div>
-    `;
-    return;
-  }
-
-  const email = (emails || []).find((e) => e.id === selectedEmailId);
-  if (!email) {
-    selectedEmailId = null;
-    updateUI();
-    return;
-  }
-
-  const demi = demiurges?.[email.category] || { name: email.from || '', catchphrase: '', image: '' };
-
-  let bodyContent = `<div class="email-body">${escapeHTML(email.body || '').replace(/\n/g, '<br>') || '&nbsp;'}</div>`;
-  if (email.type === 'pdf' && email.url) {
-    bodyContent = `<iframe src="${email.url}" width="100%" height="520" class="pdf-frame" title="PDF"></iframe>`;
-  }
-
-  view.innerHTML = `
-    <div class="mini-profile">
-      ${demi.image ? `<img src="${demi.image}" class="mini-img" alt="">` : `<div class="mini-img placeholder" aria-hidden="true"></div>`}
-      <div>
-        <strong>${escapeHTML(demi.name) || '&nbsp;'}</strong><br>
-        <small class="muted">${escapeHTML(demi.catchphrase) || '&nbsp;'}</small>
-      </div>
-    </div>
-
-    <div class="window email-window">
-      <div class="window-titlebar">
-        <span class="window-title">MESSAGE</span>
-        <div class="window-actions">
-          <button class="win-btn" onclick="closeEmail()" title="Close">✕</button>
-        </div>
-      </div>
-
-      <div class="window-body">
-        <div class="email-header">
-          <h2 class="mono-title">${escapeHTML(email.subject || '') || '&nbsp;'}</h2>
-          <p class="muted">${escapeHTML(email.date || '')}</p>
-        </div>
-        <div class="rule"></div>
-        ${bodyContent}
-      </div>
-    </div>
-  `;
 }
 
 function renderSearchView() {
-  document.getElementById('content-view').innerHTML = `
-    <div class="window">
-      <div class="window-titlebar">
-        <span class="window-title">SEARCH DATABASE</span>
-        <span class="window-controls" aria-hidden="true">▢ ✕</span>
-      </div>
-      <div class="window-body">
-        <div class="search-input-wrap">
-          <input type="text" id="search-input" placeholder="Keyword…" autocomplete="off"
-            onkeyup="if(event.key==='Enter') executeSearch()">
-          <button class="win-btn" onclick="executeSearch()">EXECUTE</button>
-        </div>
-        <div id="search-results-area"></div>
-      </div>
-    </div>
-  `;
+    const label = currentLang === 'en' ? '// SEARCH DATABASE //' : '// RECHERCHE //';
+    const placeholder = currentLang === 'en' ? 'Enter keyword...' : 'Entrer un mot-clé...';
+    const btnLabel = currentLang === 'en' ? 'EXECUTE' : 'CHERCHER';
+
+    document.getElementById('content-view').innerHTML = `
+        <div class="search-hero">
+            <h1>${label}</h1>
+            <div class="search-input-wrap">
+                <input type="text" id="search-input" placeholder="${placeholder}"
+                       onkeyup="if(event.key==='Enter') executeSearch()">
+                <button onclick="executeSearch()">${btnLabel}</button>
+            </div>
+            <div id="search-results-area"></div>
+        </div>`;
 }
 
 function executeSearch() {
-  const input = document.getElementById('search-input');
-  const q = (input?.value || '').toLowerCase().trim();
+    const q = document.getElementById('search-input').value.toLowerCase().trim();
+    if (!q) return;
+    const results = emails.filter(e =>
+        e.lang === currentLang &&
+        (e.subject.toLowerCase().includes(q) || e.body.toLowerCase().includes(q))
+    );
+    const noResultMsg = currentLang === 'en'
+        ? `No results for "${q}".`
+        : `Aucun résultat pour "${q}".`;
 
-  if (!q) {
-    document.getElementById('search-results-area').innerHTML = `
-      <div class="empty-state">${currentLang === 'en' ? 'Type something.' : 'Écrivez quelque chose.'}</div>
-    `;
-    return;
-  }
-
-  const results = (emails || []).filter(
-    (e) =>
-      e.lang === currentLang &&
-      ((e.subject || '').toLowerCase().includes(q) || (e.body || '').toLowerCase().includes(q))
-  );
-
-  if (results.length === 0) {
-    document.getElementById('search-results-area').innerHTML = `
-      <div class="empty-state">${currentLang === 'en' ? 'No matches.' : 'Aucun résultat.'}</div>
-    `;
-    return;
-  }
-
-  let html = `<div class="results-grid">`;
-  results.forEach((res) => {
-    const preview = (res.body || '').slice(0, 120);
-    html += `
-      <div class="search-card">
-        <h3>${escapeHTML(res.subject || '') || '&nbsp;'}</h3>
-        <p class="muted">${escapeHTML(preview)}${preview.length >= 120 ? '…' : ''}</p>
-        <button class="win-btn" onclick="jumpToEmail(${res.id})">READ</button>
-      </div>
-    `;
-  });
-  document.getElementById('search-results-area').innerHTML = html + `</div>`;
+    let html = `<div class="results-grid">`;
+    if (results.length === 0) {
+        html += `<p style="font-family:var(--font-vt); color:#888; font-size:18px;">${noResultMsg}</p>`;
+    }
+    results.forEach(res => {
+        html += `<div class="search-card">
+            <h3>${res.subject}</h3>
+            <p>${res.body.substring(0, 110)}...</p>
+            <button class="read-btn" onclick="jumpToEmail(${res.id})">READ →</button>
+        </div>`;
+    });
+    document.getElementById('search-results-area').innerHTML = html + `</div>`;
 }
 
 function renderStaticContent() {
-  const view = document.getElementById('content-view');
-
-  if (currentSection === 'home') {
-    view.innerHTML = `
-      <div class="window">
-        <div class="window-titlebar">
-          <span class="window-title">SYSTEM</span>
-          <span class="window-controls" aria-hidden="true">▢ ✕</span>
-        </div>
-        <div class="window-body">
-          <div class="empty-state">${homeContent?.[currentLang] ? homeContent[currentLang] : '&nbsp;'}</div>
-        </div>
-      </div>
-    `;
-    return;
-  }
-
-  if (currentSection === 'shell') {
-    view.innerHTML = shellContent || '<div class="empty-state">&nbsp;</div>';
-    return;
-  }
-
-  view.innerHTML = '<div class="empty-state">&nbsp;</div>';
-}
-
-function renderContactView() {
-  const view = document.getElementById('content-view');
-  const cfg = contactContent?.[currentLang] || { title: 'CONTACT', addressLabel: 'Mailbox', addressValue: '', note: '' };
-
-  view.innerHTML = `
-    <div class="window">
-      <div class="window-titlebar">
-        <span class="window-title">${escapeHTML(cfg.title)}</span>
-        <span class="window-controls" aria-hidden="true">▢ ✕</span>
-      </div>
-      <div class="window-body">
-        <div class="contact-grid">
-          <div class="contact-panel">
-            <div class="label">${escapeHTML(cfg.addressLabel)}</div>
-            <div class="mailbox-row">
-              <input id="mailbox" class="mailbox" value="${escapeAttr(cfg.addressValue)}" placeholder="" readonly>
-              <button class="win-btn" onclick="copyMailbox()">COPY</button>
-            </div>
-            <p class="muted">${escapeHTML(cfg.note) || '&nbsp;'}</p>
-          </div>
-
-          <form class="contact-panel" onsubmit="event.preventDefault(); toast('${currentLang === 'en' ? 'Draft saved (not really).' : 'Brouillon enregistré (pas vraiment).'}');">
-            <div class="label">${currentLang === 'en' ? 'Compose' : 'Écrire'}</div>
-            <input class="field" type="text" placeholder="${currentLang === 'en' ? 'Subject' : 'Objet'}" />
-            <textarea class="field" rows="8" placeholder="${currentLang === 'en' ? 'Message' : 'Message'}"></textarea>
-            <div class="btn-row">
-              <button class="win-btn" type="submit">SAVE DRAFT</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function copyMailbox() {
-  const el = document.getElementById('mailbox');
-  if (!el) return;
-  const value = el.value || '';
-
-  if (!value) {
-    toast(currentLang === 'en' ? 'No address set yet.' : 'Aucune adresse pour l’instant.');
-    return;
-  }
-
-  navigator.clipboard
-    .writeText(value)
-    .then(() => toast(currentLang === 'en' ? 'Copied.' : 'Copié.'))
-    .catch(() => toast(currentLang === 'en' ? 'Could not copy.' : 'Copie impossible.'));
+    const view = document.getElementById('content-view');
+    if (currentSection === 'home') {
+        view.innerHTML = `
+            <div class="home-panel">
+                <h2>// SYSTEM //</h2>
+                <hr>
+                <p>${homeContent[currentLang]}</p>
+            </div>`;
+    } else if (currentSection === 'shell') {
+        view.innerHTML = shellContent;
+    }
 }
 
 function toggleLanguage() {
-  if (confirm(currentLang === 'en' ? 'Switch reality?' : 'Changer de réalité ?')) {
-    startLoading(currentLang === 'en' ? 'fr' : 'en');
-  }
+    const msg = currentLang === 'en'
+        ? "Switch to French mode? / Passer en mode français?"
+        : "Switch to International mode? / Passer en mode international?";
+    if (confirm(msg)) startLoading(currentLang === 'en' ? 'fr' : 'en');
 }
 
 function navigate(s, c = null) {
-  selectedEmailId = null;
-  window.location.hash = c ? `${s}-${c}` : s;
+    selectedEmailId = null;
+    window.location.hash = c ? `${s}-${c}` : s;
 }
-
-function selectEmail(id) {
-  selectedEmailId = id;
-  updateUI();
-}
-
-function closeEmail() {
-  selectedEmailId = null;
-  updateUI();
-}
-
+function selectEmail(id) { selectedEmailId = id; updateUI(); }
+function closeEmail() { selectedEmailId = null; updateUI(); }
 function jumpToEmail(id) {
-  const e = (emails || []).find((x) => x.id === id);
-  if (!e) {
-    toast(currentLang === 'en' ? 'Message missing.' : 'Message introuvable.');
-    return;
-  }
-  selectedEmailId = id;
-  navigate(e.section, e.category);
+    const e = emails.find(x => x.id === id);
+    if (!e) return;
+    selectedEmailId = id;
+    navigate(e.section, e.category);
 }
-
 function moult() {
-  if (confirm(currentLang === 'en' ? 'Discard shell?' : 'Abandonner la coquille ?')) location.reload();
+    const msg = currentLang === 'en'
+        ? "Discard shell? This will reload."
+        : "Jeter la carapace? La page va se recharger.";
+    if (confirm(msg)) location.reload();
 }
 
-// Sidebar toggle
-const sidebarToggle = document.getElementById('sidebar-toggle');
-if (sidebarToggle) {
-  const toggle = () => document.getElementById('sidebar')?.classList.toggle('collapsed');
-  sidebarToggle.addEventListener('click', toggle);
-  sidebarToggle.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      toggle();
-    }
-  });
-}
-
-// Utils
-function escapeHTML(str) {
-  return String(str)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
-function escapeAttr(str) {
-  // for attribute values
-  return escapeHTML(str).replaceAll('\n', ' ');
-}
-
-function toast(msg) {
-  const id = 'toast';
-  let node = document.getElementById(id);
-  if (!node) {
-    node = document.createElement('div');
-    node.id = id;
-    node.className = 'toast';
-    document.body.appendChild(node);
-  }
-  node.textContent = msg;
-  node.classList.add('show');
-  clearTimeout(node._t);
-  node._t = setTimeout(() => node.classList.remove('show'), 1400);
-}
+document.getElementById('sidebar-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+});
