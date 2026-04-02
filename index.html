@@ -3,56 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOULTLOOK.COM</title>
+    <title>MOULTLOOK.COM // GBA_OSX</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Comfortaa:wght@500;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-default">
 
     <section id="screen-login" class="screen screen-login">
-        <div class="win-window login-window">
-            <div class="win-titlebar">
-                <span class="win-title-text">🦀 MOULTLOOK.COM</span>
-                <div class="win-btn-group">
-                    <button class="win-btn win-btn-min" tabindex="-1"></button>
-                    <button class="win-btn win-btn-max" tabindex="-1"></button>
-                    <button class="win-btn win-btn-cls" tabindex="-1"></button>
+        <div class="glitter-overlay"></div>
+        <div class="win-window login-window glass-panel">
+            <div class="osx-titlebar">
+                <div class="osx-btn-group">
+                    <div class="osx-btn close"></div>
+                    <div class="osx-btn min"></div>
+                    <div class="osx-btn max"></div>
                 </div>
+                <span class="win-title-text">🦀 MOULTLOOK.COM_LOGIN</span>
             </div>
             <div class="win-body login-body">
-                <h1 class="glitch" data-text="MOULTLOOK.COM">MOULTLOOK.COM</h1>
-                <p class="login-sub">Select your operational theatre.</p>
+                <h1 class="glitch giant-title" data-text="MOULTLOOK">MOULTLOOK</h1>
+                <p class="login-sub fe-text">Awaiting synchronization...</p>
                 <div class="login-divider-line"></div>
                 <div class="login-box">
-                    <button class="main-btn aqua-btn" onclick="startLoading('en')">
-                        CHECK MY CRABS<br><small>(International)</small>
+                    <button class="gba-btn main-btn" onclick="startLoading('en')">
+                        ACCESS DATABASE<br><small>[ INTERNATIONAL ]</small>
                     </button>
-                    <div class="or-divider">— OR —</div>
-                    <button class="french-btn aqua-btn" onclick="startLoading('fr')">
-                        CRABE M'A TUER<br><small>(Gascogne Occupée)</small>
+                    <div class="or-divider">♦</div>
+                    <button class="gba-btn french-btn" onclick="startLoading('fr')">
+                        CRABE M'A TUER<br><small>[ GASCOGNE ]</small>
                     </button>
                 </div>
             </div>
             <div class="win-statusbar">
-                <span>Ready</span>
-                <span>🔒 Encrypted</span>
+                <span>SYSTEM: READY</span>
                 <span id="login-clock"></span>
             </div>
         </div>
     </section>
 
     <section id="screen-loading" class="screen screen-loading" style="display:none;">
-        <div class="win-window loading-window">
-            <div class="win-titlebar">
-                <span class="win-title-text">⚙️ System Initialisation</span>
+        <div class="glitter-overlay"></div>
+        <div class="win-window loading-window glass-panel">
+            <div class="osx-titlebar">
+                <div class="osx-btn-group">
+                    <div class="osx-btn close"></div>
+                    <div class="osx-btn min"></div>
+                    <div class="osx-btn max"></div>
+                </div>
+                <span class="win-title-text">SYSTEM BOOT</span>
             </div>
             <div class="win-body loading-body">
                 <div class="crab-spinner">🦀</div>
-                <h2 id="loading-title">Hardening...</h2>
-                <div class="win-progress-outer">
-                    <div class="win-progress-inner" id="progress-bar"></div>
+                <h2 id="loading-title" class="fe-text">Hardening...</h2>
+                <div class="gba-progress-outer">
+                    <div class="gba-progress-inner" id="progress-bar"></div>
                 </div>
                 <p class="loading-sub" id="loading-sub">Loading modules...</p>
             </div>
@@ -60,37 +66,39 @@
     </section>
 
     <section id="screen-app" class="screen screen-app" style="display:none;">
-
+        <div class="glitter-overlay"></div>
+        
         <div class="scrolling-banner">
             <div id="banner-text" class="banner-text"></div>
         </div>
 
-        <div class="app-window">
-            <div class="app-titlebar win-titlebar">
-                <span class="win-title-text">🦀 <span id="app-win-title">MOULTLOOK</span></span>
-                <div class="win-btn-group">
-                    <button class="win-btn win-btn-min" tabindex="-1"></button>
-                    <button class="win-btn win-btn-max" tabindex="-1"></button>
+        <div class="app-window glass-panel">
+            <div class="osx-titlebar">
+                <div class="osx-btn-group">
+                    <div class="osx-btn close"></div>
+                    <div class="osx-btn min"></div>
+                    <div class="osx-btn max"></div>
                 </div>
+                <span class="win-title-text" id="app-win-title">MOULTLOOK</span>
             </div>
             <div class="app-menubar">
-                <span class="menubar-item">Fichier</span>
-                <span class="menubar-item">Édition</span>
-                <span class="menubar-item">Affichage</span>
-                <span class="menubar-item">Mue</span>
-                <span class="menubar-item">?</span>
+                <span class="menubar-item">File</span>
+                <span class="menubar-item">Edit</span>
+                <span class="menubar-item">View</span>
+                <span class="menubar-item">Moult</span>
+                <span class="menubar-item fe-text">Ω</span>
             </div>
             <div class="app-layout">
                 <aside id="sidebar" class="sidebar">
                     <div id="sidebar-toggle" class="moult-header">
                         <span class="hamburger">≡</span>
-                        <span class="label-full">MOULTLOOK</span>
-                        <span class="label-vert">M O U L T L O O K</span>
+                        <span class="label-full">DEX_NAV</span>
+                        <span class="label-vert">N A V</span>
                     </div>
                     <nav class="nav-links" id="sidebar-nav"></nav>
                     <div class="nav-item moult-btn" onclick="moult()">
                         <span class="icon">🦀</span>
-                        <span class="txt">MOULT</span>
+                        <span class="txt">MOULT_OS</span>
                     </div>
                 </aside>
 
@@ -100,7 +108,7 @@
         </div>
 
         <footer class="mirror-footer">
-            <button id="lang-toggle-btn" class="aqua-btn-small" onclick="toggleLanguage()"></button>
+            <button class="gba-btn small-btn" id="lang-toggle-btn" onclick="toggleLanguage()"></button>
         </footer>
     </section>
 
