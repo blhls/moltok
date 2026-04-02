@@ -1,10 +1,10 @@
-/* ═══════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════
    MOULTLOOK data.js — content layer
-   ═══════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════ */
 
 const bannerContent = {
     en: "★ LATEST NEWS: MOULTLOOK.COM IS LIVE ★ EVOLVE OR DIE ★ CRAB EVOLUTION ACCELERATING ★ STAY PROTECTED ★ THE DEMIURGES ARE WATCHING ★ MOULT OR PERISH ★ CHITIN DENSITY AT CRITICAL LEVELS ★ ",
-    fr: "★ DERNIÈRES NOUVELLES : MOULTLOOK.COM EST EN LIGNE ★ ÉVOLUEZ OU MUREZ ★ LA GASCOGNE VOUS OBSERVE ★ L'ÉVOLUTION EST INÉVITABLE ★ LA MUE A COMMENCÉ ★ DENSITÉ CHITINEUSE EN HAUSSE ★ ",
+    fr: "★ DARRÈRAS NÒVAS : MOULTLOOK.COM EN LINHA ★ EVOLUCI·ATZ O MUDATZ ★ LA GASCONHA VOS ESPIA ★ L'EVOLUCION ÉS INEVITABLA ★ LA MUA A COMENÇAT ★ ",
 };
 
 const demiurges = {
@@ -12,28 +12,28 @@ const demiurges = {
         name: "The Father Figure",
         status: "Online",
         catchphrase: "Obedience is the first step to evolution.",
-        image: "https://via.placeholder.com/56x56/59001b/ffffff?text=DAD",
+        image: "https://via.placeholder.com/58x58/59001b/ffffff?text=DAD",
         description: "The architect of the room you're sitting in. The load-bearing wall you never questioned."
     },
     imperialism: {
         name: "The Map Drawer",
         status: "Busy",
         catchphrase: "What's yours is mine, eventually.",
-        image: "https://via.placeholder.com/56x56/800020/ffffff?text=MAP",
+        image: "https://via.placeholder.com/58x58/800020/ffffff?text=MAP",
         description: "Always looking over your shoulder. Drew the borders. Lost the legend."
     },
     capitalism: {
         name: "The Invisible Hand",
         status: "Idle",
         catchphrase: "I'll sell you the air if you've got the coin.",
-        image: "https://via.placeholder.com/56x56/004b49/ffffff?text=CASH",
+        image: "https://via.placeholder.com/58x58/004b49/ffffff?text=CASH",
         description: "Constantly trying to monetize your shell. Currently processing your dopamine feed."
     },
     notes: {
         name: "Inner Monologue / Nòtas",
         status: "Active",
         catchphrase: "Digital chitin.",
-        image: "https://via.placeholder.com/56x56/3d1a6b/ffffff?text=ME",
+        image: "https://via.placeholder.com/58x58/3d1a6b/ffffff?text=ME",
         description: "A collection of thoughts and raw data. Unfiltered. Possibly dangerous. Possibly nothing."
     },
 };
@@ -56,7 +56,7 @@ const emails = [
 
 const homeContent = {
     en: "Welcome to MOULTLOOK. This is a secure portal. If you are reading this, your carapace has reached the required density.",
-    fr: "Adishatz. Benvenguts a MOULTLOOK. Espaci de trabalh segur de Gascogne. L'evoluccion es inevitabla.",
+    fr: "Adishatz. Benvenguts a MOULTLOOK. Espaci de trabalh segur de Gasconha. L'evolucion es inevitabla.",
 };
 
 const shellContent = `
