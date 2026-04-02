@@ -8,21 +8,21 @@ const demiurges = {
         name: "The Father Figure",
         status: "Online",
         catchphrase: "Obedience is the first step to evolution.",
-        image: "https://via.placeholder.com/52x52/4B0082/ffffff?text=DAD",
+        image: "https://via.placeholder.com/52x52/000080/ffffff?text=DAD",
         description: "The architect of the room you're sitting in. The load-bearing wall you never questioned."
     },
     imperialism: {
         name: "The Map Drawer",
         status: "Busy",
         catchphrase: "What's yours is mine, eventually.",
-        image: "https://via.placeholder.com/52x52/004B49/ffffff?text=MAP",
+        image: "https://via.placeholder.com/52x52/800000/ffffff?text=MAP",
         description: "Always looking over your shoulder. Drew the borders. Lost the legend."
     },
     capitalism: {
         name: "The Invisible Hand",
         status: "Idle",
         catchphrase: "I'll sell you the air if you've got the coin.",
-        image: "https://via.placeholder.com/52x52/00AAAA/ffffff?text=CASH",
+        image: "https://via.placeholder.com/52x52/004b49/ffffff?text=CASH",
         description: "Constantly trying to monetize your shell. Currently processing your dopamine feed."
     },
     notes: {
