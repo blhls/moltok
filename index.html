@@ -1,69 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MOULTLOOK.COM</title>
-  <link rel="stylesheet" href="style.css" />
-  <meta name="color-scheme" content="dark" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOULTLOOK.COM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-default">
 
-  <!-- LOGIN -->
-  <section id="screen-login" class="screen">
-    <div class="login-content">
-      <h1 class="glitch" aria-label="MOULTLOOK.COM">MOULTLOOK.COM</h1>
-      <div class="login-box">
-        <button class="main-btn" onclick="startLoading('en')">
-          CHECK MY CRABS<br /><small>(International)</small>
-        </button>
-        <div class="or-divider">OR</div>
-        <button class="french-btn" onclick="startLoading('fr')">
-          CRABE M'A TUER<br /><small>(Gascogne Occupée)</small>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- LOADING -->
-  <section id="screen-loading" class="screen" style="display:none;">
-    <div class="loader-content">
-      <div class="crab-spinner" aria-hidden="true">🦀</div>
-      <h2 id="loading-title">Hardening...</h2>
-      <div class="loader-bar" aria-hidden="true"><span class="loader-bar-fill"></span></div>
-      <div class="loader-hint" id="loading-hint" aria-hidden="true"></div>
-    </div>
-  </section>
-
-  <!-- APP -->
-  <section id="screen-app" class="screen" style="display:none;">
-    <div class="scrolling-banner" aria-hidden="true">
-      <div id="banner-text" class="banner-text"></div>
-    </div>
-
-    <div class="app-layout">
-      <aside id="sidebar" class="sidebar" aria-label="Primary">
-        <div id="sidebar-toggle" class="moult-header" role="button" tabindex="0" aria-label="Toggle sidebar">
-          <span class="hamburger" aria-hidden="true">≡</span>
-          <span class="label-full">MOULTLOOK</span>
-          <span class="label-vert">M O U L T L O O K</span>
+    <!-- ═══════════════════════════════════════
+         SCREEN: LOGIN
+    ═══════════════════════════════════════ -->
+    <section id="screen-login" class="screen screen-login">
+        <div class="win-window login-window">
+            <div class="win-titlebar">
+                <span class="win-title-text">🦀&nbsp;&nbsp;MOULTLOOK.COM &mdash; Identification Required</span>
+                <div class="win-btn-group">
+                    <button class="win-btn" tabindex="-1">_</button>
+                    <button class="win-btn" tabindex="-1">□</button>
+                    <button class="win-btn win-btn-cls" tabindex="-1">✕</button>
+                </div>
+            </div>
+            <div class="win-body login-body">
+                <h1 class="glitch" data-text="MOULTLOOK.COM">MOULTLOOK.COM</h1>
+                <p class="login-sub">Select your operational theatre.</p>
+                <div class="login-divider-line"></div>
+                <div class="login-box">
+                    <button class="main-btn" onclick="startLoading('en')">
+                        CHECK MY CRABS<br><small>(International)</small>
+                    </button>
+                    <div class="or-divider">— OR —</div>
+                    <button class="french-btn" onclick="startLoading('fr')">
+                        CRABE M'A TUER<br><small>(Gascogne Occupée)</small>
+                    </button>
+                </div>
+            </div>
+            <div class="win-statusbar">
+                <span>Ready</span>
+                <span>🔒 Encrypted</span>
+                <span id="login-clock"></span>
+            </div>
         </div>
-        <nav class="nav-links" id="sidebar-nav" aria-label="Navigation"></nav>
-        <div class="nav-item moult-btn" onclick="moult()" role="button" tabindex="0">
-          <span class="icon" aria-hidden="true">🦀</span> <span class="txt">MOULT</span>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         SCREEN: LOADING
+    ═══════════════════════════════════════ -->
+    <section id="screen-loading" class="screen screen-loading" style="display:none;">
+        <div class="win-window loading-window">
+            <div class="win-titlebar">
+                <span class="win-title-text">⚙️&nbsp;&nbsp;System Initialisation — MOULTLOOK v1.0</span>
+            </div>
+            <div class="win-body loading-body">
+                <div class="crab-spinner">🦀</div>
+                <h2 id="loading-title">Hardening...</h2>
+                <div class="win-progress-outer">
+                    <div class="win-progress-inner" id="progress-bar"></div>
+                </div>
+                <p class="loading-sub" id="loading-sub">Loading modules...</p>
+            </div>
         </div>
-      </aside>
+    </section>
 
-      <section class="middle-row" id="email-list" aria-label="Message list"></section>
-      <main class="content-view" id="content-view" aria-label="Content"></main>
-    </div>
+    <!-- ═══════════════════════════════════════
+         SCREEN: APP
+    ═══════════════════════════════════════ -->
+    <section id="screen-app" class="screen screen-app" style="display:none;">
 
-    <footer class="mirror-footer">
-      <button id="lang-toggle-btn" class="tiny-btn" onclick="toggleLanguage()"></button>
-    </footer>
-  </section>
+        <!-- Top scrolling banner -->
+        <div class="scrolling-banner">
+            <div id="banner-text" class="banner-text"></div>
+        </div>
 
-  <script src="data.js"></script>
-  <script src="script.js"></script>
+        <!-- Main application window -->
+        <div class="app-window">
+            <div class="app-titlebar win-titlebar">
+                <span class="win-title-text">🦀&nbsp;&nbsp;<span id="app-win-title">MOULTLOOK</span></span>
+                <div class="win-btn-group">
+                    <button class="win-btn" tabindex="-1">_</button>
+                    <button class="win-btn" tabindex="-1">□</button>
+                </div>
+            </div>
+            <div class="app-menubar">
+                <span class="menubar-item">Fichier</span>
+                <span class="menubar-item">Édition</span>
+                <span class="menubar-item">Affichage</span>
+                <span class="menubar-item">Mue</span>
+                <span class="menubar-item">?</span>
+            </div>
+            <div class="app-layout">
+                <aside id="sidebar" class="sidebar">
+                    <div id="sidebar-toggle" class="moult-header">
+                        <span class="hamburger">≡</span>
+                        <span class="label-full">MOULTLOOK</span>
+                        <span class="label-vert">M O U L T L O O K</span>
+                    </div>
+                    <nav class="nav-links" id="sidebar-nav"></nav>
+                    <div class="nav-item moult-btn" onclick="moult()">
+                        <span class="icon">🦀</span>
+                        <span class="txt">MOULT</span>
+                    </div>
+                </aside>
+
+                <section class="middle-row" id="email-list"></section>
+                <main class="content-view" id="content-view"></main>
+            </div>
+        </div>
+
+        <footer class="mirror-footer">
+            <button id="lang-toggle-btn" onclick="toggleLanguage()"></button>
+        </footer>
+    </section>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        // Live clock on login screen
+        function updateClock() {
+            const el = document.getElementById('login-clock');
+            if (el) el.innerText = new Date().toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
 </body>
 </html>
