@@ -1,81 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOULTLOOK OS v9.5</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOULTLOOK.COM</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="color-scheme" content="dark" />
 </head>
 <body class="theme-default">
 
-    <section id="screen-login" class="screen">
-        <div class="os-window login-content">
-            <div class="window-title-bar">
-                <span>SYSTEM_BOOT.EXE</span>
-                <div class="window-controls"><button>X</button></div>
-            </div>
-            <div class="window-body">
-                <h1 class="glitch-text">MOULTLOOK.COM</h1>
-                <p class="sys-prompt">C:\> SELECT_EVOLUTION_PATH_</p>
-                <div class="login-box">
-                    <button class="retro-btn" onclick="startLoading('en')">CHECK MY CRABS<br><small>(International)</small></button>
-                    <div class="or-divider">~ OR ~</div>
-                    <button class="retro-btn alt-btn" onclick="startLoading('fr')">CRABE M'A TUER<br><small>(Gascogne Occupée)</small></button>
-                </div>
-            </div>
+  <!-- LOGIN -->
+  <section id="screen-login" class="screen">
+    <div class="login-content">
+      <h1 class="glitch" aria-label="MOULTLOOK.COM">MOULTLOOK.COM</h1>
+      <div class="login-box">
+        <button class="main-btn" onclick="startLoading('en')">
+          CHECK MY CRABS<br /><small>(International)</small>
+        </button>
+        <div class="or-divider">OR</div>
+        <button class="french-btn" onclick="startLoading('fr')">
+          CRABE M'A TUER<br /><small>(Gascogne Occupée)</small>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOADING -->
+  <section id="screen-loading" class="screen" style="display:none;">
+    <div class="loader-content">
+      <div class="crab-spinner" aria-hidden="true">🦀</div>
+      <h2 id="loading-title">Hardening...</h2>
+      <div class="loader-bar" aria-hidden="true"><span class="loader-bar-fill"></span></div>
+      <div class="loader-hint" id="loading-hint" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="screen-app" class="screen" style="display:none;">
+    <div class="scrolling-banner" aria-hidden="true">
+      <div id="banner-text" class="banner-text"></div>
+    </div>
+
+    <div class="app-layout">
+      <aside id="sidebar" class="sidebar" aria-label="Primary">
+        <div id="sidebar-toggle" class="moult-header" role="button" tabindex="0" aria-label="Toggle sidebar">
+          <span class="hamburger" aria-hidden="true">≡</span>
+          <span class="label-full">MOULTLOOK</span>
+          <span class="label-vert">M O U L T L O O K</span>
         </div>
-    </section>
-
-    <section id="screen-loading" class="screen" style="display:none;">
-        <div class="os-window loader-content">
-            <div class="window-title-bar">
-                <span>PROCESSING...</span>
-            </div>
-            <div class="window-body text-center">
-                <div class="crab-spinner">🦀</div>
-                <h2 id="loading-title" class="blink">Hardening...</h2>
-            </div>
+        <nav class="nav-links" id="sidebar-nav" aria-label="Navigation"></nav>
+        <div class="nav-item moult-btn" onclick="moult()" role="button" tabindex="0">
+          <span class="icon" aria-hidden="true">🦀</span> <span class="txt">MOULT</span>
         </div>
-    </section>
+      </aside>
 
-    <section id="screen-app" class="screen app-bg" style="display:none;">
-        <div class="scrolling-banner">
-            <div id="banner-text" class="banner-text"></div>
-        </div>
+      <section class="middle-row" id="email-list" aria-label="Message list"></section>
+      <main class="content-view" id="content-view" aria-label="Content"></main>
+    </div>
 
-        <div class="app-layout">
-            <aside id="sidebar" class="sidebar win-panel">
-                <div id="sidebar-toggle" class="moult-header">
-                    <span class="hamburger">≡</span>
-                    <span class="label-full">MOULTLOOK</span>
-                    <span class="label-vert">M O U L T L O O K</span>
-                </div>
-                <nav class="nav-links inset-panel" id="sidebar-nav"></nav>
-                <div class="nav-item moult-btn retro-btn" onclick="moult()">
-                    <span class="icon">⚠️</span> <span class="txt">FORCE MOULT</span>
-                </div>
-            </aside>
+    <footer class="mirror-footer">
+      <button id="lang-toggle-btn" class="tiny-btn" onclick="toggleLanguage()"></button>
+    </footer>
+  </section>
 
-            <section class="middle-row win-panel" id="email-list-wrapper">
-                <div class="window-title-bar"><span>INDEX</span></div>
-                <div id="email-list" class="inset-panel"></div>
-            </section>
-
-            <main class="content-view win-panel" id="content-wrapper">
-                <div class="window-title-bar">
-                    <span>VIEWER.EXE</span>
-                    <div class="window-controls"><button>?</button><button>X</button></div>
-                </div>
-                <div id="content-view" class="inset-panel bg-grid"></div>
-            </main>
-        </div>
-
-        <footer class="mirror-footer">
-            <button id="lang-toggle-btn" class="retro-btn" onclick="toggleLanguage()"></button>
-        </footer>
-    </section>
-
-    <script src="data.js"></script>
-    <script src="script.js"></script>
+  <script src="data.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
