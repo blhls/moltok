@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOULTLOOK.COM</title>
+    <title>MOULTLOOK OS X</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Special+Elite&display=swap" rel="stylesheet">
@@ -15,29 +15,29 @@
         <div class="win-window login-window">
             <div class="win-titlebar">
                 <div class="win-btn-group">
-                    <button class="win-btn win-btn-cls" tabindex="-1"></button>
-                    <button class="win-btn win-btn-min" tabindex="-1"></button>
-                    <button class="win-btn win-btn-max" tabindex="-1"></button>
+                    <button class="win-btn btn-red" tabindex="-1"></button>
+                    <button class="win-btn btn-yellow" tabindex="-1"></button>
+                    <button class="win-btn btn-green" tabindex="-1"></button>
                 </div>
-                <span class="win-title-text">🦀&nbsp;&nbsp;MOULTLOOK.COM &mdash; Identification Required</span>
+                <span class="win-title-text">🦀::MOULTLOOK.OSX</span>
             </div>
             <div class="win-body login-body">
-                <h1 class="glitch" data-text="MOULTLOOK.COM">MOULTLOOK.COM</h1>
-                <p class="login-sub">Select your operational theatre.</p>
+                <h1 class="glitch" data-text="MOULTLOOK // SYS">MOULTLOOK // SYS</h1>
+                <p class="login-sub">✨ Select your paradigm ✨</p>
                 <div class="login-divider-line"></div>
                 <div class="login-box">
-                    <button class="main-btn" onclick="startLoading('en')">
+                    <button class="main-btn jelly-btn" onclick="startLoading('en')">
                         CHECK MY CRABS<br><small>(International)</small>
                     </button>
-                    <div class="or-divider">⋆｡°✩ OR ✩°｡⋆</div>
-                    <button class="french-btn" onclick="startLoading('fr')">
+                    <div class="or-divider">~ OR ~</div>
+                    <button class="french-btn jelly-btn" onclick="startLoading('fr')">
                         CRABE M'A TUER<br><small>(Gascogne Occupée)</small>
                     </button>
                 </div>
             </div>
             <div class="win-statusbar">
-                <span>Ready</span>
-                <span>🔒 Encrypted</span>
+                <span>[AWAITING_INPUT]</span>
+                <span class="blink-text">🔒 Encrypted</span>
                 <span id="login-clock"></span>
             </div>
         </div>
@@ -46,22 +46,15 @@
     <section id="screen-loading" class="screen screen-loading" style="display:none;">
         <div class="win-window loading-window">
             <div class="win-titlebar">
-                <div class="win-btn-group">
-                    <button class="win-btn win-btn-cls" tabindex="-1"></button>
-                    <button class="win-btn win-btn-min" tabindex="-1"></button>
-                    <button class="win-btn win-btn-max" tabindex="-1"></button>
-                </div>
-                <span class="win-title-text">⚙️&nbsp;&nbsp;System Initialisation — MOULTLOOK v1.0</span>
+                <span class="win-title-text">⚙️ MOULTLOOK ADVANCE</span>
             </div>
             <div class="win-body loading-body">
-                <div class="gba-screen-inner">
-                    <div class="crab-spinner">🦀</div>
-                    <h2 id="loading-title">Hardening...</h2>
-                    <div class="win-progress-outer">
-                        <div class="win-progress-inner" id="progress-bar"></div>
-                    </div>
-                    <p class="loading-sub" id="loading-sub">Loading modules...</p>
+                <div class="crab-spinner">🦀</div>
+                <h2 id="loading-title">Hardening...</h2>
+                <div class="win-progress-outer">
+                    <div class="win-progress-inner" id="progress-bar"></div>
                 </div>
+                <p class="loading-sub" id="loading-sub">Loading modules...</p>
             </div>
         </div>
     </section>
@@ -72,43 +65,44 @@
             <div id="banner-text" class="banner-text"></div>
         </div>
 
-        <div class="app-window win-window">
+        <div class="app-window">
             <div class="app-titlebar win-titlebar">
                 <div class="win-btn-group">
-                    <button class="win-btn win-btn-cls" tabindex="-1"></button>
-                    <button class="win-btn win-btn-min" tabindex="-1"></button>
-                    <button class="win-btn win-btn-max" tabindex="-1"></button>
+                    <button class="win-btn btn-red" tabindex="-1"></button>
+                    <button class="win-btn btn-yellow" tabindex="-1"></button>
+                    <button class="win-btn btn-green" tabindex="-1"></button>
                 </div>
-                <span class="win-title-text">🦀&nbsp;&nbsp;<span id="app-win-title">MOULTLOOK</span></span>
+                <span class="win-title-text">✨ <span id="app-win-title">MOULTLOOK</span></span>
             </div>
             <div class="app-menubar">
-                <span class="menubar-item">Fichier</span>
-                <span class="menubar-item">Édition</span>
-                <span class="menubar-item">Affichage</span>
-                <span class="menubar-item">Mue</span>
+                <span class="menubar-item">System</span>
+                <span class="menubar-item">Crustacean</span>
+                <span class="menubar-item">View</span>
+                <span class="menubar-item">Moult</span>
                 <span class="menubar-item">?</span>
             </div>
             <div class="app-layout">
                 <aside id="sidebar" class="sidebar">
                     <div id="sidebar-toggle" class="moult-header">
-                        <span class="hamburger">≡</span>
-                        <span class="label-full">MOULTLOOK</span>
-                        <span class="label-vert">M O U L T</span>
+                        <span class="hamburger">▼</span>
+                        <span class="label-full">MOULT // DATA</span>
+                        <span class="label-vert">M O U L T L O O K</span>
                     </div>
                     <nav class="nav-links" id="sidebar-nav"></nav>
                     <div class="nav-item moult-btn" onclick="moult()">
-                        <span class="icon">🦀</span>
-                        <span class="txt">MOULT</span>
+                        <span class="icon">✨</span>
+                        <span class="txt">INIT_MOULT</span>
                     </div>
                 </aside>
 
                 <section class="middle-row" id="email-list"></section>
+                
                 <main class="content-view" id="content-view"></main>
             </div>
         </div>
 
         <footer class="mirror-footer">
-            <button id="lang-toggle-btn" onclick="toggleLanguage()"></button>
+            <button id="lang-toggle-btn" class="jelly-btn" onclick="toggleLanguage()"></button>
         </footer>
     </section>
 
