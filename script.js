@@ -16,12 +16,7 @@ function handleRouting() {
 
 function startLoading(lang) {
     currentLang = lang;
-    
-    // Hide BOTH screens to ensure clean transition when switching languages
     document.getElementById('screen-login').style.display = 'none';
-    const appScreen = document.getElementById('screen-app');
-    if(appScreen) appScreen.style.display = 'none'; 
-    
     document.getElementById('screen-loading').style.display = 'flex';
     document.getElementById('loading-title').innerText = lang === 'en' ? "Hardening chitin..." : "Mue en cours...";
     document.getElementById('banner-text').innerText = bannerContent[lang];
@@ -89,13 +84,13 @@ function updateUI() {
     const langBtn = document.getElementById('lang-toggle-btn');
     if (langBtn) {
         langBtn.innerText = currentLang === 'en'
-            ? "🇫🇷 CRABE M'A TUER"
-            : "🌐 INTERNATIONAL";
+            ? "FR_SWITCH"
+            : "INT_SWITCH";
     }
 
     const titleEl = document.getElementById('app-win-title');
     if (titleEl) {
-        let title = 'MOULTLOOK :: ' + currentSection.toUpperCase();
+        let title = 'MOULTLOOK // ' + currentSection.toUpperCase();
         if (currentCategory) title += ' > ' + currentCategory.toUpperCase();
         titleEl.innerText = title;
     }
@@ -123,11 +118,11 @@ function renderSidebar() {
             sent:    'SENT',
             drafts:  'DRAFTS',
             archive: 'ARCHIVE',
-            shell:   'YOUR SHELL'
+            shell:   'SHELL_DATA'
         },
         fr: {
             home:    'ADISHATZ',
-            search:  'RECHERCHER',
+            search:  'RECHERCHE',
             inbox:   'REÇUS',
             sent:    'ENVOYÉS',
             archive: 'ARCHIVE'
@@ -136,23 +131,17 @@ function renderSidebar() {
 
     let html = '';
     for (const [key, label] of Object.entries(menus[currentLang])) {
-        const isActive = currentSection === key;
-        const prefix = isActive ? '▶ ' : '&nbsp;&nbsp;';
-        
-        html += `<div class="nav-item ${isActive ? 'active' : ''}" onclick="navigate('${key}')">
-            <span class="txt">${prefix}${label}</span>
+        html += `<div class="nav-item ${currentSection === key ? 'active' : ''}" onclick="navigate('${key}')">
+            <span class="icon">►</span><span class="txt">${label}</span>
         </div>`;
-        
         if (key === 'inbox' && currentLang === 'en') {
             const cats = ['patriarchy', 'imperialism', 'capitalism', 'notes'];
             html += `<div class="nav-sub">` +
-                cats.map(c => {
-                    const isSubActive = currentCategory === c;
-                    const subPrefix = isSubActive ? '▶ ' : '  ';
-                    return `<div class="${isSubActive ? 'active' : ''}" onclick="navigate('inbox', '${c}')">
-                        ${subPrefix}${c}
+                cats.map(c =>
+                    `<div class="${currentCategory === c ? 'active' : ''}" onclick="navigate('inbox', '${c}')">
+                        ↳ ${c}
                     </div>`
-                }).join('') +
+                ).join('') +
             `</div>`;
         }
     }
@@ -173,8 +162,8 @@ function renderEmailList() {
     }
 
     if (list.length === 0) {
-        container.innerHTML = `<div style="padding:16px; font-family:var(--font-vt); font-size:17px; color:#0000AA; font-style:italic;">
-            [ No Signal. ]
+        container.innerHTML = `<div style="padding:16px; font-family:var(--font-vt); font-size:17px; color:#888; font-style:italic;">
+            [ Data Empty. ]
         </div>`;
         return;
     }
@@ -194,12 +183,12 @@ function renderEmailContent() {
         const demi = demiurges[email.category] || {
             name: email.from,
             catchphrase: "",
-            image: "https://via.placeholder.com/52x52/808080/fff?text=?"
+            image: "https://via.placeholder.com/60x60/4B0082/E0FFFF?text=?"
         };
 
         let bodyContent = `<div class="email-body">${email.body}</div>`;
         if (email.type === 'pdf') {
-            bodyContent = `<iframe src="${email.url}" width="100%" height="500px"></iframe>`;
+            bodyContent = `<iframe src="${email.url}" width="100%" height="500px" style="border: none; border-radius: 8px;"></iframe>`;
         }
 
         view.innerHTML = `
@@ -211,10 +200,10 @@ function renderEmailContent() {
                 </div>
             </div>
             <div class="email-container">
-                <div class="close-btn" onclick="closeEmail()">X</div>
+                <div class="close-btn" onclick="closeEmail()">✕</div>
                 <div class="email-header">
                     <h2>${email.subject}</h2>
-                    <p>SYS.DATE: ${email.date} // SRC: ${email.from}</p>
+                    <p class="fe-text">${email.date} // ${email.from}</p>
                 </div>
                 <hr>
                 ${bodyContent}
@@ -224,29 +213,26 @@ function renderEmailContent() {
         view.innerHTML = `
             <div class="demiurge-profile">
                 <h2>${demi.name}</h2>
-                <p class="demi-quote">"${demi.catchphrase}"</p>
+                <p class="fe-text" style="color: var(--cold-cherry);">"${demi.catchphrase}"</p>
                 <hr>
                 <p>${demi.description}</p>
             </div>`;
     } else {
-        view.innerHTML = `<div class="empty-state">AWAITING INPUT...</div>`;
+        view.innerHTML = `<div class="empty-state">[ Awaiting Selection... ]</div>`;
     }
 }
 
 function renderSearchView() {
-    const label = currentLang === 'en' ? 'QUERY DATABASE' : 'RECHERCHE';
-    const placeholder = currentLang === 'en' ? 'Input string...' : 'Entrer un mot-clé...';
-    const btnLabel = currentLang === 'en' ? 'EXECUTE' : 'CHERCHER';
-
     document.getElementById('content-view').innerHTML = `
-        <div class="search-hero">
-            <h1>${label}</h1>
-            <div class="search-input-wrap">
-                <input type="text" id="search-input" placeholder="${placeholder}"
-                       onkeyup="if(event.key==='Enter') executeSearch()">
-                <button class="aqua-btn-small" onclick="executeSearch()">${btnLabel}</button>
-            </div>
-            <div id="search-results-area"></div>
+        <div class="home-panel" style="text-align: center;">
+            <h2>// QUERY DB //</h2>
+            <hr>
+            <input type="text" id="search-input" placeholder="Enter keyword..." 
+                style="padding: 10px; width: 80%; border: 2px solid var(--mort); border-radius: 4px; font-family: var(--font-pixel); margin-bottom: 15px;"
+                onkeyup="if(event.key==='Enter') executeSearch()">
+            <br>
+            <button class="gba-btn" onclick="executeSearch()">EXECUTE</button>
+            <div id="search-results-area" style="margin-top: 20px; text-align: left;"></div>
         </div>`;
 }
 
@@ -257,19 +243,13 @@ function executeSearch() {
         e.lang === currentLang &&
         (e.subject.toLowerCase().includes(q) || e.body.toLowerCase().includes(q))
     );
-    const noResultMsg = currentLang === 'en'
-        ? `0 results for "${q}".`
-        : `0 résultat pour "${q}".`;
-
-    let html = `<div class="results-grid">`;
-    if (results.length === 0) {
-        html += `<p style="font-family:var(--font-vt); color:var(--temple-red); font-size:18px;">${noResultMsg}</p>`;
-    }
+    let html = `<div>`;
+    if (results.length === 0) html += `<p>[ No results found. ]</p>`;
     results.forEach(res => {
-        html += `<div class="search-card">
-            <h3>${res.subject}</h3>
-            <p>${res.body.substring(0, 110)}...</p>
-            <button class="read-btn" onclick="jumpToEmail(${res.id})">READ_FILE()</button>
+        html += `<div style="border-left: 4px solid var(--duckblue); padding-left: 10px; margin-bottom: 15px;">
+            <h3 style="margin:0; font-family:var(--font-fe);">${res.subject}</h3>
+            <p style="margin:5px 0; font-family:var(--font-osx); font-size:13px;">${res.body.substring(0, 80)}...</p>
+            <button class="gba-btn small-btn" onclick="jumpToEmail(${res.id})">READ</button>
         </div>`;
     });
     document.getElementById('search-results-area').innerHTML = html + `</div>`;
@@ -280,7 +260,7 @@ function renderStaticContent() {
     if (currentSection === 'home') {
         view.innerHTML = `
             <div class="home-panel">
-                <h2>C:\\SYS\\HOME</h2>
+                <h2>// SYSTEM INIT //</h2>
                 <hr>
                 <p>${homeContent[currentLang]}</p>
             </div>`;
@@ -290,10 +270,7 @@ function renderStaticContent() {
 }
 
 function toggleLanguage() {
-    const msg = currentLang === 'en'
-        ? "Switch to French mode? / Passer en mode français?"
-        : "Switch to International mode? / Passer en mode international?";
-    if (confirm(msg)) startLoading(currentLang === 'en' ? 'fr' : 'en');
+    startLoading(currentLang === 'en' ? 'fr' : 'en');
 }
 
 function navigate(s, c = null) {
@@ -309,10 +286,7 @@ function jumpToEmail(id) {
     navigate(e.section, e.category);
 }
 function moult() {
-    const msg = currentLang === 'en'
-        ? "Discard shell? This will reload."
-        : "Jeter la carapace? La page va se recharger.";
-    if (confirm(msg)) location.reload();
+    if (confirm("Initiate physical OS reboot?")) location.reload();
 }
 
 document.getElementById('sidebar-toggle').addEventListener('click', () => {
