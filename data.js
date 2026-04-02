@@ -5,32 +5,24 @@ const bannerContent = {
 
 const demiurges = {
     patriarchy: {
-        name: "The Father Figure",
-        status: "Online",
-        catchphrase: "Obedience is the first step to evolution.",
-        image: "https://via.placeholder.com/52x52/000080/ffffff?text=DAD",
-        description: "The architect of the room you're sitting in. The load-bearing wall you never questioned."
+        name: "The Father Figure", catchphrase: "Obedience is the first step.",
+        image: "https://via.placeholder.com/60x60/4B0082/E0FFFF?text=DAD",
+        description: "[ Data Purged from Core Memory ]"
     },
     imperialism: {
-        name: "The Map Drawer",
-        status: "Busy",
-        catchphrase: "What's yours is mine, eventually.",
-        image: "https://via.placeholder.com/52x52/800000/ffffff?text=MAP",
-        description: "Always looking over your shoulder. Drew the borders. Lost the legend."
+        name: "The Map Drawer", catchphrase: "What's yours is mine.",
+        image: "https://via.placeholder.com/60x60/D2042D/E0FFFF?text=MAP",
+        description: "[ Topographical Data Corrupted ]"
     },
     capitalism: {
-        name: "The Invisible Hand",
-        status: "Idle",
-        catchphrase: "I'll sell you the air if you've got the coin.",
-        image: "https://via.placeholder.com/52x52/004b49/ffffff?text=CASH",
-        description: "Constantly trying to monetize your shell. Currently processing your dopamine feed."
+        name: "The Invisible Hand", catchphrase: "I'll sell you the air.",
+        image: "https://via.placeholder.com/60x60/004B49/E0FFFF?text=CASH",
+        description: "[ Processing your dopamine feed... ]"
     },
     notes: {
-        name: "Inner Monologue / Nòtas",
-        status: "Active",
-        catchphrase: "Digital chitin.",
-        image: "https://via.placeholder.com/52x52/59001b/ffffff?text=ME",
-        description: "A collection of thoughts and raw data. Unfiltered. Possibly dangerous. Possibly nothing."
+        name: "Inner Monologue", catchphrase: "Digital chitin.",
+        image: "https://via.placeholder.com/60x60/59001B/E0FFFF?text=ME",
+        description: "A collection of blank thoughts and raw data. Unfiltered."
     }
 };
 
@@ -39,14 +31,14 @@ const emails = [
         id: 1, lang: "en", section: "inbox", category: "capitalism",
         from: "The Hand", subject: "Your Debt in Chitin", date: "2026-03-01",
         tags: ["money", "debt"], type: "text",
-        body: "You owe us three layers of moult. Pay up or stay soft."
+        body: "Placeholder data. Subject owes three layers of moult. Awaiting payment."
     },
     {
         id: 2, lang: "fr", section: "inbox", category: "notes",
         from: "Moi-même", subject: "Manifeste de la Mue", date: "2026-03-02",
         tags: ["philosophie", "gascogne"], type: "pdf",
         url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-        body: "Voir le document PDF joint pour les détails de la décolonisation de l'esprit."
+        body: "Document PDF vierge en pièce jointe."
     }
 ];
 
