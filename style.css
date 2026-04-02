@@ -1,128 +1,64 @@
 /* ================================================================
-   MOULTLOOK.CSS — "Tumblr Y2K × Pokedex × OSX Cheetah"
-   Aesthetic System v3.0
+   MOULTLOOK.CSS — Aesthetic System v3.0 (FUSION REWRITE)
+   GBA Pokedex × Mac OS X Cheetah × TempleOS × Y2K Tumblr
+   Palette: Mortuum Violet, Duck Blue, Indigo, Dusty Pale Pink
    ================================================================ */
 
 /* ── Variables ──────────────────────────────────────────────────── */
 :root {
-    /* Base Palette requested */
-    --mort:        #59001B;       /* Mortuur Burgundy */
-    --mort-dark:   #30000e;
+    /* Core Moodboard Palette */
+    --mort:        #59001B;       /* Mortuum Violet / Burgundy */
     --duckblue:    #004B49;       /* Duck Blue */
-    --indigo:      #4B0082;       /* Deep Indigo */
-    --pink-dust:   #F0D8E8;       /* Dusty Pale Pink */
-    --pink-hot:    #ff66b2;       /* Y2K Hot Pink */
-    
-    /* GBA/TempleOS System Colors */
-    --gba-lcd:     #8bac0f;       /* Gameboy Green */
+    --duck-lit:    #008f8c;       /* Aqua Duck Highlight */
+    --indigo:      #2A1B38;       /* Deep GBA Plastic Indigo */
+    --indigo-light:#4A3B58;
+    --pink-dusty:  #E8C0D8;       /* Y2K Tumblr Dusty Pink */
+    --pink-pale:   #F7EAF1;       /* Light Tumblr BG */
+    --temple-blue: #0000AA;       /* TempleOS Blue */
     --temple-cyan: #00AAAA;
-    --temple-red:  #AA0000;
-    --temple-yell: #FFFF55;
     
-    /* Fire Emblem UI */
-    --fe-parchment:#f0e6d2;
-    --fe-border:   #cfa87a;
-
+    /* GBA/OSX Highlights */
+    --y2k-silver:  #E5E5E5;
+    --pixel-red:   #FF5555;
+    --pixel-yellow:#FFFF55;
+    
     /* Typography */
-    --font-vt:     'VT323', 'Courier New', monospace;
-    --font-pixel:  'Press Start 2P', monospace;
-    --font-type:   'Special Elite', 'Courier New', serif;
+    --font-vt:     'VT323', 'Courier New', monospace;          /* Terminal/TempleOS */
+    --font-pixel:  'Press Start 2P', monospace;                /* GBA/Fire Emblem */
+    --font-type:   'Times New Roman', 'Special Elite', serif;  /* Y2K Tumblr text */
 }
 
 /* ── Reset ──────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 html, body {
-    margin: 0; padding: 0;
-    width: 100%; height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
-    color: var(--mort);
+    background: var(--pink-dusty);
+    color: var(--indigo);
     font-family: var(--font-vt);
     font-size: 18px;
 }
 
-/* ── Y2K Tumblr Background ──────────────────────────────────────── */
-body {
-    background-color: var(--pink-dust);
-    /* Sparkle grid pattern */
-    background-image: 
-        radial-gradient(circle, #fff 1px, transparent 1px),
-        radial-gradient(circle, #fff 1px, transparent 1px);
-    background-size: 40px 40px;
-    background-position: 0 0, 20px 20px;
-    animation: drift 20s linear infinite;
-}
-@keyframes drift {
-    100% { background-position: 40px 40px, 60px 60px; }
-}
-
-/* ── OSX Cheetah Window Chrome ──────────────────────────────────── */
-.win-window {
-    background: #E8E8E8;
-    border-radius: 10px;
-    box-shadow: 0 20px 40px rgba(89, 0, 27, 0.4), inset 0 1px 0 rgba(255,255,255,0.8);
-    border: 1px solid #999;
-    overflow: hidden;
-}
-
-.win-titlebar {
-    /* OSX Pinstripes */
+/* ── CRT Scanlines (TempleOS/GBA Screen feel) ───────────────────── */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
     background: repeating-linear-gradient(
-        to bottom,
-        #f2f2f2 0px, #f2f2f2 2px,
-        #e5e5e5 2px, #e5e5e5 4px
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(42, 27, 56, 0.08) 2px,
+        rgba(42, 27, 56, 0.08) 4px
     );
-    border-bottom: 1px solid #777;
-    padding: 4px 10px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    user-select: none;
-    height: 28px;
+    pointer-events: none;
+    z-index: 99999;
 }
 
-.win-title-text {
-    font-family: 'Arial', sans-serif; /* True to OSX */
-    font-size: 13px;
-    font-weight: bold;
-    color: #333;
-    text-shadow: 0 1px 0 #fff;
-    flex-grow: 1;
-    text-align: center;
-}
-
-/* OSX Traffic Lights */
-.win-btn-group { display: flex; gap: 6px; }
-
-.win-btn {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    border: 1px solid rgba(0,0,0,0.3);
-    box-shadow: inset 0 2px 2px rgba(255,255,255,0.6), inset 0 -2px 2px rgba(0,0,0,0.1);
-    cursor: pointer;
-    padding: 0;
-}
-.win-btn-cls { background: #ff5f56; } /* Close Red */
-.win-btn-min { background: #ffbd2e; } /* Min Yellow */
-.win-btn-max { background: #27c93f; } /* Max Green */
-
-.win-body {
-    background: var(--pink-dust);
-    padding: 22px 28px 20px;
-}
-
-.win-statusbar {
-    background: #e8e8e8;
-    border-top: 1px solid #aaa;
-    padding: 3px 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--font-vt);
-    font-size: 14px;
-    color: #444;
-}
-
-/* ── Screen Base ────────────────────────────────────────────────── */
+/* ── Screen Base (OSX Cheetah Pinstripes) ───────────────────────── */
 .screen {
     position: fixed;
     inset: 0;
@@ -130,7 +66,82 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: var(--pink-dusty);
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.3) 2px,
+        rgba(255, 255, 255, 0.3) 4px
+    );
 }
+
+/* ── Mac OS X / GBA Hybrid Windows ──────────────────────────────── */
+.win-window {
+    background: var(--y2k-silver);
+    /* GBA chunky plastic border */
+    border: 4px solid var(--indigo);
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 rgba(42, 27, 56, 0.5), inset 2px 2px 0 rgba(255,255,255,0.8);
+    overflow: hidden;
+}
+
+/* Cheetah Aqua Titlebar */
+.win-titlebar {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--y2k-silver) 40%, #CCCCCC 45%, var(--y2k-silver) 100%);
+    border-bottom: 2px solid var(--indigo);
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.win-title-text {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: var(--indigo);
+    white-space: nowrap;
+    text-shadow: 1px 1px 0 #FFF;
+    letter-spacing: 1px;
+}
+
+/* Mac OSX "Traffic Light" Buttons */
+.win-btn-group { display: flex; gap: 6px; flex-shrink: 0; }
+.win-btn {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--indigo);
+    cursor: pointer;
+    padding: 0;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.3), inset 2px 2px 4px rgba(255,255,255,0.8);
+}
+.btn-red { background: #FF5F56; }
+.btn-yellow { background: #FFBD2E; }
+.btn-green { background: #27C93F; }
+
+.win-body {
+    background: var(--pink-pale);
+    padding: 22px 28px 20px;
+}
+
+/* TempleOS Status Bar */
+.win-statusbar {
+    background: var(--temple-blue);
+    border-top: 2px solid var(--indigo);
+    padding: 4px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-vt);
+    font-size: 16px;
+    color: var(--pixel-yellow);
+    text-transform: uppercase;
+}
+.blink-text { animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
 
 /* ── LOGIN SCREEN ───────────────────────────────────────────────── */
 .login-window { width: min(480px, 92vw); }
@@ -139,121 +150,124 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 0;
-    padding: 28px 36px 22px;
-    background: linear-gradient(135deg, var(--pink-dust) 0%, #fff 100%);
+    padding: 32px 36px 28px;
+    background: repeating-linear-gradient(45deg, var(--pink-pale), var(--pink-pale) 10px, #ffffff 10px, #ffffff 20px);
 }
 
+/* Y2K Sparkle/Glitch Title */
 .glitch {
     font-family: var(--font-pixel);
-    font-size: clamp(14px, 3.2vw, 22px);
-    color: var(--indigo);
+    font-size: clamp(14px, 3.2vw, 18px);
+    color: var(--mort);
     margin: 8px 0 4px;
     text-align: center;
-    position: relative;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 0px var(--pink-hot);
+    text-shadow: 2px 2px 0 var(--pink-dusty), -1px -1px 0 var(--duckblue);
 }
 
 .login-sub {
-    font-family: var(--font-vt);
-    font-size: 19px;
-    color: var(--mort);
-    margin: 4px 0 18px;
+    font-family: var(--font-type);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--duckblue);
+    margin: 8px 0 18px;
     text-align: center;
 }
-
 .login-divider-line {
     width: 100%;
-    border-top: 2px dotted var(--pink-hot);
+    border-top: 2px dashed var(--pink-dusty);
     margin-bottom: 22px;
 }
+.login-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
 
-.login-box { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
-
-/* GBA UI Buttons */
-.main-btn, .french-btn {
-    font-family: var(--font-pixel);
-    font-size: 11px;
-    line-height: 1.6;
+/* Jelly Buttons (OSX Aqua x Y2K) */
+.jelly-btn {
+    font-family: var(--font-vt);
+    font-size: 22px;
     cursor: pointer;
-    padding: 12px 20px;
-    width: 320px;
+    padding: 10px 28px;
+    width: 280px;
     text-align: center;
+    letter-spacing: 1px;
     border-radius: 20px;
-    border: 4px solid var(--mort);
+    border: 2px solid var(--indigo);
+    color: #FFF;
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
     transition: transform 0.1s;
-    box-shadow: 0 4px 0 var(--mort);
 }
 .main-btn {
-    background: var(--duckblue);
-    color: #fff;
+    background: linear-gradient(180deg, var(--duck-lit) 0%, var(--duckblue) 50%, #00302E 100%);
+    box-shadow: inset 0 3px 6px rgba(255,255,255,0.5), 0 4px 0 var(--indigo);
 }
-.main-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--mort); }
-
 .french-btn {
-    background: var(--pink-hot);
-    color: #fff;
+    background: linear-gradient(180deg, #D45B78 0%, var(--mort) 50%, #3A0010 100%);
+    box-shadow: inset 0 3px 6px rgba(255,255,255,0.4), 0 4px 0 var(--indigo);
 }
-.french-btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--mort); }
+.jelly-btn:active {
+    transform: translateY(4px);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), 0 0 0 var(--indigo);
+}
+.jelly-btn small { display: block; font-size: 14px; opacity: 0.8; font-family: var(--font-type); }
 
 .or-divider {
     font-family: var(--font-type);
-    font-size: 15px;
-    color: var(--mort);
-    font-weight: bold;
+    font-size: 14px;
+    color: var(--indigo);
+    font-style: italic;
 }
 
-/* ── LOADING SCREEN (Pokedex Boot) ──────────────────────────────── */
-.loading-window { width: min(380px, 90vw); }
+/* ── LOADING SCREEN (GBA Link style) ────────────────────────────── */
+.loading-window { width: min(380px, 90vw); background: var(--duckblue); }
 .loading-body {
-    background: #cc0000; /* Pokedex Red */
-    padding: 16px;
-    border-radius: 0 0 8px 8px;
-}
-.gba-screen-inner {
-    background: var(--gba-lcd);
-    border: 4px solid #333;
-    border-radius: 8px 8px 32px 8px; /* Pokedex curve */
-    padding: 20px;
+    background: var(--indigo);
+    color: var(--pixel-yellow);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 14px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    padding: 28px 32px;
+    border-top: 2px solid #000;
 }
-
 .crab-spinner {
     font-size: 46px;
     animation: crab-rock 0.7s ease-in-out infinite;
     display: block;
-    filter: sepia(1) hue-rotate(60deg) saturate(3); /* Make crab match LCD */
+    filter: drop-shadow(0 0 5px var(--pink-dusty));
 }
 @keyframes crab-rock {
-    0%, 100% { transform: rotate(-12deg); }
-    50%       { transform: rotate(12deg); }
+    0%, 100% { transform: rotate(-12deg) scale(1); }
+    50%       { transform: rotate(12deg) scale(1.1); }
 }
-
-.gba-screen-inner h2 {
+.loading-body h2 {
     font-family: var(--font-pixel);
-    font-size: 14px;
+    font-size: 12px;
     margin: 0;
-    color: #0f380f; /* Dark LCD green */
+    color: var(--pink-dusty);
+    letter-spacing: 2px;
 }
-
 .win-progress-outer {
-    width: 100%; height: 16px;
-    border: 2px solid #0f380f;
-    background: #306230;
+    width: 100%;
+    height: 16px;
+    border: 2px solid var(--pink-dusty);
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
 }
 .win-progress-inner {
-    height: 100%; width: 0%;
-    background: #9bbc0f;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--mort), var(--pink-dusty));
     transition: width 0.38s cubic-bezier(.4,0,.6,1);
 }
 .loading-sub {
-    font-family: var(--font-pixel);
-    font-size: 9px;
-    color: #0f380f;
+    font-family: var(--font-vt);
+    font-size: 16px;
+    color: var(--y2k-silver);
     margin: 0;
     min-height: 22px;
     text-align: center;
@@ -263,82 +277,92 @@ body {
 .screen-app {
     justify-content: flex-start;
     align-items: stretch;
-    padding-top: 30px;
-    padding-bottom: 32px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 38px 10px 40px; 
 }
 
-/* TempleOS Banner */
+/* ── Scrolling Banner (TempleOS style) ───────────────────────────── */
 .scrolling-banner {
     position: fixed;
     top: 0; left: 0; right: 0;
     height: 30px;
-    background: var(--temple-cyan);
-    color: var(--temple-yell);
-    font-family: var(--font-pixel);
-    font-size: 14px;
+    background: var(--temple-blue);
+    color: var(--pixel-yellow);
+    font-family: var(--font-vt);
+    font-size: 20px;
     line-height: 30px;
     overflow: hidden;
     z-index: 1000;
-    border-bottom: 4px solid var(--temple-red);
+    border-bottom: 2px solid var(--pixel-red);
 }
 .banner-text {
     display: inline-block;
     white-space: nowrap;
     padding-right: 120px;
-    animation: bannertick 20s linear infinite;
+    animation: bannertick 25s linear infinite;
 }
 @keyframes bannertick {
     from { transform: translateX(100vw); }
     to   { transform: translateX(-100%); }
 }
 
-/* ── App Window ──────────────────────────────────────────────────── */
+/* ── App Window Base ─────────────────────────────────────────────── */
 .app-window {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    margin: 10px 0;
+    background: var(--y2k-silver);
+    border: 4px solid var(--indigo);
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(42,27,56,0.3);
+    overflow: hidden;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1200px;
 }
 
+/* Mac OSX Menu Bar */
 .app-menubar {
-    background: #e8e8e8;
-    padding: 2px 5px;
-    border-bottom: 1px solid #aaa;
+    background: linear-gradient(180deg, #fff 0%, #e0e0e0 100%);
+    padding: 2px 10px;
+    border-bottom: 2px solid var(--indigo);
     display: flex;
-    gap: 0;
+    gap: 12px;
     flex-shrink: 0;
 }
 .menubar-item {
-    font-family: 'Arial', sans-serif;
-    font-size: 13px;
-    color: #000;
-    padding: 2px 10px;
+    font-family: var(--font-type);
+    font-size: 14px;
+    color: var(--indigo);
+    padding: 2px 8px;
     cursor: default;
+    border-radius: 4px;
 }
-.menubar-item:hover { background: #316ac5; color: #fff; border-radius: 4px; }
+.menubar-item:hover {
+    background: var(--duckblue);
+    color: #fff;
+}
 
-/* ── Three-Column Layout (Pokedex inside OSX) ────────────────────── */
+/* ── Three-Column Layout ─────────────────────────────────────────── */
 .app-layout {
     display: flex;
     flex-grow: 1;
     overflow: hidden;
-    background: var(--duckblue); /* Base Pokedex interior */
+    background: var(--pink-pale);
 }
 
-/* ── Sidebar (GBA Menu) ──────────────────────────────────────────── */
+/* ── Sidebar (Fire Emblem Stats Style) ───────────────────────────── */
 .sidebar {
     width: 220px;
     flex-shrink: 0;
     background: var(--indigo);
-    border-right: 4px solid var(--mort);
+    border-right: 4px solid var(--indigo-light);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     transition: width 0.18s ease;
+    color: var(--pink-dusty);
 }
-.sidebar.collapsed { width: 50px; }
+.sidebar.collapsed { width: 44px; }
 .sidebar.collapsed .label-full,
 .sidebar.collapsed .txt,
 .sidebar.collapsed .nav-sub { display: none; }
@@ -346,23 +370,34 @@ body {
     display: block;
     writing-mode: vertical-rl;
     text-orientation: mixed;
-    font-size: 12px;
-    color: var(--pink-hot);
-    margin: 15px auto;
+    font-size: 10px;
+    font-family: var(--font-pixel);
+    color: var(--duck-lit);
+    margin: 10px auto;
 }
 
 .moult-header {
     background: var(--mort);
-    padding: 15px 10px;
+    padding: 12px 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 10px;
-    border-bottom: 4px solid var(--pink-hot);
+    gap: 8px;
+    border-bottom: 2px solid var(--pink-dusty);
+    flex-shrink: 0;
 }
-.moult-header .hamburger { font-size: 24px; color: #fff; line-height: 1; }
-.moult-header .label-full { font-family: var(--font-pixel); font-size: 10px; color: #fff; }
-.moult-header .label-vert { display: none; font-family: var(--font-pixel); }
+.moult-header .hamburger {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: var(--pixel-yellow);
+}
+.moult-header .label-full {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: #FFF;
+    letter-spacing: 1px;
+}
+.moult-header .label-vert { display: none; }
 
 .nav-links {
     flex-grow: 1;
@@ -370,192 +405,327 @@ body {
     padding: 10px 0;
 }
 .nav-item {
+    font-family: var(--font-vt);
+    font-size: 20px;
+    padding: 8px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--pink-dusty);
+    border-left: 4px solid transparent;
+    transition: 0.1s;
+}
+.nav-item:hover { background: var(--indigo-light); border-left-color: var(--duck-lit); }
+.nav-item.active { background: var(--mort); color: #fff; border-left-color: var(--pixel-yellow); }
+
+.nav-sub {
+    padding: 4px 0 10px 34px;
+    font-family: var(--font-vt);
+    font-size: 18px;
+    color: #A090B0;
+}
+.nav-sub div {
+    padding: 4px 8px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+}
+.nav-sub div:hover { color: var(--pink-pale); border-left-color: var(--duck-lit); }
+.nav-sub div.active { color: var(--pixel-yellow); font-weight: bold; }
+
+.moult-btn {
+    background: var(--duckblue);
+    color: #FFF !important;
+    border-top: 2px solid var(--duck-lit);
     font-family: var(--font-pixel);
     font-size: 10px;
-    padding: 12px 10px;
-    cursor: pointer;
-    color: var(--pink-dust);
-    border-left: 6px solid transparent;
-    transition: background 0.2s;
+    padding: 14px 10px;
+    justify-content: center;
 }
-.nav-item:hover { background: rgba(255,102,178,0.2); border-left-color: var(--pink-hot); }
-.nav-item.active { background: var(--pink-hot); color: #fff; border-left-color: var(--duckblue); }
+.moult-btn:hover { background: var(--duck-lit); }
 
-.nav-sub { padding: 5px 0 10px 20px; font-family: var(--font-pixel); font-size: 9px; }
-.nav-sub div { padding: 8px; cursor: pointer; color: #aaa; }
-.nav-sub div:hover { color: #fff; }
-.nav-sub div.active { color: var(--temple-yell); }
-
-/* TempleOS flashing button */
-.moult-btn {
-    background: var(--temple-cyan);
-    color: #fff !important;
-    border-top: 4px solid var(--temple-red);
-    font-size: 14px;
-    text-align: center;
-    animation: temple-blink 1s steps(2, start) infinite;
-}
-@keyframes temple-blink { 0% { background: var(--temple-cyan); } 100% { background: var(--temple-red); } }
-
-/* ── Middle Column (Tumblr Dash style inside GBA) ────────────────── */
+/* ── Middle Column (Pokedex Screen) ──────────────────────────────── */
 .middle-row {
     width: 280px;
     flex-shrink: 0;
-    background: var(--pink-dust);
-    border-right: 4px solid var(--mort);
+    background: #E8F0F0;
+    border-right: 4px solid var(--indigo);
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 .email-item {
-    padding: 15px;
-    border-bottom: 2px dashed var(--pink-hot);
+    padding: 14px 16px;
+    border-bottom: 2px solid #C0D0D0;
     cursor: pointer;
     font-family: var(--font-vt);
-    color: var(--mort);
+    color: var(--duckblue);
+    background: #F4F8F8;
+    transition: 0.1s;
 }
-.email-item:hover { background: #fff; }
+.email-item:hover { background: #FFFFFF; transform: translateX(2px); }
 .email-item.active {
-    background: var(--pink-hot);
-    color: #fff;
-    border-left: 8px solid var(--indigo);
+    background: var(--duckblue);
+    color: var(--pixel-yellow);
+    border-left: 6px solid var(--mort);
 }
-.email-item strong { display: block; font-size: 20px; font-family: var(--font-pixel); font-size: 11px; margin-bottom:6px; line-height: 1.4; }
-.email-item small { font-size: 16px; opacity: 0.8; }
+.email-item strong { display: block; font-size: 20px; font-family: var(--font-pixel); font-size: 10px; margin-bottom: 6px; line-height: 1.4; }
+.email-item small { font-size: 16px; font-family: var(--font-type); }
+.email-item.active small { color: #FFF; }
 
-/* ── Content View (Fire Emblem Dialogue Pane) ────────────────────── */
+/* ── Content View (Tumblr Dashboard x TempleOS) ──────────────────── */
 .content-view {
     flex-grow: 1;
-    background: var(--duckblue);
-    padding: 30px;
+    background: var(--pink-pale);
+    background-image: radial-gradient(var(--pink-dusty) 1px, transparent 1px);
+    background-size: 20px 20px;
     overflow-y: auto;
+    padding: 30px;
 }
 
-.email-container, .demiurge-profile, .shell-panel, .home-panel {
-    background: var(--fe-parchment);
-    border: 6px double var(--mort);
-    border-radius: 12px;
-    padding: 25px 35px;
+/* Y2K Tumblr Email Pane */
+.email-container {
+    background: #FFF;
+    border: 2px dashed var(--pink-dusty);
+    border-radius: 16px;
+    padding: 30px;
     position: relative;
-    max-width: 800px;
+    max-width: 760px;
     margin: 0 auto;
-    box-shadow: 4px 4px 0 rgba(0,0,0,0.3), inset 0 0 0 2px var(--fe-border);
+    box-shadow: 0 4px 15px rgba(89,0,27,0.08);
 }
-
 .email-header h2 {
-    font-family: var(--font-pixel);
-    font-size: 18px;
-    margin: 0 0 10px;
-    color: var(--indigo);
-    line-height: 1.4;
+    font-family: var(--font-type);
+    font-size: 32px;
+    margin: 0 0 8px;
+    color: var(--mort);
 }
-.email-header p { font-family: var(--font-vt); font-size: 18px; color: var(--mort); margin: 0; font-weight: bold; }
-.email-body { font-family: var(--font-type); font-size: 18px; line-height: 1.8; color: #222; margin-top: 15px; }
+.email-header p {
+    font-family: var(--font-vt);
+    font-size: 18px;
+    color: var(--duckblue);
+    margin: 0;
+}
+.email-body {
+    font-family: var(--font-type);
+    font-size: 18px;
+    line-height: 1.8;
+    color: var(--indigo);
+    margin-top: 20px;
+}
 
-/* GBA Close Button */
 .close-btn {
     position: absolute;
-    top: 10px; right: 15px;
+    top: 15px; right: 15px;
     font-family: var(--font-pixel);
-    font-size: 14px;
-    color: #fff;
+    font-size: 12px;
+    color: var(--pixel-red);
     cursor: pointer;
-    background: var(--mort);
-    padding: 8px;
+    background: var(--pink-pale);
+    border: 2px solid var(--pink-dusty);
     border-radius: 50%;
-    border: 2px solid var(--fe-border);
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
 }
-.close-btn:hover { background: var(--temple-red); }
+.close-btn:hover { background: var(--pixel-red); color: #FFF; border-color: var(--mort); }
 
-/* FE Avatar Box */
+/* Profile Box (Tumblr Style) */
 .mini-profile {
     display: flex;
     gap: 15px;
     align-items: center;
-    background: var(--fe-parchment);
-    border: 4px solid var(--mort);
-    border-radius: 8px;
-    padding: 10px;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid var(--pink-dusty);
+    border-radius: 40px;
+    padding: 8px 20px 8px 8px;
     margin-bottom: 20px;
-    max-width: 800px;
-    margin-left: auto; margin-right: auto;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
 }
 .mini-img {
-    width: 64px; height: 64px;
-    border: 4px solid var(--fe-border);
-    image-rendering: pixelated;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--duckblue);
+    object-fit: cover;
 }
-.mini-profile strong { font-family: var(--font-pixel); font-size: 12px; color: var(--indigo); display: block; margin-bottom: 4px;}
-.mini-profile small { font-family: var(--font-type); font-size: 14px; color: var(--mort); font-style: italic; }
-
-.demiurge-profile h2, .shell-panel h2, .home-panel h2 {
+.mini-profile strong {
     font-family: var(--font-pixel);
-    font-size: 22px;
+    font-size: 10px;
+    color: var(--indigo);
+    display: block;
+    margin-bottom: 4px;
+}
+.mini-profile small {
+    font-family: var(--font-type);
+    font-size: 15px;
     color: var(--mort);
-    margin: 0 0 15px;
+    font-style: italic;
 }
-.demiurge-profile .demi-quote { font-family: var(--font-type); font-size: 16px; color: var(--indigo); font-style: italic; margin: 0 0 15px; }
-.demiurge-profile p, .shell-panel p, .home-panel p { font-family: var(--font-type); font-size: 18px; line-height: 1.7; color: #333; }
 
-.empty-state { text-align: center; font-family: var(--font-pixel); font-size: 14px; color: var(--pink-dust); margin-top: 120px; line-height: 2;}
-
-/* ── Search (TempleOS Terminal style) ────────────────────────────── */
-.search-hero { max-width: 700px; margin: 0 auto; padding: 20px 10px; }
-.search-hero h1 { font-family: var(--font-pixel); font-size: 18px; color: var(--temple-yell); margin-bottom: 22px; text-shadow: 2px 2px 0 #000; }
-.search-input-wrap { display: flex; gap: 0; margin-bottom: 22px; border: 4px solid var(--mort); }
-.search-input-wrap input {
-    flex-grow: 1;
+/* TempleOS Terminal Style Demiurge Profile */
+.demiurge-profile, .shell-panel {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 30px;
+    background: var(--temple-blue);
+    border: 4px solid var(--pixel-red);
+    box-shadow: 8px 8px 0 var(--indigo);
+    color: #FFF;
+}
+.demiurge-profile h2, .shell-panel h2 {
     font-family: var(--font-pixel);
-    font-size: 14px;
-    padding: 15px;
-    background: #000;
-    color: var(--temple-cyan);
-    border: none; outline: none;
+    font-size: 24px;
+    color: var(--pixel-yellow);
+    text-shadow: 2px 2px 0 var(--mort);
+    margin: 0 0 16px;
+    text-transform: uppercase;
+    animation: blink 2s step-end infinite;
 }
-.search-input-wrap button {
+.demiurge-profile .demi-quote {
+    font-family: var(--font-vt);
+    font-size: 22px;
+    color: var(--temple-cyan);
+    margin: 0 0 20px;
+}
+.demiurge-profile p, .shell-panel p {
+    font-family: var(--font-vt);
+    font-size: 20px;
+    line-height: 1.5;
+    color: #FFF;
+}
+
+.home-panel {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 40px;
+    background: #FFF;
+    border-radius: 20px;
+    border: 2px dashed var(--duckblue);
+    text-align: center;
+}
+.home-panel h2 {
+    font-family: var(--font-pixel);
+    font-size: 18px;
+    color: var(--mort);
+    margin-bottom: 20px;
+}
+.home-panel p {
+    font-family: var(--font-type);
+    font-size: 20px;
+    color: var(--indigo);
+}
+
+.empty-state {
+    text-align: center;
     font-family: var(--font-pixel);
     font-size: 12px;
-    padding: 15px 25px;
-    background: var(--temple-red);
-    border: none;
-    cursor: pointer;
-    color: #fff;
+    color: var(--pink-dusty);
+    margin-top: 100px;
+    line-height: 2;
 }
-.results-grid { display: flex; flex-direction: column; gap: 15px; }
-.search-card { background: var(--fe-parchment); padding: 20px; border: 4px solid var(--indigo); border-radius: 8px;}
-.search-card h3 { font-family: var(--font-pixel); font-size: 12px; margin: 0 0 10px; color: var(--mort); }
-.search-card p { font-family: var(--font-type); font-size: 16px; margin: 0 0 15px; color: #222; }
-.read-btn { font-family: var(--font-pixel); font-size: 10px; padding: 10px 20px; background: var(--duckblue); border: none; border-radius: 20px; color: #fff; cursor: pointer; }
+
+/* ── Search (Y2K / GBA) ─────────────────────────────────────────── */
+.search-hero { max-width: 700px; margin: 0 auto; padding: 20px; }
+.search-hero h1 {
+    font-family: var(--font-pixel);
+    font-size: 16px;
+    color: var(--duckblue);
+    margin-bottom: 20px;
+}
+.search-input-wrap { display: flex; gap: 10px; margin-bottom: 30px; }
+.search-input-wrap input {
+    flex-grow: 1;
+    font-family: var(--font-type);
+    font-size: 20px;
+    padding: 10px 15px;
+    border: 2px solid var(--indigo);
+    border-radius: 8px;
+    background: #FFF;
+    color: var(--indigo);
+    outline: none;
+}
+.search-input-wrap input:focus { border-color: var(--mort); box-shadow: 0 0 8px var(--pink-dusty); }
+.search-input-wrap button {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    padding: 0 20px;
+    background: var(--duckblue);
+    border: 2px solid var(--indigo);
+    border-radius: 8px;
+    color: #FFF;
+    cursor: pointer;
+}
+.search-input-wrap button:hover { background: var(--duck-lit); }
+
+.search-card {
+    background: #FFF;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid var(--pink-dusty);
+    margin-bottom: 15px;
+}
+.search-card h3 { font-family: var(--font-type); font-size: 24px; color: var(--mort); margin: 0 0 10px; }
+.search-card p { font-family: var(--font-type); font-size: 16px; color: #555; }
+.read-btn {
+    margin-top: 10px;
+    font-family: var(--font-pixel);
+    font-size: 8px;
+    padding: 8px 12px;
+    background: var(--pink-pale);
+    border: 1px solid var(--mort);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--mort);
+}
+.read-btn:hover { background: var(--mort); color: #FFF; }
 
 /* ── Footer ──────────────────────────────────────────────────────── */
-.mirror-footer { position: fixed; bottom: 10px; right: 15px; z-index: 500; }
+.mirror-footer { position: fixed; bottom: 15px; right: 15px; z-index: 500; }
 .mirror-footer button {
-    font-family: var(--font-pixel);
-    font-size: 9px;
-    background: #fff;
-    border: 3px solid var(--pink-hot);
-    border-radius: 20px;
-    padding: 10px 15px;
-    cursor: pointer;
-    color: var(--pink-hot);
-    box-shadow: 0 4px 0 var(--pink-hot);
-    transition: transform 0.1s;
+    font-size: 14px;
+    padding: 8px 16px;
+    width: auto;
+    border-radius: 30px;
 }
-.mirror-footer button:active { transform: translateY(4px); box-shadow: 0 0 0 var(--pink-hot); }
 
-/* ── Scrollbars ─────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 16px; }
-::-webkit-scrollbar-track { background: var(--duckblue); }
-::-webkit-scrollbar-thumb { background: var(--pink-hot); border: 2px solid var(--mort); border-radius: 8px; }
+/* ── HR ─────────────────────────────────────────────────────────── */
+hr {
+    border: none;
+    border-top: 2px dashed var(--pink-dusty);
+    margin: 20px 0;
+}
 
-/* ── Misc ───────────────────────────────────────────────────────── */
-hr { border: none; border-top: 2px dashed var(--fe-border); margin: 20px 0; }
-iframe { border: 4px solid var(--mort); display: block; margin-top: 14px; border-radius: 8px; }
+/* ── FRENCH MODE (Gascogne Tricolore Y2K) ───────────────────────── */
+.mode-fr {
+    --duckblue: #002395; /* French Blue */
+    --mort: #ED2939;     /* French Red */
+    --pink-dusty: #C0C8E0;
+    --pink-pale: #EAEFF8;
+}
+.mode-fr .app-menubar { background: linear-gradient(90deg, #002395, #FFF, #ED2939); color: #000; }
+.mode-fr .menubar-item { color: #000; font-weight: bold; }
+.mode-fr .scrolling-banner { background: #ED2939; color: #FFF; border-bottom-color: #002395; }
+.mode-fr .moult-header { background: #002395; }
+.mode-fr .sidebar { background: #0A1535; border-right-color: #ED2939; }
+.mode-fr .nav-item.active { background: #ED2939; }
+.mode-fr .email-item.active { background: #002395; border-left-color: #ED2939; }
+.mode-fr .glitch { color: #002395; text-shadow: 2px 2px 0 #ED2939, -1px -1px 0 #FFF; }
 
-/* ── FRENCH MODE (TempleOS High Contrast Override) ───────────────── */
-.mode-fr body { background-color: var(--temple-cyan); background-image: none; }
-.mode-fr .win-window { border: 4px solid var(--temple-red); border-radius: 0; box-shadow: none; }
-.mode-fr .login-body { background: #000; }
-.mode-fr .glitch { color: var(--temple-yell); text-shadow: none; }
-.mode-fr .login-sub, .mode-fr .or-divider { color: var(--temple-cyan); }
-.mode-fr .main-btn, .mode-fr .french-btn { border-radius: 0; border: 4px solid #fff; box-shadow: none; }
-.mode-fr .french-btn { background: var(--temple-red); }
-.mode-fr .loading-body { background: #000; border-radius: 0; border: 4px solid var(--temple-red); }
+/* ── Global Scrollbar (OSX Style) ────────────────────────────────── */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--pink-pale); border-left: 1px solid var(--pink-dusty); }
+::-webkit-scrollbar-thumb {
+    background: #C0C0C0;
+    border-radius: 10px;
+    border: 2px solid var(--pink-pale);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--duckblue); }
+
+/* ── Iframe (PDF viewer) ──────────────────────────────────────────── */
+iframe {
+    border: 2px solid var(--indigo);
+    border-radius: 8px;
+    display: block;
+    margin-top: 20px;
+}
