@@ -16,7 +16,12 @@ function handleRouting() {
 
 function startLoading(lang) {
     currentLang = lang;
+    
+    // Hide BOTH screens to ensure clean transition when switching languages
     document.getElementById('screen-login').style.display = 'none';
+    const appScreen = document.getElementById('screen-app');
+    if(appScreen) appScreen.style.display = 'none'; 
+    
     document.getElementById('screen-loading').style.display = 'flex';
     document.getElementById('loading-title').innerText = lang === 'en' ? "Hardening chitin..." : "Mue en cours...";
     document.getElementById('banner-text').innerText = bannerContent[lang];
@@ -84,15 +89,14 @@ function updateUI() {
     const langBtn = document.getElementById('lang-toggle-btn');
     if (langBtn) {
         langBtn.innerText = currentLang === 'en'
-            ? "🇫🇷  CRABE M'A TUER"
-            : "🌐  INTERNATIONAL";
+            ? "🇫🇷 CRABE M'A TUER"
+            : "🌐 INTERNATIONAL";
     }
 
-    // Update title bar
     const titleEl = document.getElementById('app-win-title');
     if (titleEl) {
-        let title = 'MOULTLOOK — ' + currentSection.toUpperCase();
-        if (currentCategory) title += ' › ' + currentCategory.toUpperCase();
+        let title = 'MOULTLOOK :: ' + currentSection.toUpperCase();
+        if (currentCategory) title += ' > ' + currentCategory.toUpperCase();
         titleEl.innerText = title;
     }
 
@@ -112,37 +116,43 @@ function renderSidebar() {
     const nav = document.getElementById('sidebar-nav');
     const menus = {
         en: {
-            home:    '🏠 HOME',
-            unread:  '🆕 UNREAD',
-            search:  '🔍 SEARCH',
-            inbox:   '📥 INBOX',
-            sent:    '📤 SENT',
-            drafts:  '📝 DRAFTS',
-            archive: '🗄️ ARCHIVE',
-            shell:   '🐚 YOUR SHELL'
+            home:    'HOME',
+            unread:  'UNREAD',
+            search:  'SEARCH',
+            inbox:   'INBOX',
+            sent:    'SENT',
+            drafts:  'DRAFTS',
+            archive: 'ARCHIVE',
+            shell:   'YOUR SHELL'
         },
         fr: {
-            home:    '🏠 ADISHATZ',
-            search:  '🔍 RECHERCHER',
-            inbox:   '📥 REÇUS',
-            sent:    '📤 ENVOYÉS',
-            archive: '🗄️ ARCHIVE'
+            home:    'ADISHATZ',
+            search:  'RECHERCHER',
+            inbox:   'REÇUS',
+            sent:    'ENVOYÉS',
+            archive: 'ARCHIVE'
         }
     };
 
     let html = '';
     for (const [key, label] of Object.entries(menus[currentLang])) {
-        html += `<div class="nav-item ${currentSection === key ? 'active' : ''}" onclick="navigate('${key}')">
-            <span class="txt">${label}</span>
+        const isActive = currentSection === key;
+        const prefix = isActive ? '▶ ' : '&nbsp;&nbsp;';
+        
+        html += `<div class="nav-item ${isActive ? 'active' : ''}" onclick="navigate('${key}')">
+            <span class="txt">${prefix}${label}</span>
         </div>`;
+        
         if (key === 'inbox' && currentLang === 'en') {
             const cats = ['patriarchy', 'imperialism', 'capitalism', 'notes'];
             html += `<div class="nav-sub">` +
-                cats.map(c =>
-                    `<div class="${currentCategory === c ? 'active' : ''}" onclick="navigate('inbox', '${c}')">
-                        ↳ ${c}
+                cats.map(c => {
+                    const isSubActive = currentCategory === c;
+                    const subPrefix = isSubActive ? '▶ ' : '  ';
+                    return `<div class="${isSubActive ? 'active' : ''}" onclick="navigate('inbox', '${c}')">
+                        ${subPrefix}${c}
                     </div>`
-                ).join('') +
+                }).join('') +
             `</div>`;
         }
     }
@@ -163,8 +173,8 @@ function renderEmailList() {
     }
 
     if (list.length === 0) {
-        container.innerHTML = `<div style="padding:16px; font-family:var(--font-vt); font-size:17px; color:#888; font-style:italic;">
-            [ Empty. ]
+        container.innerHTML = `<div style="padding:16px; font-family:var(--font-vt); font-size:17px; color:#0000AA; font-style:italic;">
+            [ No Signal. ]
         </div>`;
         return;
     }
@@ -172,7 +182,7 @@ function renderEmailList() {
     container.innerHTML = list.map(e => `
         <div class="email-item ${selectedEmailId === e.id ? 'active' : ''}" onclick="selectEmail(${e.id})">
             <strong>${e.subject}</strong>
-            <small>${e.from} &nbsp;|&nbsp; ${e.date}</small>
+            <small>${e.from} | ${e.date}</small>
         </div>`
     ).join('');
 }
@@ -201,10 +211,10 @@ function renderEmailContent() {
                 </div>
             </div>
             <div class="email-container">
-                <div class="close-btn" onclick="closeEmail()">✕</div>
+                <div class="close-btn" onclick="closeEmail()">X</div>
                 <div class="email-header">
                     <h2>${email.subject}</h2>
-                    <p>${email.date} &nbsp;&middot;&nbsp; ${email.from}</p>
+                    <p>SYS.DATE: ${email.date} // SRC: ${email.from}</p>
                 </div>
                 <hr>
                 ${bodyContent}
@@ -219,13 +229,13 @@ function renderEmailContent() {
                 <p>${demi.description}</p>
             </div>`;
     } else {
-        view.innerHTML = `<div class="empty-state">[ Select an item to view. ]</div>`;
+        view.innerHTML = `<div class="empty-state">AWAITING INPUT...</div>`;
     }
 }
 
 function renderSearchView() {
-    const label = currentLang === 'en' ? '// SEARCH DATABASE //' : '// RECHERCHE //';
-    const placeholder = currentLang === 'en' ? 'Enter keyword...' : 'Entrer un mot-clé...';
+    const label = currentLang === 'en' ? 'QUERY DATABASE' : 'RECHERCHE';
+    const placeholder = currentLang === 'en' ? 'Input string...' : 'Entrer un mot-clé...';
     const btnLabel = currentLang === 'en' ? 'EXECUTE' : 'CHERCHER';
 
     document.getElementById('content-view').innerHTML = `
@@ -234,7 +244,7 @@ function renderSearchView() {
             <div class="search-input-wrap">
                 <input type="text" id="search-input" placeholder="${placeholder}"
                        onkeyup="if(event.key==='Enter') executeSearch()">
-                <button onclick="executeSearch()">${btnLabel}</button>
+                <button class="aqua-btn-small" onclick="executeSearch()">${btnLabel}</button>
             </div>
             <div id="search-results-area"></div>
         </div>`;
@@ -248,18 +258,18 @@ function executeSearch() {
         (e.subject.toLowerCase().includes(q) || e.body.toLowerCase().includes(q))
     );
     const noResultMsg = currentLang === 'en'
-        ? `No results for "${q}".`
-        : `Aucun résultat pour "${q}".`;
+        ? `0 results for "${q}".`
+        : `0 résultat pour "${q}".`;
 
     let html = `<div class="results-grid">`;
     if (results.length === 0) {
-        html += `<p style="font-family:var(--font-vt); color:#888; font-size:18px;">${noResultMsg}</p>`;
+        html += `<p style="font-family:var(--font-vt); color:var(--temple-red); font-size:18px;">${noResultMsg}</p>`;
     }
     results.forEach(res => {
         html += `<div class="search-card">
             <h3>${res.subject}</h3>
             <p>${res.body.substring(0, 110)}...</p>
-            <button class="read-btn" onclick="jumpToEmail(${res.id})">READ →</button>
+            <button class="read-btn" onclick="jumpToEmail(${res.id})">READ_FILE()</button>
         </div>`;
     });
     document.getElementById('search-results-area').innerHTML = html + `</div>`;
@@ -270,7 +280,7 @@ function renderStaticContent() {
     if (currentSection === 'home') {
         view.innerHTML = `
             <div class="home-panel">
-                <h2>// SYSTEM //</h2>
+                <h2>C:\\SYS\\HOME</h2>
                 <hr>
                 <p>${homeContent[currentLang]}</p>
             </div>`;
