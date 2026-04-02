@@ -11,29 +11,31 @@
 </head>
 <body class="theme-default">
 
-<!-- ░░ ANIMATED GLITTER CANVAS — behind everything ░░ -->
+<!-- ░░ GLITTER CANVAS — always behind ░░ -->
 <canvas id="glitter-canvas"></canvas>
 
-<!-- ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+<!-- ═══════════════════════════════════════
      SCREEN : LOGIN
-     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ -->
+     ═══════════════════════════════════════ -->
 <section id="screen-login" class="screen screen-login">
+
+    <!-- BIG title OUTSIDE the panel -->
+    <h1 class="site-title" data-text="MOULTLOOK.COM">
+        MOULTLOOK<span class="title-dot">.COM</span>
+    </h1>
+
     <div class="login-panel">
         <div class="login-panel-inner">
 
             <div class="dex-top-bar">
                 <div class="dex-eye large"></div>
+                <p class="login-tagline">SECURE PORTAL &nbsp;·&nbsp; CHITIN REQUIRED</p>
                 <div class="dex-lights">
                     <div class="dex-light cherry pulse-slow"></div>
                     <div class="dex-light amber"></div>
                     <div class="dex-light duckegg"></div>
                 </div>
             </div>
-
-            <h1 class="site-title" data-text="MOULTLOOK.COM">
-                MOULTLOOK<span class="title-dot">.COM</span>
-            </h1>
-            <p class="login-tagline">SECURE PORTAL &nbsp;&middot;&nbsp; CHITIN REQUIRED</p>
 
             <div class="ornament-row">
                 <span class="orn-line"></span>
@@ -55,12 +57,13 @@
 
         </div>
     </div>
-    <p class="login-footer-tag">v2.0 &nbsp;·&nbsp; 🦀 &nbsp;·&nbsp; moultlook.com</p>
+
+    <p class="login-footer-tag">v3.0 &nbsp;·&nbsp; 🦀 &nbsp;·&nbsp; moultlook.com</p>
 </section>
 
-<!-- ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+<!-- ═══════════════════════════════════════
      SCREEN : LOADING
-     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ -->
+     ═══════════════════════════════════════ -->
 <section id="screen-loading" class="screen screen-loading" style="display:none;">
     <div class="loading-panel">
         <div class="loading-panel-inner">
@@ -77,9 +80,9 @@
     </div>
 </section>
 
-<!-- ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+<!-- ═══════════════════════════════════════
      SCREEN : APP
-     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ -->
+     ═══════════════════════════════════════ -->
 <section id="screen-app" class="screen screen-app" style="display:none;">
 
     <div class="scrolling-banner">
@@ -91,7 +94,7 @@
         <div class="app-titlebar">
             <div class="titlebar-left">
                 <div class="dex-eye small"></div>
-                <span id="app-win-title" class="app-title-text">MOULTLOOK</span>
+                <span id="app-win-title" class="app-title-text glitch-subtle">MOULTLOOK</span>
             </div>
             <div class="titlebar-right">
                 <button id="lang-toggle-btn" class="lang-btn" onclick="toggleLanguage()"></button>
@@ -103,7 +106,7 @@
             <aside id="sidebar" class="sidebar">
                 <div id="sidebar-toggle" class="sidebar-header">
                     <span class="hamburger">≡</span>
-                    <span class="label-full">MOULTLOOK</span>
+                    <span class="label-full glitch-subtle">MOULTLOOK</span>
                     <span class="label-vert">M·O·U·L·T</span>
                 </div>
                 <nav class="nav-links" id="sidebar-nav"></nav>
