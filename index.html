@@ -2,126 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOULTLOOK.COM // GBA_OSX</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Comfortaa:wght@500;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <title>MOULTLOOK.COM</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Special+Elite&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="theme-default">
+<body class="crt">
+    <div class="glitter-bg"></div>
 
-    <section id="screen-login" class="screen screen-login">
-        <div class="glitter-overlay"></div>
-        <div class="win-window login-window glass-panel">
-            <div class="osx-titlebar">
-                <div class="osx-btn-group">
-                    <div class="osx-btn close"></div>
-                    <div class="osx-btn min"></div>
-                    <div class="osx-btn max"></div>
-                </div>
-                <span class="win-title-text">🦀 MOULTLOOK.COM_LOGIN</span>
-            </div>
-            <div class="win-body login-body">
-                <h1 class="glitch giant-title" data-text="MOULTLOOK">MOULTLOOK</h1>
-                <p class="login-sub fe-text">Awaiting synchronization...</p>
-                <div class="login-divider-line"></div>
-                <div class="login-box">
-                    <button class="gba-btn main-btn" onclick="startLoading('en')">
-                        ACCESS DATABASE<br><small>[ INTERNATIONAL ]</small>
-                    </button>
-                    <div class="or-divider">♦</div>
-                    <button class="gba-btn french-btn" onclick="startLoading('fr')">
-                        CRABE M'A TUER<br><small>[ GASCOGNE ]</small>
-                    </button>
-                </div>
-            </div>
-            <div class="win-statusbar">
-                <span>SYSTEM: READY</span>
-                <span id="login-clock"></span>
+    <section id="screen-login" class="screen">
+        <div class="login-hero">
+            <h1 class="big-title">MOULTLOOK</h1>
+            <div class="btn-container">
+                <button class="gba-btn" onclick="startLoading('en')">EN // OPERATE</button>
+                <button class="gba-btn" onclick="startLoading('fr')" style="background: var(--cherry);">FR // EVOLUER</button>
             </div>
         </div>
     </section>
 
-    <section id="screen-loading" class="screen screen-loading" style="display:none;">
-        <div class="glitter-overlay"></div>
-        <div class="win-window loading-window glass-panel">
-            <div class="osx-titlebar">
-                <div class="osx-btn-group">
-                    <div class="osx-btn close"></div>
-                    <div class="osx-btn min"></div>
-                    <div class="osx-btn max"></div>
-                </div>
-                <span class="win-title-text">SYSTEM BOOT</span>
-            </div>
-            <div class="win-body loading-body">
-                <div class="crab-spinner">🦀</div>
-                <h2 id="loading-title" class="fe-text">Hardening...</h2>
-                <div class="gba-progress-outer">
-                    <div class="gba-progress-inner" id="progress-bar"></div>
-                </div>
-                <p class="loading-sub" id="loading-sub">Loading modules...</p>
-            </div>
+    <section id="screen-loading" class="screen" style="display:none;">
+        <div class="loading-wrap">
+            <div class="loading-crab">🦀</div>
+            <h2 id="loading-title" class="big-title" style="font-size: 2rem;">HARDENING...</h2>
+            <div id="loading-sub" style="font-family: var(--font-pixel); font-size: 10px; text-align: center;"></div>
         </div>
     </section>
 
-    <section id="screen-app" class="screen screen-app" style="display:none;">
-        <div class="glitter-overlay"></div>
-        
-        <div class="scrolling-banner">
-            <div id="banner-text" class="banner-text"></div>
-        </div>
-
-        <div class="app-window glass-panel">
-            <div class="osx-titlebar">
-                <div class="osx-btn-group">
-                    <div class="osx-btn close"></div>
-                    <div class="osx-btn min"></div>
-                    <div class="osx-btn max"></div>
-                </div>
-                <span class="win-title-text" id="app-win-title">MOULTLOOK</span>
+    <section id="screen-app" class="screen" style="display:none;">
+        <div class="pokedex-window">
+            <div class="title-bar">
+                <h1 id="app-win-title">MOULTLOOK v3.0</h1>
+                <div class="gba-btn" style="padding: 5px 10px; font-size: 8px;" onclick="moult()">EJECT</div>
             </div>
-            <div class="app-menubar">
-                <span class="menubar-item">File</span>
-                <span class="menubar-item">Edit</span>
-                <span class="menubar-item">View</span>
-                <span class="menubar-item">Moult</span>
-                <span class="menubar-item fe-text">Ω</span>
-            </div>
-            <div class="app-layout">
-                <aside id="sidebar" class="sidebar">
-                    <div id="sidebar-toggle" class="moult-header">
-                        <span class="hamburger">≡</span>
-                        <span class="label-full">DEX_NAV</span>
-                        <span class="label-vert">N A V</span>
-                    </div>
-                    <nav class="nav-links" id="sidebar-nav"></nav>
-                    <div class="nav-item moult-btn" onclick="moult()">
-                        <span class="icon">🦀</span>
-                        <span class="txt">MOULT_OS</span>
-                    </div>
+            <div class="app-grid">
+                <aside class="sidebar">
+                    <nav id="sidebar-nav"></nav>
                 </aside>
-
-                <section class="middle-row" id="email-list"></section>
+                <section class="list-view" id="email-list"></section>
                 <main class="content-view" id="content-view"></main>
             </div>
         </div>
-
-        <footer class="mirror-footer">
-            <button class="gba-btn small-btn" id="lang-toggle-btn" onclick="toggleLanguage()"></button>
-        </footer>
     </section>
 
     <script src="data.js"></script>
     <script src="script.js"></script>
-
-    <script>
-        function updateClock() {
-            const el = document.getElementById('login-clock');
-            if (el) el.innerText = new Date().toLocaleTimeString();
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
 </body>
 </html>
