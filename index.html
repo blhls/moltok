@@ -6,20 +6,18 @@
     <title>MOULTLOOK.COM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Press+Start+2P&family=Nunito:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Inline&family=Press+Start+2P&family=Nunito:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-default">
 
-<!-- ░░ GLITTER CANVAS — always behind ░░ -->
 <canvas id="glitter-canvas"></canvas>
 
-<!-- ═══════════════════════════════════════
-     SCREEN : LOGIN
-     ═══════════════════════════════════════ -->
+<!-- ══════════════════════════════════════
+     LOGIN
+     ══════════════════════════════════════ -->
 <section id="screen-login" class="screen screen-login">
 
-    <!-- BIG title OUTSIDE the panel -->
     <h1 class="site-title" data-text="MOULTLOOK.COM">
         MOULTLOOK<span class="title-dot">.COM</span>
     </h1>
@@ -55,34 +53,36 @@
                 </button>
             </div>
 
+            <p class="press-start blink">▶ SELECT YOUR REALITY ◀</p>
         </div>
     </div>
 
-    <p class="login-footer-tag">v3.0 &nbsp;·&nbsp; 🦀 &nbsp;·&nbsp; moultlook.com</p>
+    <p class="login-footer-tag">v4.0 &nbsp;·&nbsp; 🦀 &nbsp;·&nbsp; moultlook.com &nbsp;·&nbsp; all spooks reserved</p>
 </section>
 
-<!-- ═══════════════════════════════════════
-     SCREEN : LOADING
-     ═══════════════════════════════════════ -->
+<!-- ══════════════════════════════════════
+     LOADING
+     ══════════════════════════════════════ -->
 <section id="screen-loading" class="screen screen-loading" style="display:none;">
     <div class="loading-panel">
         <div class="loading-panel-inner">
             <div class="crab-spinner">🦀</div>
             <h2 id="loading-title" class="loading-title">Hardening chitin...</h2>
             <div class="hp-row">
-                <span class="hp-label">HP</span>
+                <span class="hp-label">EGO</span>
                 <div class="hp-bar-outer">
                     <div class="hp-bar-inner" id="progress-bar"></div>
                 </div>
+                <span class="hp-label">MAX</span>
             </div>
-            <p class="loading-sub" id="loading-sub">Initialising...</p>
+            <p class="loading-sub" id="loading-sub">Dissolving the social contract...</p>
         </div>
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     SCREEN : APP
-     ═══════════════════════════════════════ -->
+<!-- ══════════════════════════════════════
+     APP
+     ══════════════════════════════════════ -->
 <section id="screen-app" class="screen screen-app" style="display:none;">
 
     <div class="scrolling-banner">
@@ -90,11 +90,11 @@
     </div>
 
     <div class="app-frame">
-
         <div class="app-titlebar">
             <div class="titlebar-left">
                 <div class="dex-eye small"></div>
                 <span id="app-win-title" class="app-title-text glitch-subtle">MOULTLOOK</span>
+                <span class="title-cursor blink">█</span>
             </div>
             <div class="titlebar-right">
                 <button id="lang-toggle-btn" class="lang-btn" onclick="toggleLanguage()"></button>
@@ -106,8 +106,8 @@
             <aside id="sidebar" class="sidebar">
                 <div id="sidebar-toggle" class="sidebar-header">
                     <span class="hamburger">≡</span>
-                    <span class="label-full glitch-subtle">MOULTLOOK</span>
-                    <span class="label-vert">M·O·U·L·T</span>
+                    <span class="label-full glitch-subtle" style="--gd:5">MOULTLOOK</span>
+                    <span class="label-vert">M·L·O·K</span>
                 </div>
                 <nav class="nav-links" id="sidebar-nav"></nav>
                 <div class="sidebar-bottom-lights">
