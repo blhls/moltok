@@ -6,178 +6,180 @@
     <title>MOULTLOOK.COM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Special+Elite&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-default">
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SCREEN: LOGIN
-         Pixel art char → login-char.png (same folder as index.html)
-    ═══════════════════════════════════════════════════════════ -->
-    <section id="screen-login" class="screen screen-login">
-        <canvas id="login-canvas" class="bg-canvas"></canvas>
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: LOGIN
+═══════════════════════════════════════════════════════════ -->
+<section id="screen-login" class="screen screen-login">
 
-        <div class="login-scene">
+    <!-- Animated background canvas -->
+    <canvas id="bg-canvas" class="bg-canvas"></canvas>
 
-            <!-- BIG TITLE — outside any console -->
-            <div class="login-title-block">
-                <h1 class="mega-glitch" data-text="MOULTLOOK.COM">
-                    <span class="glitch-text">MOULTLOOK.COM</span>
-                </h1>
-                <p class="login-byline">select your operational theatre</p>
-            </div>
+    <!-- Noise grain overlay -->
+    <div class="grain-overlay"></div>
 
-            <!-- Character + Console row -->
-            <div class="login-layout-row">
+    <!-- ── HUGE TITLE — outside the window ── -->
+    <div class="login-title-wrap">
+        <div class="big-glitch-wrap">
+            <h1 class="big-glitch" data-text="MOULTLOOK">MOULTLOOK</h1>
+            <span class="big-glitch-dot">.COM</span>
+        </div>
+        <p class="login-tagline">select your operational theatre</p>
+    </div>
 
-                <!-- Pixel art character — replace login-char.png with your file -->
-                <div class="login-char-wrap">
-                    <img src="login-char.png" class="pixel-char" alt=""
-                         onerror="this.parentElement.classList.add('char-hidden')">
-                    <div class="char-glow"></div>
-                </div>
-
-                <!-- Login console -->
-                <div class="win-window login-window">
-                    <div class="win-titlebar">
-                        <span class="win-title-text">🦀&nbsp;&nbsp;MOULTLOOK.COM &mdash; Identification Required</span>
-                        <div class="win-btn-group">
-                            <button class="win-btn" tabindex="-1">_</button>
-                            <button class="win-btn" tabindex="-1">□</button>
-                            <button class="win-btn win-btn-cls" tabindex="-1">✕</button>
-                        </div>
-                    </div>
-                    <div class="win-body login-body">
-                        <p class="login-sub">Carapace density check required.</p>
-                        <div class="login-divider-line"></div>
-                        <div class="login-box">
-                            <button class="main-btn" onclick="startLoading('en')">
-                                CHECK MY CRABS<br><small>(International)</small>
-                            </button>
-                            <div class="or-divider">— OR —</div>
-                            <button class="french-btn" onclick="startLoading('fr')">
-                                CRABE M'A TUER<br><small>(Gascogne Occupée)</small>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="win-statusbar">
-                        <span>Ready</span>
-                        <span>🔒 Encrypted</span>
-                        <span id="login-clock"></span>
-                    </div>
-                </div>
-
-            </div><!-- /login-layout-row -->
-        </div><!-- /login-scene -->
-    </section>
-
-
-    <!-- ═══════════════════════════════════════════════════════════
-         SCREEN: LOADING
-         session.gif → place session.gif in same folder as index.html
-    ═══════════════════════════════════════════════════════════ -->
-    <section id="screen-loading" class="screen screen-loading" style="display:none;">
-        <canvas id="loading-canvas" class="bg-canvas"></canvas>
-
-        <div class="win-window loading-window">
-            <div class="win-titlebar">
-                <span class="win-title-text">⚙️&nbsp;&nbsp;System Initialisation — MOULTLOOK v1.0</span>
-            </div>
-            <div class="win-body loading-body">
-
-                <!-- session.gif replaces crab emoji -->
-                <div class="loading-gif-wrap">
-                    <img src="session.gif" class="loading-gif" alt=""
-                         onerror="this.outerHTML='<span class=\'crab-spinner\'>🦀</span>'">
-                </div>
-
-                <h2 id="loading-title">Hardening...</h2>
-
-                <div class="win-progress-outer">
-                    <div class="win-progress-inner" id="progress-bar"></div>
-                </div>
-                <p class="loading-sub" id="loading-sub">Loading modules...</p>
-
-                <!-- GIF SPACE — future: contact avatars, article thumbnails, etc.
-                     Populate from data.js or upload directly. -->
-                <div class="gif-space-row" id="gif-space">
-                    <div class="gif-slot gif-slot--empty"></div>
-                    <div class="gif-slot gif-slot--empty"></div>
-                    <div class="gif-slot gif-slot--empty"></div>
-                    <div class="gif-slot gif-slot--empty"></div>
-                    <div class="gif-slot gif-slot--empty"></div>
-                </div>
-
+    <!-- ── Login window ── -->
+    <div class="win-window login-window">
+        <div class="win-titlebar">
+            <span class="win-title-text">identification required</span>
+            <div class="win-btn-group">
+                <button class="win-btn" tabindex="-1">_</button>
+                <button class="win-btn" tabindex="-1">□</button>
+                <button class="win-btn win-btn-cls" tabindex="-1">✕</button>
             </div>
         </div>
-    </section>
+        <div class="win-body login-body">
+            <!-- GIF slot — replace session.gif with your asset -->
+            <div class="login-gif-slot">
+                <img src="session.gif" alt="" class="login-gif" id="login-gif" onerror="this.style.display='none'">
+            </div>
+            <div class="login-box">
+                <button class="main-btn" onclick="startLoading('en')">
+                    CHECK MY CRABS<br><small>( International )</small>
+                </button>
+                <div class="or-divider">— OR —</div>
+                <button class="gascony-btn" onclick="startLoading('fr')">
+                    CRABE M'A TUER<br><small>( Gascogne Occupée )</small>
+                </button>
+            </div>
+        </div>
+        <div class="win-statusbar">
+            <span>Ready</span>
+            <span>🔒 Encrypted</span>
+            <span id="login-clock"></span>
+        </div>
+    </div>
+
+    <!-- ── Pixel art character — replace character.png with your asset ── -->
+    <div class="login-character-wrap">
+        <img src="character.png" alt="" class="login-character" id="login-character" onerror="this.style.display='none'">
+    </div>
+
+</section>
 
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SCREEN: APP
-    ═══════════════════════════════════════════════════════════ -->
-    <section id="screen-app" class="screen screen-app" style="display:none;">
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: LOADING (initial + lang switch)
+═══════════════════════════════════════════════════════════ -->
+<section id="screen-loading" class="screen screen-loading" style="display:none;">
 
-        <!-- Top scrolling banner -->
-        <div class="scrolling-banner">
-            <div id="banner-text" class="banner-text"></div>
+    <canvas id="bg-canvas-loading" class="bg-canvas"></canvas>
+    <div class="grain-overlay"></div>
+
+    <div class="win-window loading-window">
+        <div class="win-titlebar">
+            <span class="win-title-text" id="loading-titlebar-text">⚙ System Initialisation — MOULTLOOK v1.0</span>
+        </div>
+        <div class="win-body loading-body">
+
+            <!-- GIF slot for loading — shows session.gif -->
+            <div class="loading-gif-slot" id="loading-gif-slot">
+                <img src="session.gif" alt="" class="loading-gif" id="loading-gif" onerror="this.parentElement.innerHTML='<span class=\'gif-fallback\'>🦀</span>'">
+            </div>
+
+            <h2 id="loading-title" class="loading-title-text">Hardening...</h2>
+
+            <div class="win-progress-outer">
+                <div class="win-progress-inner" id="progress-bar"></div>
+            </div>
+            <p class="loading-sub" id="loading-sub">Loading modules...</p>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: APP
+═══════════════════════════════════════════════════════════ -->
+<section id="screen-app" class="screen screen-app" style="display:none;">
+
+    <!-- Canvas visible behind the centered app-window -->
+    <canvas id="bg-canvas-app" class="bg-canvas"></canvas>
+    <div class="grain-overlay"></div>
+
+    <!-- Scrolling top banner -->
+    <div class="scrolling-banner">
+        <div id="banner-text" class="banner-text"></div>
+    </div>
+
+    <!-- Main application window — centered, airy -->
+    <div class="app-window">
+
+        <div class="app-titlebar win-titlebar">
+            <span class="win-title-text">🦀&nbsp;&nbsp;<span id="app-win-title">MOULTLOOK</span></span>
+            <div class="win-btn-group">
+                <button class="win-btn" tabindex="-1">_</button>
+                <button class="win-btn" tabindex="-1">□</button>
+            </div>
         </div>
 
-        <!-- Centred app wrapper — background visible on both sides -->
-        <div class="app-wrapper">
-            <div class="app-window">
-                <div class="app-titlebar win-titlebar">
-                    <span class="win-title-text">🦀&nbsp;&nbsp;<span id="app-win-title">MOULTLOOK</span></span>
-                    <div class="win-btn-group">
-                        <button class="win-btn" tabindex="-1">_</button>
-                        <button class="win-btn" tabindex="-1">□</button>
-                    </div>
+        <div class="app-menubar">
+            <span class="menubar-item" id="menu-fichier">Fichier</span>
+            <span class="menubar-item">Édition</span>
+            <span class="menubar-item">Affichage</span>
+            <span class="menubar-item">Mue</span>
+            <span class="menubar-item">?</span>
+        </div>
+
+        <div class="app-layout">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="sidebar">
+                <div id="sidebar-toggle" class="moult-header">
+                    <span class="hamburger">≡</span>
+                    <span class="label-full">MOULTLOOK</span>
+                    <span class="label-vert">M O U L T L O O K</span>
                 </div>
-                <div class="app-menubar">
-                    <span class="menubar-item">Fichier</span>
-                    <span class="menubar-item">Édition</span>
-                    <span class="menubar-item">Affichage</span>
-                    <span class="menubar-item">Mue</span>
-                    <span class="menubar-item">?</span>
+                <nav class="nav-links" id="sidebar-nav"></nav>
+                <div class="nav-item moult-btn" onclick="moult()">
+                    <span class="icon">🦀</span>
+                    <span class="txt">MOULT</span>
                 </div>
-                <div class="app-layout">
-                    <aside id="sidebar" class="sidebar">
-                        <div id="sidebar-toggle" class="moult-header">
-                            <span class="hamburger">≡</span>
-                            <span class="label-full">MOULTLOOK</span>
-                            <span class="label-vert">M O U L T L O O K</span>
-                        </div>
-                        <nav class="nav-links" id="sidebar-nav"></nav>
-                        <div class="nav-item moult-btn" onclick="moult()">
-                            <span class="icon">🦀</span>
-                            <span class="txt">MOULT</span>
-                        </div>
-                    </aside>
+            </aside>
 
-                    <section class="middle-row" id="email-list"></section>
-                    <main class="content-view" id="content-view"></main>
-                </div>
-            </div>
-        </div><!-- /app-wrapper -->
+            <!-- Email list (middle column) -->
+            <section class="middle-row" id="email-list"></section>
 
-        <footer class="mirror-footer">
-            <button id="lang-toggle-btn" onclick="toggleLanguage()"></button>
-        </footer>
-    </section>
+            <!-- Content view — wider for reading -->
+            <main class="content-view" id="content-view"></main>
+        </div>
+
+    </div>
+
+    <!-- Language toggle footer -->
+    <footer class="mirror-footer">
+        <button id="lang-toggle-btn" onclick="toggleLanguage()"></button>
+    </footer>
+
+</section>
 
 
-    <script src="data.js"></script>
-    <script src="script.js"></script>
+<!-- ── Scripts ── -->
+<script src="data.js"></script>
+<script src="script.js"></script>
 
-    <script>
-        /* Live clock */
-        function updateClock() {
-            const el = document.getElementById('login-clock');
-            if (el) el.innerText = new Date().toLocaleTimeString();
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
+<script>
+    // Live clock on login screen
+    function updateClock() {
+        const el = document.getElementById('login-clock');
+        if (el) el.innerText = new Date().toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>
+
 </body>
 </html>
