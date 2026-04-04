@@ -1,6 +1,7 @@
 /* ================================================================
-   MOULTLOOK — script.js v4.0
-   Logic: routing, rendering, Aqua canvas animation, lang switch
+   MOULTLOOK — script.js v5.0
+   Canvas: fast, aggressive, accelerationist particle system
+   Logic: identical to v4.0
    ================================================================ */
 'use strict';
 
@@ -22,22 +23,27 @@ function handleRouting() {
 
 
 /* ══════════════════════════════════════════════════════════
-   CANVAS — accelerated glitter animation
-   Aqua meets GBA: sparkle pixels, speed streaks, bloom glows
+   CANVAS — BERYLIST ACCELERATIONISM
+   Fast streaks, neon sparks, data-burst glitch, radar sweeps
+   EN: cherry/duckegg on void-black
+   FR: bixbite/amethyst/petroleum on deep navy
 ══════════════════════════════════════════════════════════ */
+
 const PALETTES = {
     en: {
-        bg:     ['#120610', '#1C0A18', '#0E0418'],
-        sparks: ['#C0003A','#E0608A','#FFD6E8','#7EC8C0','#5C1A48','#3D2B6E','#ffffff','#B8F0EC'],
-        lines:  ['#59001B','#C0003A','#5C1A48','#E0608A','#7EC8C0'],
-        blooms: ['rgba(192,0,58,0.12)','rgba(224,96,138,0.08)','rgba(92,26,72,0.1)','rgba(126,200,192,0.07)'],
+        bg:       ['#060008', '#0E0408', '#060010'],
+        sparks:   ['#FF0040','#FF3880','#00FFD0','#4A0A38','#FFD6E8','#FF7090','#00D0A8','#ffffff'],
+        lines:    ['#FF0040','#FF3880','#00FFD0','#780060','#FF7090','#4A0A38'],
+        blooms:   ['rgba(255,0,64,0.1)','rgba(255,56,128,0.07)','rgba(0,255,208,0.07)','rgba(74,10,56,0.12)'],
+        grid:     'rgba(255,0,64,0.04)',
     },
     fr: {
-        bg:     ['#060A14','#081820','#04101C'],
-        sparks: ['#1C6B7A','#7EC8C0','#C8F0EC','#E84080','#FFD6EC','#5A3D7A','#ffffff','#1A4A5A'],
-        lines:  ['#1A4A5A','#5A3D7A','#1C6B7A','#E84080','#7EC8C0'],
-        blooms: ['rgba(26,107,122,0.12)','rgba(126,200,192,0.09)','rgba(90,61,122,0.1)','rgba(232,64,128,0.07)'],
-    }
+        bg:       ['#02040E', '#060C1C', '#020810'],
+        sparks:   ['#FF1848','#FF4080','#20D8C0','#6030A8','#C090FF','#FF80A0','#8050C8','#ffffff'],
+        lines:    ['#FF1848','#6030A8','#20D8C0','#8050C8','#FF4080','#082840'],
+        blooms:   ['rgba(255,24,72,0.1)','rgba(96,48,168,0.1)','rgba(32,216,192,0.07)','rgba(128,80,200,0.08)'],
+        grid:     'rgba(32,216,192,0.04)',
+    },
 };
 
 const canvasRegistry = {};
@@ -53,80 +59,104 @@ function initBgCanvas(canvasId, mode) {
     const pal = PALETTES[mode] || PALETTES.en;
 
     function resize() {
-        canvas.width  = canvas.parentElement ? canvas.parentElement.offsetWidth  : window.innerWidth;
-        canvas.height = canvas.parentElement ? canvas.parentElement.offsetHeight : window.innerHeight;
-        /* Also clamp to window */
-        if (canvas.width  === 0) canvas.width  = window.innerWidth;
-        if (canvas.height === 0) canvas.height = window.innerHeight;
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
     resize();
-    window.addEventListener('resize', resize);
+    if (!canvasRegistry[canvasId]) {
+        window.addEventListener('resize', resize);
+    }
 
-    /* Sparkle pixels */
+    /* Neon spark pixels — fast pulse */
     const sparks = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 120; i++) {
         sparks.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size:  Math.random() * 3.5 + 1,
+            x:     Math.random() * canvas.width,
+            y:     Math.random() * canvas.height,
+            size:  Math.random() * 3 + 1,
             color: pal.sparks[Math.floor(Math.random() * pal.sparks.length)],
-            vx: (Math.random() - 0.5) * 0.2,
-            vy: (Math.random() - 0.5) * 0.22 - 0.06,
+            vx:    (Math.random() - 0.5) * 0.4,
+            vy:    (Math.random() - 0.5) * 0.4 - 0.1,
             phase: Math.random() * Math.PI * 2,
-            speed: Math.random() * 0.02 + 0.007,
+            speed: Math.random() * 0.05 + 0.02,    /* faster than before */
         });
     }
 
-    /* Acceleration streaks */
+    /* Acceleration streaks — diagonal, fast */
     const streaks = [];
-    for (let i = 0; i < 22; i++) {
+    for (let i = 0; i < 30; i++) {
         streaks.push({
             x:     Math.random() * canvas.width,
             y:     Math.random() * canvas.height,
-            len:   Math.random() * 80 + 20,
-            angle: -0.7 + (Math.random() - 0.5) * 0.6,
+            len:   Math.random() * 100 + 30,
+            angle: -0.65 + (Math.random() - 0.5) * 0.7,
             color: pal.lines[Math.floor(Math.random() * pal.lines.length)],
-            speed: Math.random() * 3 + 1.5,
-            alpha: Math.random() * 0.3 + 0.07,
-            width: Math.random() * 1.8 + 0.4,
+            speed: Math.random() * 5 + 2.5,         /* fast */
+            alpha: Math.random() * 0.35 + 0.06,
+            width: Math.random() * 1.5 + 0.3,
         });
     }
 
-    /* Bloom glows */
+    /* Bloom glows — larger, pulsing */
     const blooms = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
         blooms.push({
             x:     Math.random() * canvas.width,
             y:     Math.random() * canvas.height,
-            r:     Math.random() * 90 + 35,
+            r:     Math.random() * 120 + 40,
             color: pal.blooms[Math.floor(Math.random() * pal.blooms.length)],
             phase: Math.random() * Math.PI * 2,
-            speed: Math.random() * 0.006 + 0.003,
-            vx: (Math.random() - 0.5) * 0.18,
-            vy: (Math.random() - 0.5) * 0.18,
+            speed: Math.random() * 0.012 + 0.005,
+            vx:    (Math.random() - 0.5) * 0.2,
+            vy:    (Math.random() - 0.5) * 0.2,
         });
     }
 
-    let glitchTimer = 0, glitchOn = false, glitchY = 0, glitchH = 0, glitchDur = 0;
+    /* Data burst events — occasional column of sparks */
+    let burstTimer = 0;
+    let burstX = 0, burstActive = false, burstParticles = [];
+
+    /* Horizontal scan flash */
+    let flashTimer = 0, flashY = -1, flashAlpha = 0, flashDir = 1;
+
+    /* Glitch band state */
+    let glitchTimer = 0, glitchOn = false;
+    let glitchY = 0, glitchH = 0, glitchDur = 0;
+    let glitchShift = 0;
+
+    function triggerDataBurst() {
+        burstActive = true;
+        burstX = Math.random() * canvas.width;
+        burstParticles = [];
+        for (let i = 0; i < 22; i++) {
+            burstParticles.push({
+                x: burstX, y: canvas.height * 0.5,
+                vx: (Math.random() - 0.5) * 4,
+                vy: (Math.random() - 1.5) * 5,
+                alpha: 1,
+                color: pal.sparks[Math.floor(Math.random() * pal.sparks.length)],
+                size: Math.random() * 4 + 1,
+            });
+        }
+    }
 
     function draw() {
         const w = canvas.width, h = canvas.height;
         const p = PALETTES[currentLang] || PALETTES.en;
 
-        /* Background gradient */
-        const grad = ctx.createLinearGradient(0, 0, w * 0.6, h);
+        /* Background */
+        const grad = ctx.createLinearGradient(0, 0, w * 0.5, h);
         grad.addColorStop(0, p.bg[0]);
         grad.addColorStop(0.5, p.bg[1]);
         grad.addColorStop(1, p.bg[2]);
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, w, h);
 
-        /* Pixel grid (very faint) */
-        const gc = currentLang === 'en' ? 'rgba(89,0,27,0.055)' : 'rgba(26,74,90,0.055)';
-        ctx.strokeStyle = gc; ctx.lineWidth = 0.5;
-        const gs = 32;
-        for (let x = 0; x < w; x += gs) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
-        for (let y = 0; y < h; y += gs) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+        /* Pixel grid */
+        ctx.strokeStyle = p.grid; ctx.lineWidth = 0.5;
+        const gs = 24;
+        for (let x = 0; x < w; x += gs) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+        for (let y = 0; y < h; y += gs) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
 
         /* Bloom glows */
         for (const b of blooms) {
@@ -136,80 +166,128 @@ function initBgCanvas(canvasId, mode) {
             if (b.x > w + b.r) b.x = -b.r;
             if (b.y < -b.r) b.y = h + b.r;
             if (b.y > h + b.r) b.y = -b.r;
-            const alpha = (Math.sin(b.phase) * 0.4 + 0.6);
-            ctx.save();
-            ctx.globalAlpha = alpha;
+            const a = Math.sin(b.phase) * 0.45 + 0.55;
+            ctx.save(); ctx.globalAlpha = a;
             const gr = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-            gr.addColorStop(0, b.color.replace(')', `, ${alpha * 1.2})`).replace('rgba(', 'rgba('));
+            gr.addColorStop(0, b.color);
             gr.addColorStop(1, 'rgba(0,0,0,0)');
             ctx.fillStyle = gr;
             ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
             ctx.fill(); ctx.restore();
         }
 
-        /* Sparkle pixels */
+        /* Spark pixels — cross sparkle */
         for (const s of sparks) {
             s.phase += s.speed;
-            const alpha = Math.sin(s.phase) * 0.5 + 0.5;
+            const alpha = Math.pow(Math.abs(Math.sin(s.phase)), 1.5);
             s.x += s.vx; s.y += s.vy;
             if (s.x < 0) s.x = w; if (s.x > w) s.x = 0;
             if (s.y < 0) s.y = h; if (s.y > h) s.y = 0;
             ctx.save();
-            ctx.globalAlpha = alpha * 0.9;
+            ctx.globalAlpha = alpha * 0.95;
             ctx.fillStyle = s.color;
             const sz = Math.ceil(s.size);
             const fx = Math.floor(s.x), fy = Math.floor(s.y);
             ctx.fillRect(fx, fy, sz, sz);
-            /* Cross sparkle arms for larger ones */
-            if (s.size > 2.4) {
-                ctx.globalAlpha = alpha * 0.45;
-                ctx.fillRect(fx - sz, fy + Math.floor(sz/2), sz*3, 1);
-                ctx.fillRect(fx + Math.floor(sz/2), fy - sz, 1, sz*3);
+            if (s.size > 2) {
+                ctx.globalAlpha = alpha * 0.4;
+                ctx.fillRect(fx - sz - 1, fy + Math.floor(sz/2), sz * 3 + 2, 1);
+                ctx.fillRect(fx + Math.floor(sz/2), fy - sz - 1, 1, sz * 3 + 2);
+                /* glow */
+                if (s.size > 2.8) {
+                    ctx.globalAlpha = alpha * 0.15;
+                    ctx.fillRect(fx - 2, fy - 2, sz + 4, sz + 4);
+                }
             }
             ctx.restore();
         }
 
-        /* Acceleration streaks */
+        /* Streaks — gradient fade */
         for (const st of streaks) {
             st.x += Math.cos(st.angle) * st.speed;
             st.y += Math.sin(st.angle) * st.speed;
-            if (st.x > w + 140) { st.x = -100; st.y = Math.random() * h; }
-            if (st.y > h + 140) { st.y = -100; st.x = Math.random() * w; }
+            if (st.x > w + 150) { st.x = -80; st.y = Math.random() * h; }
+            if (st.y > h + 150) { st.y = -80; st.x = Math.random() * w; }
+            if (st.x < -150)    { st.x = w + 80; st.y = Math.random() * h; }
+
             ctx.save();
-            /* Gradient streak: bright at tail, fades to transparent */
             const gst = ctx.createLinearGradient(
                 st.x, st.y,
                 st.x - Math.cos(st.angle) * st.len,
                 st.y - Math.sin(st.angle) * st.len
             );
             gst.addColorStop(0, st.color + '00');
-            gst.addColorStop(0.5, st.color);
+            gst.addColorStop(0.4, st.color);
+            gst.addColorStop(0.6, st.color);
             gst.addColorStop(1, st.color + '00');
             ctx.globalAlpha = st.alpha;
             ctx.strokeStyle = gst;
             ctx.lineWidth = st.width;
+            ctx.shadowBlur = st.width > 1 ? 4 : 0;
+            ctx.shadowColor = st.color;
             ctx.beginPath();
             ctx.moveTo(st.x, st.y);
             ctx.lineTo(st.x - Math.cos(st.angle) * st.len, st.y - Math.sin(st.angle) * st.len);
             ctx.stroke(); ctx.restore();
         }
 
-        /* Glitch band */
+        /* Data burst */
+        burstTimer++;
+        if (!burstActive && burstTimer > 280 && Math.random() < 0.015) {
+            triggerDataBurst(); burstTimer = 0;
+        }
+        if (burstActive) {
+            let alive = false;
+            for (const bp of burstParticles) {
+                bp.x += bp.vx; bp.y += bp.vy; bp.vy += 0.12; bp.alpha -= 0.035;
+                if (bp.alpha > 0) {
+                    alive = true;
+                    ctx.save(); ctx.globalAlpha = bp.alpha;
+                    ctx.fillStyle = bp.color;
+                    ctx.fillRect(Math.floor(bp.x), Math.floor(bp.y), Math.ceil(bp.size), Math.ceil(bp.size));
+                    ctx.restore();
+                }
+            }
+            if (!alive) burstActive = false;
+        }
+
+        /* Horizontal flash scan */
+        flashTimer++;
+        if (flashTimer > 140 && Math.random() < 0.01) {
+            flashY = Math.random() * h;
+            flashAlpha = 0.5;
+            flashTimer = 0;
+        }
+        if (flashAlpha > 0) {
+            const fc = p.lines[Math.floor(Math.random() * p.lines.length)];
+            ctx.save(); ctx.globalAlpha = flashAlpha;
+            ctx.strokeStyle = fc; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(0, flashY); ctx.lineTo(w, flashY); ctx.stroke();
+            ctx.restore();
+            flashAlpha -= 0.04;
+        }
+
+        /* Glitch band — full row displacement */
         glitchTimer++;
-        if (!glitchOn && glitchTimer > 200 && Math.random() < 0.006) {
+        if (!glitchOn && glitchTimer > 160 && Math.random() < 0.012) {
             glitchOn = true; glitchTimer = 0;
             glitchY = Math.random() * h;
-            glitchH = Math.random() * 24 + 3;
+            glitchH = Math.random() * 30 + 4;
             glitchDur = 0;
+            glitchShift = (Math.random() - 0.5) * 40;
         }
         if (glitchOn) {
-            ctx.save(); ctx.globalAlpha = 0.12;
-            ctx.fillStyle = currentLang === 'en' ? '#E0608A' : '#7EC8C0';
+            ctx.save();
+            /* Horizontal shift strip */
+            ctx.globalAlpha = 0.18;
+            ctx.fillStyle = p.lines[0];
             ctx.fillRect(0, glitchY, w, glitchH);
-            ctx.globalAlpha = 0.06; ctx.fillStyle = '#fff';
-            ctx.fillRect(0, glitchY + glitchH * 0.5, w, 1);
+            /* White noise line */
+            ctx.globalAlpha = 0.3;
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, glitchY, w, 1);
             ctx.restore();
-            if (++glitchDur > 5) glitchOn = false;
+            if (++glitchDur > 4) { glitchOn = false; }
         }
 
         canvasRegistry[canvasId].animId = requestAnimationFrame(draw);
@@ -227,7 +305,7 @@ window.addEventListener('load', () => initBgCanvas('bg-canvas', currentLang));
 
 
 /* ══════════════════════════════════════════════════════════
-   LOADING / NAVIGATION
+   LOADING / NAVIGATION — identical logic to v4
 ══════════════════════════════════════════════════════════ */
 function startLoading(lang) {
     currentLang = lang;
@@ -241,11 +319,11 @@ function startLoading(lang) {
 
     const lBar = document.getElementById('loading-titlebar-text');
     if (lBar) lBar.innerText = lang === 'en'
-        ? 'System Initialisation — MOULTLOOK v1.0'
-        : 'Initialisation du système — MOULTLOOK v1.0';
+        ? 'system initialisation — moultlook v1.0'
+        : 'initialisation du système — moultlook v1.0';
 
     const lTitle = document.getElementById('loading-title');
-    if (lTitle) lTitle.innerText = lang === 'en' ? 'Hardening chitin...' : 'Mue en cours...';
+    if (lTitle) lTitle.innerText = lang === 'en' ? 'HARDENING CHITIN...' : 'MUE EN COURS...';
 
     document.getElementById('banner-text').innerText = bannerContent[lang];
 
@@ -267,13 +345,21 @@ function animateProgress(lang) {
     const bar = document.getElementById('progress-bar');
     const sub = document.getElementById('loading-sub');
     const messages = {
-        en: ['Initialising chitin protocols...','Loading crustacean database...',
-             'Establishing shell integrity...','Decoding demiurge signals...',
-             'Compiling subjective reality...','Ready.'],
-        fr: ['Initialisation des protocoles chitineux...',
-             'Chargement de la base de données gasconne...',
-             'Vérification de l\'intégrité de la carapace...',
-             'Décodage des signaux démiurgiques...','Prêt.'],
+        en: [
+            'initialising chitin protocols...',
+            'loading crustacean database...',
+            'establishing shell integrity...',
+            'decoding demiurge signals...',
+            'compiling subjective reality...',
+            'ready.',
+        ],
+        fr: [
+            'initialisation des protocoles chitineux...',
+            'chargement de la base de données gasconne...',
+            'vérification de l\'intégrité de la carapace...',
+            'décodage des signaux démiurgiques...',
+            'prêt.',
+        ],
     };
     const msgs = messages[lang] || messages.en;
     let progress = 0, msgIdx = 0;
@@ -281,18 +367,18 @@ function animateProgress(lang) {
     if (sub) sub.innerText = msgs[0];
 
     const iv = setInterval(() => {
-        const jump = Math.random() * 16 + 7;
+        const jump = Math.random() * 18 + 8;
         progress = Math.min(100, progress + jump);
         if (bar) bar.style.width = progress + '%';
         const ti = Math.min(Math.floor((progress / 100) * msgs.length), msgs.length - 1);
         if (ti > msgIdx) { msgIdx = ti; if (sub) sub.innerText = msgs[msgIdx]; }
         if (progress >= 100) { if (sub) sub.innerText = msgs[msgs.length - 1]; clearInterval(iv); }
-    }, 420);
+    }, 400);
 }
 
 
 /* ══════════════════════════════════════════════════════════
-   UI RENDERING
+   UI RENDERING — identical logic to v4
 ══════════════════════════════════════════════════════════ */
 function updateUI() {
     renderSidebar();
@@ -351,13 +437,13 @@ function renderEmailList() {
     if (currentCategory && currentLang === 'en') list = list.filter(e => e.category === currentCategory);
     if (currentSection === 'unread' && !selectedEmailId && list.length > 0) selectedEmailId = list[0].id;
     if (list.length === 0) {
-        container.innerHTML = `<div style="padding:16px;font-family:var(--font-ui);font-size:13px;color:var(--text-dim);font-style:italic;">[ Empty. ]</div>`;
+        container.innerHTML = `<div style="padding:16px;font-family:var(--font-mono);font-size:16px;color:var(--text-dim);letter-spacing:.08em;">[ empty ]</div>`;
         return;
     }
     container.innerHTML = list.map(e => `
         <div class="email-item ${selectedEmailId===e.id?'active':''}" onclick="selectEmail(${e.id})">
             <strong>${e.subject}</strong>
-            <small>${e.from} &nbsp;|&nbsp; ${e.date}</small>
+            <small>${e.from} | ${e.date}</small>
         </div>`).join('');
 }
 
@@ -365,7 +451,10 @@ function renderEmailContent() {
     const view = document.getElementById('content-view');
     if (selectedEmailId) {
         const email = emails.find(e => e.id === selectedEmailId);
-        const demi  = demiurges[email.category] || { name: email.from, catchphrase: '', image: 'https://via.placeholder.com/46x46/808080/fff?text=?' };
+        const demi  = demiurges[email.category] || {
+            name: email.from, catchphrase: '',
+            image: 'https://via.placeholder.com/44x44/1A0810/FF0040?text=?',
+        };
         let bodyContent = `<div class="email-body">${email.body}</div>`;
         if (email.type === 'pdf') bodyContent = `<iframe src="${email.url}" width="100%" height="520px"></iframe>`;
         view.innerHTML = `
@@ -374,10 +463,10 @@ function renderEmailContent() {
                 <div><strong>${demi.name}</strong><small>${demi.catchphrase}</small></div>
             </div>
             <div class="email-container">
-                <div class="close-btn" onclick="closeEmail()">✕</div>
+                <div class="close-btn" onclick="closeEmail()">[ × ]</div>
                 <div class="email-header">
                     <h2>${email.subject}</h2>
-                    <p>${email.date} &nbsp;&middot;&nbsp; ${email.from}</p>
+                    <p>${email.date} // ${email.from}</p>
                 </div>
                 <hr>${bodyContent}
             </div>`;
@@ -390,13 +479,13 @@ function renderEmailContent() {
                 <p>${demi.description}</p>
             </div>`;
     } else {
-        view.innerHTML = `<div class="empty-state">select an item to view</div>`;
+        view.innerHTML = `<div class="empty-state">[ select an item to view ]</div>`;
     }
 }
 
 function renderSearchView() {
-    const label       = currentLang === 'en' ? 'Search the Database' : 'Rechercher';
-    const placeholder = currentLang === 'en' ? 'Enter keyword...' : 'Entrer un mot-clé...';
+    const label       = currentLang === 'en' ? '// SEARCH DATABASE //' : '// RECHERCHER //';
+    const placeholder = currentLang === 'en' ? 'enter keyword...' : 'entrer un mot-clé...';
     const btnLabel    = currentLang === 'en' ? 'EXECUTE' : 'CHERCHER';
     document.getElementById('content-view').innerHTML = `
         <div class="search-hero">
@@ -415,9 +504,9 @@ function executeSearch() {
     if (!q) return;
     const results = emails.filter(e => e.lang === currentLang &&
         (e.subject.toLowerCase().includes(q) || e.body.toLowerCase().includes(q)));
-    const noResult = currentLang === 'en' ? `No results for "${q}".` : `Aucun résultat pour "${q}".`;
+    const noResult = currentLang === 'en' ? `no results for "${q}".` : `aucun résultat pour "${q}".`;
     let html = `<div class="results-grid">`;
-    if (results.length === 0) html += `<p style="font-family:var(--font-ui);color:var(--text-dim);font-size:14px;font-style:italic;">${noResult}</p>`;
+    if (results.length === 0) html += `<p style="font-family:var(--font-mono);color:var(--text-dim);font-size:16px;">${noResult}</p>`;
     results.forEach(r => {
         html += `<div class="search-card"><h3>${r.subject}</h3>
             <p>${r.body.substring(0,110)}...</p>
@@ -430,16 +519,15 @@ function renderStaticContent() {
     const view = document.getElementById('content-view');
     if (currentSection === 'home') {
         view.innerHTML = `<div class="home-panel">
-            <h2>// System //</h2><hr>
+            <h2>// SYSTEM //</h2><hr>
             <p>${homeContent[currentLang]}</p></div>`;
     } else if (currentSection === 'shell') {
         view.innerHTML = shellContent;
     }
 }
 
-
 /* ══════════════════════════════════════════════════════════
-   HELPERS
+   HELPERS — identical to v4
 ══════════════════════════════════════════════════════════ */
 function navigate(s, c = null) {
     selectedEmailId = null;
@@ -447,7 +535,7 @@ function navigate(s, c = null) {
 }
 function selectEmail(id)  { selectedEmailId = id;   updateUI(); }
 function closeEmail()     { selectedEmailId = null; updateUI(); }
-function jumpToEmail(id) {
+function jumpToEmail(id)  {
     const e = emails.find(x => x.id === id);
     if (!e) return;
     selectedEmailId = id;
