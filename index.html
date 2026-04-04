@@ -6,7 +6,7 @@
     <title>MOULTLOOK.COM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&family=Share+Tech+Mono&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-default">
@@ -17,8 +17,8 @@
 <section id="screen-login" class="screen screen-login">
 
     <canvas id="bg-canvas" class="bg-canvas"></canvas>
+    <div class="grain-overlay"></div>
 
-    <!-- Big title — outside the window -->
     <div class="login-title-wrap">
         <div class="big-glitch-wrap">
             <h1 class="big-glitch" data-text="MOULTLOOK">MOULTLOOK</h1>
@@ -27,7 +27,6 @@
         <p class="login-tagline">select your operational theatre</p>
     </div>
 
-    <!-- Login window -->
     <div class="win-window login-window">
         <div class="win-titlebar">
             <div class="win-btn-group">
@@ -43,22 +42,21 @@
             </div>
             <div class="login-box">
                 <button class="main-btn" onclick="startLoading('en')">
-                    CHECK MY CRABS<br><small>( International )</small>
+                    CHECK MY CRABS<br><small>( international )</small>
                 </button>
-                <div class="or-divider">— or —</div>
+                <div class="or-divider">// OR //</div>
                 <button class="gascony-btn" onclick="startLoading('fr')">
-                    CRABE M'A TUER<br><small>( Gascogne Occupée )</small>
+                    CRABE M'A TUER<br><small>( gascogne occupée )</small>
                 </button>
             </div>
         </div>
         <div class="win-statusbar">
-            <span>Ready</span>
-            <span>🔒 Encrypted</span>
+            <span>READY</span>
+            <span>[ ENCRYPTED ]</span>
             <span id="login-clock"></span>
         </div>
     </div>
 
-    <!-- Pixel art character — drop character.png in repo root -->
     <div class="login-character-wrap">
         <img src="character.png" alt="" class="login-character" onerror="this.style.display='none'">
     </div>
@@ -72,6 +70,7 @@
 <section id="screen-loading" class="screen screen-loading" style="display:none;">
 
     <canvas id="bg-canvas-loading" class="bg-canvas"></canvas>
+    <div class="grain-overlay"></div>
 
     <div class="win-window loading-window">
         <div class="win-titlebar">
@@ -80,18 +79,18 @@
                 <button class="win-btn" tabindex="-1"></button>
                 <button class="win-btn" tabindex="-1"></button>
             </div>
-            <span class="win-title-text" id="loading-titlebar-text">System Initialisation — MOULTLOOK v1.0</span>
+            <span class="win-title-text" id="loading-titlebar-text">system initialisation — moultlook v1.0</span>
         </div>
         <div class="win-body loading-body">
             <div class="loading-gif-slot" id="loading-gif-slot">
                 <img src="session.gif" alt="" class="loading-gif" id="loading-gif"
                      onerror="this.parentElement.innerHTML='<span class=\'gif-fallback\'>🦀</span>'">
             </div>
-            <h2 id="loading-title" class="loading-title-text">Hardening...</h2>
+            <h2 id="loading-title" class="loading-title-text">HARDENING...</h2>
             <div class="win-progress-outer">
                 <div class="win-progress-inner" id="progress-bar"></div>
             </div>
-            <p class="loading-sub" id="loading-sub">Loading modules...</p>
+            <p class="loading-sub" id="loading-sub">loading modules...</p>
         </div>
     </div>
 
@@ -104,6 +103,7 @@
 <section id="screen-app" class="screen screen-app" style="display:none;">
 
     <canvas id="bg-canvas-app" class="bg-canvas"></canvas>
+    <div class="grain-overlay"></div>
 
     <div class="scrolling-banner">
         <div id="banner-text" class="banner-text"></div>
@@ -117,7 +117,7 @@
                 <button class="win-btn" tabindex="-1"></button>
                 <button class="win-btn" tabindex="-1"></button>
             </div>
-            <span class="win-title-text">🦀&nbsp;&nbsp;<span id="app-win-title">MOULTLOOK</span></span>
+            <span class="win-title-text">🦀 &nbsp;<span id="app-win-title">MOULTLOOK</span></span>
         </div>
 
         <div class="app-menubar">
