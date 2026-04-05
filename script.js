@@ -1,7 +1,7 @@
 /* ================================================================
-   MOULTLOOK — script.js v6.0
-   Canvas: oscilloscope sine waves, radar pings, petroleum twilight
-   "retro, corny, overreacted, absurd, yet thrilling"
+   MOULTLOOK — script.js v7.0 "HOLOGRAPHIC TWILIGHT"
+   Canvas: warm oscilloscope over textured wallpaper
+   Holographic glitch = the interface commenting on human chaos
    ================================================================ */
 'use strict';
 
@@ -23,30 +23,33 @@ function handleRouting() {
 
 
 /* ══════════════════════════════════════════════════════════
-   CANVAS — Oscilloscope Twilight
-   Sine waves scrolling across petroleum bg
-   Radar pings, signal sparks, scan lines
-   EN: orange-red/teal on deep petroleum blue
-   FR: bixbite/amethyst on deep indigo
+   CANVAS — Oscilloscope Twilight over Wallpaper
+   The canvas sits ON the wallpaper, adding warm holographic
+   data layer: sine waves, amber sparks, teal radar pings.
+   EN: amber/rose/teal glow over dusty burgundy wallpaper
+   FR: amber/teal/duck-egg glow over petroleum wallpaper
 ══════════════════════════════════════════════════════════ */
+
 const PALETTES = {
     en: {
-        bg:        ['#0A1420', '#0E1B2C', '#081020'],
-        sine:      ['rgba(232,74,40,0.22)', 'rgba(0,200,176,0.14)', 'rgba(216,72,120,0.1)'],
-        sineBright:['rgba(232,74,40,0.7)',  'rgba(0,200,176,0.5)',  'rgba(232,160,48,0.4)'],
-        sparks:    ['#E84A28','#FF6040','#00C8B0','#D84878','#E8A030','#FF8060','#20E8D0','#ffffff'],
-        lines:     ['rgba(232,74,40,0.5)','rgba(0,200,176,0.4)','rgba(216,72,120,0.3)','rgba(232,160,48,0.35)'],
-        radar:     'rgba(0,200,176,0.6)',
-        grid:      'rgba(30,50,72,0.45)',
+        /* Warm amber twilight on rose-burgundy */
+        sineFill:  ['rgba(232,160,40,0.18)',  'rgba(32,200,176,0.10)', 'rgba(216,80,64,0.08)'],
+        sineBright:['rgba(232,160,40,0.65)',  'rgba(32,200,176,0.45)', 'rgba(255,192,64,0.4)'],
+        sparks:    ['#E8A028','#FFC040','#20C8B0','#D84050','#E8D0A0','#80D0C0','#FFE080'],
+        lines:     ['rgba(232,160,40,0.4)','rgba(32,200,176,0.28)','rgba(255,192,64,0.3)'],
+        radar:     'rgba(232,160,40,0.55)',
+        grid:      'rgba(232,160,40,0.06)',
+        bloom:     ['rgba(232,160,40,0.09)','rgba(32,200,176,0.06)','rgba(216,64,80,0.05)'],
     },
     fr: {
-        bg:        ['#060A1C', '#0A0E28', '#050818'],
-        sine:      ['rgba(232,24,72,0.22)', 'rgba(32,200,176,0.14)', 'rgba(128,80,200,0.14)'],
-        sineBright:['rgba(232,24,72,0.7)',  'rgba(32,200,176,0.5)',  'rgba(160,112,232,0.5)'],
-        sparks:    ['#E81848','#FF2860','#20C8B0','#8050C8','#A070E8','#FF5080','#40D8C0','#ffffff'],
-        lines:     ['rgba(232,24,72,0.5)','rgba(32,200,176,0.4)','rgba(128,80,200,0.4)','rgba(160,112,232,0.3)'],
-        radar:     'rgba(128,80,200,0.6)',
-        grid:      'rgba(24,32,80,0.45)',
+        /* Amber + duck-egg teal on petroleum */
+        sineFill:  ['rgba(232,160,40,0.15)',  'rgba(32,200,176,0.14)', 'rgba(100,180,180,0.1)'],
+        sineBright:['rgba(232,160,40,0.6)',   'rgba(32,200,176,0.5)',  'rgba(140,220,200,0.4)'],
+        sparks:    ['#E8A028','#20C8B0','#8AC8B8','#FFC040','#E8E0C0','#40D8C0','#C8E8E0'],
+        lines:     ['rgba(232,160,40,0.38)','rgba(32,200,176,0.35)','rgba(140,220,200,0.22)'],
+        radar:     'rgba(32,200,176,0.5)',
+        grid:      'rgba(32,200,176,0.055)',
+        bloom:     ['rgba(232,160,40,0.08)','rgba(32,200,176,0.09)','rgba(100,180,160,0.07)'],
     },
 };
 
@@ -67,175 +70,177 @@ function initBgCanvas(canvasId, mode) {
     resize();
     if (!canvasRegistry[canvasId]) window.addEventListener('resize', resize);
 
-    /* ── Sine wave layers ────────────────────────────────────
-       Multiple sine waves at different frequencies, speeds, amplitudes
-       This is the oscilloscope motif
-    ─────────────────────────────────────────────────────── */
+    /* ── Sine waves — the oscilloscope layer ── */
     const sineWaves = [
-        /* Main signal wave */
-        { phase: 0, speed: 0.012, freq: 1.4, amp: 0.12, y: 0.42, color: 0, width: 1.5 },
-        /* Secondary interference */
-        { phase: 1.4, speed: 0.007, freq: 2.3, amp: 0.06, y: 0.58, color: 1, width: 1 },
-        /* Background carrier */
-        { phase: 3.1, speed: 0.004, freq: 0.7, amp: 0.18, y: 0.5, color: 2, width: 0.7 },
-        /* Tight rapid signal */
-        { phase: 0.8, speed: 0.022, freq: 4.2, amp: 0.025, y: 0.35, color: 0, width: 0.6, bright: true },
-        /* Slow drift */
-        { phase: 2.2, speed: 0.003, freq: 0.4, amp: 0.22, y: 0.65, color: 1, width: 0.5 },
+        /* Main signal — amber, slow drift */
+        { phase: 0,   speed: 0.009, freq: 1.2, amp: 0.10, y: 0.44, ci: 0, w: 1.4 },
+        /* Teal interference */
+        { phase: 1.6, speed: 0.006, freq: 2.1, amp: 0.055, y: 0.56, ci: 1, w: 0.9 },
+        /* Background carrier — very wide, faint */
+        { phase: 2.8, speed: 0.003, freq: 0.5, amp: 0.17, y: 0.5,  ci: 2, w: 0.6 },
+        /* Rapid signal trace */
+        { phase: 0.5, speed: 0.02,  freq: 3.8, amp: 0.022, y: 0.36, ci: 0, w: 0.5, bright: true },
+        /* Slow glow wave */
+        { phase: 1.1, speed: 0.0025,freq: 0.35, amp: 0.2, y: 0.67, ci: 1, w: 0.5 },
     ];
+
+    /* ── Bloom glows — warm atmospheric halos ── */
+    const blooms = [];
+    for (let i = 0; i < 7; i++) {
+        blooms.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 110 + 40,
+            ci: Math.floor(Math.random() * 3),
+            phase: Math.random() * Math.PI * 2,
+            speed: Math.random() * 0.008 + 0.003,
+            vx: (Math.random() - 0.5) * 0.15,
+            vy: (Math.random() - 0.5) * 0.15,
+        });
+    }
 
     /* ── Spark pixels ── */
     const sparks = [];
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 90; i++) {
         sparks.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size:  Math.random() * 2.5 + 0.8,
-            color: pal.sparks[Math.floor(Math.random() * pal.sparks.length)],
-            vx: (Math.random() - 0.5) * 0.15,
-            vy: (Math.random() - 0.5) * 0.15,
+            size:  Math.random() * 2.2 + 0.6,
+            ci:    Math.floor(Math.random() * pal.sparks.length),
+            vx: (Math.random() - 0.5) * 0.12,
+            vy: (Math.random() - 0.5) * 0.12,
             phase: Math.random() * Math.PI * 2,
-            speed: Math.random() * 0.03 + 0.01,
+            speed: Math.random() * 0.022 + 0.008,
+        });
+    }
+
+    /* ── Horizontal data streaks ── */
+    const hStreaks = [];
+    for (let i = 0; i < 10; i++) {
+        hStreaks.push({
+            y:     Math.random() * canvas.height,
+            x:     Math.random() * canvas.width,
+            width: Math.random() * 55 + 18,
+            speed: Math.random() * 1.8 + 0.7,
+            alpha: Math.random() * 0.2 + 0.04,
+            ci:    Math.floor(Math.random() * pal.lines.length),
         });
     }
 
     /* ── Radar pings ── */
-    let pings = [];
-    let pingTimer = 0;
-
-    function addPing() {
-        const p = PALETTES[currentLang] || PALETTES.en;
-        pings.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            r: 0, maxR: Math.random() * 80 + 30,
-            alpha: 0.7,
-            color: p.radar,
-        });
-    }
+    let pings = [], pingTimer = 0;
+    const addPing = () => pings.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 0, maxR: Math.random() * 70 + 25, alpha: 0.65,
+    });
     addPing();
 
-    /* ── Horizontal data streaks ── */
-    const hStreaks = [];
-    for (let i = 0; i < 8; i++) {
-        hStreaks.push({
-            y:      Math.random() * canvas.height,
-            x:      Math.random() * canvas.width,
-            width:  Math.random() * 60 + 20,
-            speed:  Math.random() * 2 + 0.8,
-            alpha:  Math.random() * 0.25 + 0.05,
-            color:  pal.lines[Math.floor(Math.random() * pal.lines.length)],
-        });
-    }
+    /* ── Signal burst ── */
+    let burstTimer = 0, burstActive = false, burstFrame = 0, burstWave = null;
 
-    /* ── Signal burst state ── */
-    let burstTimer = 0, burstActive = false, burstFrame = 0;
-    let burstWave = null;
+    /* ── Holographic panel glitch ── */
+    let holoTimer = 0;
 
     /* ── Glitch band ── */
     let glitchTimer = 0, glitchOn = false, glitchY = 0, glitchH = 0, glitchDur = 0;
 
-    let tick = 0;
-
     function draw() {
         const w = canvas.width, h = canvas.height;
         const p = PALETTES[currentLang] || PALETTES.en;
-        tick++;
 
-        /* Background */
-        const grad = ctx.createLinearGradient(0, 0, w * 0.4, h);
-        grad.addColorStop(0, p.bg[0]);
-        grad.addColorStop(0.5, p.bg[1]);
-        grad.addColorStop(1, p.bg[2]);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
+        /* Clear — fully transparent so wallpaper shows through */
+        ctx.clearRect(0, 0, w, h);
 
-        /* Grid */
+        /* Subtle vignette to deepen edges over wallpaper */
+        const vig = ctx.createRadialGradient(w/2, h/2, h*0.2, w/2, h/2, h*0.85);
+        vig.addColorStop(0, 'rgba(0,0,0,0)');
+        vig.addColorStop(1, 'rgba(0,0,0,0.45)');
+        ctx.fillStyle = vig; ctx.fillRect(0, 0, w, h);
+
+        /* Grid — very faint amber/teal over wallpaper */
         ctx.strokeStyle = p.grid; ctx.lineWidth = 0.4;
-        const gs = 36;
+        const gs = 40;
         for (let x = 0; x < w; x += gs) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
         for (let y = 0; y < h; y += gs) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
 
-        /* ── SINE WAVES — the oscilloscope ── */
+        /* Bloom glows */
+        for (const b of blooms) {
+            b.phase += b.speed;
+            b.x += b.vx; b.y += b.vy;
+            if (b.x < -b.r) b.x = w + b.r; if (b.x > w + b.r) b.x = -b.r;
+            if (b.y < -b.r) b.y = h + b.r; if (b.y > h + b.r) b.y = -b.r;
+            const a = Math.sin(b.phase) * 0.4 + 0.6;
+            const col = p.bloom[b.ci % p.bloom.length];
+            ctx.save(); ctx.globalAlpha = a;
+            const gr = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+            gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = gr;
+            ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+            ctx.fill(); ctx.restore();
+        }
+
+        /* ── SINE WAVES ── */
         for (const sw of sineWaves) {
             sw.phase += sw.speed;
-            const colorArr = sw.bright ? p.sineBright : p.sine;
-            const col = colorArr[sw.color % colorArr.length];
+            const col = sw.bright ? p.sineBright[sw.ci % p.sineBright.length]
+                                  : p.sineFill[sw.ci  % p.sineFill.length];
             ctx.save();
-            ctx.beginPath();
-            ctx.strokeStyle = col;
-            ctx.lineWidth = sw.width;
-            ctx.shadowBlur = sw.bright ? 8 : 3;
-            ctx.shadowColor = col;
-
+            ctx.strokeStyle = col; ctx.lineWidth = sw.w;
+            if (sw.bright) { ctx.shadowBlur = 10; ctx.shadowColor = col; }
             const baseY = h * sw.y;
             const amp   = h * sw.amp;
-            const freqPx = w / (sw.freq * 60);  /* wavelength in pixels */
-
+            const fpx   = w / (sw.freq * 60);
+            ctx.beginPath();
             ctx.moveTo(0, baseY + Math.sin(sw.phase) * amp);
             for (let x = 1; x < w; x += 1.5) {
-                const y = baseY + Math.sin(sw.phase + x / freqPx) * amp;
-                ctx.lineTo(x, y);
+                ctx.lineTo(x, baseY + Math.sin(sw.phase + x / fpx) * amp);
             }
             ctx.stroke(); ctx.restore();
         }
 
-        /* Signal burst — brief full-amplitude flash on a wave */
+        /* Signal burst */
         burstTimer++;
-        if (!burstActive && burstTimer > 220 && Math.random() < 0.018) {
+        if (!burstActive && burstTimer > 240 && Math.random() < 0.015) {
             burstActive = true; burstFrame = 0; burstTimer = 0;
-            burstWave = sineWaves[Math.floor(Math.random() * 2)]; /* one of the main waves */
+            burstWave = sineWaves[Math.floor(Math.random() * 2)];
         }
         if (burstActive && burstWave) {
-            const bAlpha = Math.max(0, 1 - burstFrame / 18);
-            const col = p.sineBright[burstWave.color % p.sineBright.length];
-            ctx.save();
-            ctx.beginPath();
-            ctx.strokeStyle = col;
-            ctx.lineWidth = burstWave.width * 2.5;
-            ctx.globalAlpha = bAlpha;
-            ctx.shadowBlur = 18;
-            ctx.shadowColor = col;
-            const baseY = h * burstWave.y;
-            const amp   = h * burstWave.amp * (2 + burstFrame * 0.1);
-            const freqPx = w / (burstWave.freq * 60);
-            ctx.moveTo(0, baseY + Math.sin(burstWave.phase) * amp);
-            for (let x = 1; x < w; x += 2) {
-                ctx.lineTo(x, baseY + Math.sin(burstWave.phase + x / freqPx) * amp);
-            }
+            const bA = Math.max(0, 1 - burstFrame / 16);
+            const col = p.sineBright[burstWave.ci % p.sineBright.length];
+            ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = burstWave.w * 2.8;
+            ctx.globalAlpha = bA; ctx.shadowBlur = 20; ctx.shadowColor = col;
+            const by = h * burstWave.y, ba = h * burstWave.amp * (2 + burstFrame * 0.12);
+            const bfp = w / (burstWave.freq * 60);
+            ctx.beginPath(); ctx.moveTo(0, by + Math.sin(burstWave.phase) * ba);
+            for (let x = 1; x < w; x += 2) ctx.lineTo(x, by + Math.sin(burstWave.phase + x / bfp) * ba);
             ctx.stroke(); ctx.restore();
-            if (++burstFrame > 22) { burstActive = false; burstWave = null; }
+            if (++burstFrame > 20) { burstActive = false; burstWave = null; }
         }
 
-        /* ── Horizontal data streaks ── */
+        /* Horizontal streaks */
         for (const st of hStreaks) {
             st.x += st.speed;
             if (st.x > w + 80) { st.x = -100; st.y = Math.random() * h; }
             const g = ctx.createLinearGradient(st.x - st.width, st.y, st.x, st.y);
-            g.addColorStop(0, 'rgba(0,0,0,0)');
-            g.addColorStop(0.6, st.color);
-            g.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.save();
-            ctx.globalAlpha = st.alpha;
-            ctx.strokeStyle = g; ctx.lineWidth = 1;
+            g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.6, p.lines[st.ci]); g.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.save(); ctx.globalAlpha = st.alpha; ctx.strokeStyle = g; ctx.lineWidth = 1;
             ctx.beginPath(); ctx.moveTo(st.x - st.width, st.y); ctx.lineTo(st.x, st.y);
             ctx.stroke(); ctx.restore();
         }
 
-        /* ── Spark pixels ── */
+        /* Spark pixels */
         for (const s of sparks) {
             s.phase += s.speed;
-            const alpha = Math.pow(Math.abs(Math.sin(s.phase)), 1.8);
+            const alpha = Math.pow(Math.abs(Math.sin(s.phase)), 1.6) * 0.9;
             s.x += s.vx; s.y += s.vy;
             if (s.x < 0) s.x = w; if (s.x > w) s.x = 0;
             if (s.y < 0) s.y = h; if (s.y > h) s.y = 0;
-            ctx.save();
-            ctx.globalAlpha = alpha * 0.85;
-            ctx.fillStyle = s.color;
-            const sz = Math.ceil(s.size);
-            const fx = Math.floor(s.x), fy = Math.floor(s.y);
+            ctx.save(); ctx.globalAlpha = alpha;
+            ctx.fillStyle = p.sparks[s.ci % p.sparks.length];
+            const sz = Math.ceil(s.size), fx = Math.floor(s.x), fy = Math.floor(s.y);
             ctx.fillRect(fx, fy, sz, sz);
-            if (s.size > 1.8) {
+            if (s.size > 1.6) {
                 ctx.globalAlpha = alpha * 0.3;
                 ctx.fillRect(fx - sz, fy + Math.floor(sz/2), sz*3, 1);
                 ctx.fillRect(fx + Math.floor(sz/2), fy - sz, 1, sz*3);
@@ -243,40 +248,50 @@ function initBgCanvas(canvasId, mode) {
             ctx.restore();
         }
 
-        /* ── Radar pings ── */
+        /* Radar pings */
         pingTimer++;
-        if (pingTimer > 200 && Math.random() < 0.02) { addPing(); pingTimer = 0; }
-
-        pings = pings.filter(pg => pg.alpha > 0);
+        if (pingTimer > 220 && Math.random() < 0.018) { addPing(); pingTimer = 0; }
+        pings = pings.filter(pg => pg.alpha > 0.01);
         for (const pg of pings) {
-            pg.r += 1.2;
-            pg.alpha -= 0.008;
-            if (pg.alpha <= 0) continue;
-            ctx.save();
-            ctx.globalAlpha = pg.alpha;
-            ctx.strokeStyle = p.radar;
-            ctx.lineWidth = 1;
-            ctx.shadowBlur = 6; ctx.shadowColor = p.radar;
-            ctx.beginPath();
-            ctx.arc(pg.x, pg.y, pg.r, 0, Math.PI * 2);
+            pg.r += 1; pg.alpha -= 0.007;
+            ctx.save(); ctx.globalAlpha = pg.alpha;
+            ctx.strokeStyle = p.radar; ctx.lineWidth = 1;
+            ctx.shadowBlur = 5; ctx.shadowColor = p.radar;
+            ctx.beginPath(); ctx.arc(pg.x, pg.y, pg.r, 0, Math.PI * 2);
             ctx.stroke(); ctx.restore();
         }
 
-        /* ── Glitch band ── */
+        /* Holographic interface glitch — affects panels (CSS triggered separately) */
+        holoTimer++;
+        if (holoTimer > 280 && Math.random() < 0.012) {
+            /* Flash a horizontal displacement strip over canvas */
+            const gy = Math.random() * h;
+            ctx.save(); ctx.globalAlpha = 0.1;
+            ctx.fillStyle = p.sparks[0];
+            ctx.fillRect(0, gy, w, Math.random() * 20 + 2);
+            ctx.globalAlpha = 0.18; ctx.fillStyle = '#fff';
+            ctx.fillRect(0, gy, w, 1);
+            ctx.restore();
+            holoTimer = 0;
+
+            /* Trigger CSS holo glitch on app window */
+            const appWin = document.querySelector('.app-window');
+            if (appWin) {
+                appWin.style.animation = 'holo-shift 0.4s ease forwards';
+                setTimeout(() => { if (appWin) appWin.style.animation = ''; }, 420);
+            }
+        }
+
+        /* Glitch band */
         glitchTimer++;
-        if (!glitchOn && glitchTimer > 180 && Math.random() < 0.01) {
+        if (!glitchOn && glitchTimer > 200 && Math.random() < 0.008) {
             glitchOn = true; glitchTimer = 0;
-            glitchY = Math.random() * h;
-            glitchH = Math.random() * 22 + 2;
-            glitchDur = 0;
+            glitchY = Math.random() * h; glitchH = Math.random() * 18 + 2; glitchDur = 0;
         }
         if (glitchOn) {
-            ctx.save(); ctx.globalAlpha = 0.14;
-            ctx.fillStyle = p.sparks[0];
-            ctx.fillRect(0, glitchY, w, glitchH);
-            ctx.globalAlpha = 0.25;
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(0, glitchY, w, 1);
+            ctx.save(); ctx.globalAlpha = 0.12;
+            ctx.fillStyle = p.sparks[0]; ctx.fillRect(0, glitchY, w, glitchH);
+            ctx.globalAlpha = 0.2; ctx.fillStyle = '#fff'; ctx.fillRect(0, glitchY, w, 1);
             ctx.restore();
             if (++glitchDur > 5) glitchOn = false;
         }
@@ -324,15 +339,14 @@ function startLoading(lang) {
         document.getElementById('screen-app').style.display     = 'flex';
         initBgCanvas('bg-canvas-app', lang);
         if (!isSwitching) window.location.hash = 'home';
-        handleRouting();
-        updateUI();
+        handleRouting(); updateUI();
     }, isSwitching ? 3000 : 2800);
 }
 
 function animateProgress(lang) {
     const bar = document.getElementById('progress-bar');
     const sub = document.getElementById('loading-sub');
-    const messages = {
+    const msgs = {
         en: ['initialising chitin protocols...','loading crustacean database...',
              'establishing shell integrity...','decoding demiurge signals...',
              'compiling subjective reality...','ready.'],
@@ -340,14 +354,12 @@ function animateProgress(lang) {
              'chargement de la base de données gasconne...',
              'vérification de l\'intégrité de la carapace...',
              'décodage des signaux démiurgiques...','prêt.'],
-    };
-    const msgs = messages[lang] || messages.en;
+    }[lang] || [];
     let progress = 0, msgIdx = 0;
     if (bar) bar.style.width = '0%';
-    if (sub) sub.innerText = msgs[0];
+    if (sub) sub.innerText = msgs[0] || '';
     const iv = setInterval(() => {
-        const jump = Math.random() * 18 + 8;
-        progress = Math.min(100, progress + jump);
+        progress = Math.min(100, progress + Math.random() * 18 + 8);
         if (bar) bar.style.width = progress + '%';
         const ti = Math.min(Math.floor((progress / 100) * msgs.length), msgs.length - 1);
         if (ti > msgIdx) { msgIdx = ti; if (sub) sub.innerText = msgs[msgIdx]; }
@@ -357,7 +369,7 @@ function animateProgress(lang) {
 
 
 /* ══════════════════════════════════════════════════════════
-   UI RENDERING
+   UI RENDERING — identical logic
 ══════════════════════════════════════════════════════════ */
 function updateUI() {
     renderSidebar();
@@ -370,15 +382,14 @@ function updateUI() {
         if (currentCategory) t += ' › ' + currentCategory.toUpperCase();
         titleEl.innerText = t;
     }
-    if (['home', 'shell', 'search'].includes(currentSection)) {
+    if (['home','shell','search'].includes(currentSection)) {
         middleRow.style.display = 'none';
         if (currentSection === 'search') renderSearchView();
         else renderStaticContent();
     } else {
         middleRow.style.display = 'flex';
         middleRow.style.flexDirection = 'column';
-        renderEmailList();
-        renderEmailContent();
+        renderEmailList(); renderEmailContent();
     }
 }
 
@@ -430,7 +441,7 @@ function renderEmailContent() {
         const email = emails.find(e => e.id === selectedEmailId);
         const demi  = demiurges[email.category] || {
             name: email.from, catchphrase: '',
-            image: 'https://via.placeholder.com/44x44/0E1B2C/E84A28?text=?',
+            image: 'https://via.placeholder.com/44x44/1C2030/E8A028?text=?',
         };
         let bodyContent = `<div class="email-body">${email.body}</div>`;
         if (email.type === 'pdf') bodyContent = `<iframe src="${email.url}" width="100%" height="520px"></iframe>`;
@@ -461,16 +472,16 @@ function renderEmailContent() {
 }
 
 function renderSearchView() {
-    const label       = currentLang === 'en' ? 'Search the Database' : 'Rechercher';
-    const placeholder = currentLang === 'en' ? 'enter keyword...' : 'entrer un mot-clé...';
-    const btnLabel    = currentLang === 'en' ? 'EXECUTE' : 'CHERCHER';
+    const label  = currentLang === 'en' ? 'Search the Database' : 'Rechercher';
+    const ph     = currentLang === 'en' ? 'enter keyword...' : 'entrer un mot-clé...';
+    const btn    = currentLang === 'en' ? 'EXECUTE' : 'CHERCHER';
     document.getElementById('content-view').innerHTML = `
         <div class="search-hero">
             <h1>${label}</h1>
             <div class="search-input-wrap">
-                <input type="text" id="search-input" placeholder="${placeholder}"
+                <input type="text" id="search-input" placeholder="${ph}"
                        onkeyup="if(event.key==='Enter') executeSearch()">
-                <button onclick="executeSearch()">${btnLabel}</button>
+                <button onclick="executeSearch()">${btn}</button>
             </div>
             <div id="search-results-area"></div>
         </div>`;
@@ -481,9 +492,9 @@ function executeSearch() {
     if (!q) return;
     const results = emails.filter(e => e.lang === currentLang &&
         (e.subject.toLowerCase().includes(q) || e.body.toLowerCase().includes(q)));
-    const noResult = currentLang === 'en' ? `no results for "${q}".` : `aucun résultat pour "${q}".`;
+    const nr = currentLang === 'en' ? `no results for "${q}".` : `aucun résultat pour "${q}".`;
     let html = `<div class="results-grid">`;
-    if (results.length === 0) html += `<p style="font-family:var(--font-mono);color:var(--text-dim);font-size:17px;">${noResult}</p>`;
+    if (!results.length) html += `<p style="font-family:var(--font-mono);color:var(--text-dim);font-size:17px;">${nr}</p>`;
     results.forEach(r => {
         html += `<div class="search-card"><h3>${r.subject}</h3>
             <p>${r.body.substring(0,110)}...</p>
@@ -495,17 +506,12 @@ function executeSearch() {
 function renderStaticContent() {
     const view = document.getElementById('content-view');
     if (currentSection === 'home') {
-        view.innerHTML = `<div class="home-panel">
-            <h2>// System //</h2><hr>
-            <p>${homeContent[currentLang]}</p></div>`;
+        view.innerHTML = `<div class="home-panel"><h2>// System //</h2><hr><p>${homeContent[currentLang]}</p></div>`;
     } else if (currentSection === 'shell') {
         view.innerHTML = shellContent;
     }
 }
 
-/* ══════════════════════════════════════════════════════════
-   HELPERS
-══════════════════════════════════════════════════════════ */
 function navigate(s, c = null) {
     selectedEmailId = null;
     window.location.hash = c ? `${s}-${c}` : s;
@@ -513,8 +519,7 @@ function navigate(s, c = null) {
 function selectEmail(id)  { selectedEmailId = id;   updateUI(); }
 function closeEmail()     { selectedEmailId = null; updateUI(); }
 function jumpToEmail(id)  {
-    const e = emails.find(x => x.id === id);
-    if (!e) return;
+    const e = emails.find(x => x.id === id); if (!e) return;
     selectedEmailId = id; navigate(e.section, e.category);
 }
 function moult() {
@@ -523,9 +528,7 @@ function moult() {
         : 'Jeter la carapace ? La page va se recharger.';
     if (confirm(msg)) location.reload();
 }
-function toggleLanguage() {
-    startLoading(currentLang === 'en' ? 'fr' : 'en');
-}
+function toggleLanguage() { startLoading(currentLang === 'en' ? 'fr' : 'en'); }
 
 document.getElementById('sidebar-toggle').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('collapsed');
