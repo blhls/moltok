@@ -6,19 +6,13 @@
     <title>MOULTLOOK.COM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&family=Share+Tech+Mono&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Share+Tech+Mono&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-default">
 
-<!-- ═══════════════════════════════════════════
-     SCREEN: LOGIN
-═══════════════════════════════════════════ -->
 <section id="screen-login" class="screen screen-login">
-
     <canvas id="bg-canvas" class="bg-canvas"></canvas>
-    <div class="grain-overlay"></div>
-
     <div class="login-title-wrap">
         <div class="big-glitch-wrap">
             <h1 class="big-glitch" data-text="MOULTLOOK">MOULTLOOK</h1>
@@ -26,7 +20,6 @@
         </div>
         <p class="login-tagline">select your operational theatre</p>
     </div>
-
     <div class="win-window login-window">
         <div class="win-titlebar">
             <div class="win-btn-group">
@@ -56,22 +49,13 @@
             <span id="login-clock"></span>
         </div>
     </div>
-
     <div class="login-character-wrap">
         <img src="character.png" alt="" class="login-character" onerror="this.style.display='none'">
     </div>
-
 </section>
 
-
-<!-- ═══════════════════════════════════════════
-     SCREEN: LOADING
-═══════════════════════════════════════════ -->
 <section id="screen-loading" class="screen screen-loading" style="display:none;">
-
     <canvas id="bg-canvas-loading" class="bg-canvas"></canvas>
-    <div class="grain-overlay"></div>
-
     <div class="win-window loading-window">
         <div class="win-titlebar">
             <div class="win-btn-group">
@@ -93,24 +77,14 @@
             <p class="loading-sub" id="loading-sub">loading modules...</p>
         </div>
     </div>
-
 </section>
 
-
-<!-- ═══════════════════════════════════════════
-     SCREEN: APP
-═══════════════════════════════════════════ -->
 <section id="screen-app" class="screen screen-app" style="display:none;">
-
     <canvas id="bg-canvas-app" class="bg-canvas"></canvas>
-    <div class="grain-overlay"></div>
-
     <div class="scrolling-banner">
         <div id="banner-text" class="banner-text"></div>
     </div>
-
     <div class="app-window">
-
         <div class="app-titlebar win-titlebar">
             <div class="win-btn-group">
                 <button class="win-btn win-btn-cls" tabindex="-1"></button>
@@ -119,7 +93,6 @@
             </div>
             <span class="win-title-text">🦀 &nbsp;<span id="app-win-title">MOULTLOOK</span></span>
         </div>
-
         <div class="app-menubar">
             <span class="menubar-item">Fichier</span>
             <span class="menubar-item">Édition</span>
@@ -127,7 +100,6 @@
             <span class="menubar-item">Mue</span>
             <span class="menubar-item">?</span>
         </div>
-
         <div class="app-layout">
             <aside id="sidebar" class="sidebar">
                 <div id="sidebar-toggle" class="moult-header">
@@ -141,19 +113,14 @@
                     <span class="txt">MOULT</span>
                 </div>
             </aside>
-
             <section class="middle-row" id="email-list"></section>
             <main class="content-view" id="content-view"></main>
         </div>
-
     </div>
-
     <footer class="mirror-footer">
         <button id="lang-toggle-btn" onclick="toggleLanguage()"></button>
     </footer>
-
 </section>
-
 
 <script src="data.js"></script>
 <script src="script.js"></script>
