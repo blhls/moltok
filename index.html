@@ -66,7 +66,7 @@
             <span class="win-title-text" id="loading-titlebar-text">system initialisation — moultlook v1.0</span>
         </div>
         <div class="win-body loading-body">
-            <div class="loading-gif-slot" id="loading-gif-slot">
+            <div class="loading-gif-slot">
                 <img src="session.gif" alt="" class="loading-gif" id="loading-gif"
                      onerror="this.parentElement.innerHTML='<span class=\'gif-fallback\'>🦀</span>'">
             </div>
@@ -129,8 +129,7 @@
         const el = document.getElementById('login-clock');
         if (el) el.innerText = new Date().toLocaleTimeString();
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(updateClock, 1000); updateClock();
 </script>
 </body>
 </html>
