@@ -11,60 +11,70 @@
 </head>
 <body class="theme-default">
 
-<!-- LOGIN -->
+<!-- ═══════════════════════════════════════════
+     SCREEN: LOGIN
+     Initial state: only the floating gif.
+     Clicking gif reveals the console.
+═══════════════════════════════════════════ -->
 <section id="screen-login" class="screen screen-login">
     <canvas id="bg-canvas" class="bg-canvas"></canvas>
-    <div class="login-title-wrap">
-        <div class="big-glitch-wrap">
-            <h1 class="big-glitch" data-text="MOULTLOOK">MOULTLOOK</h1>
-            <span class="big-glitch-dot">.com</span>
-        </div>
-        <p class="login-tagline">select your operational theatre</p>
+
+    <!-- Floating trigger — ALWAYS visible on this screen -->
+    <div id="login-trigger" class="floating-trigger" onclick="toggleLoginConsole()">
+        <img src="session.gif" alt="" class="trigger-gif">
     </div>
-    <div class="win-window login-window">
-        <div class="win-titlebar">
-            <div class="win-btn-group">
-                <button class="win-btn win-btn-cls" tabindex="-1"></button>
-                <button class="win-btn" tabindex="-1"></button>
-                <button class="win-btn" tabindex="-1"></button>
+
+    <!-- Login console — hidden until gif clicked -->
+    <div id="login-console" class="login-console-wrap" style="display:none;">
+        <div class="login-title-wrap">
+            <div class="big-glitch-wrap">
+                <h1 class="big-glitch" data-text="MOULTLOOK">MOULTLOOK</h1>
+                <span class="big-glitch-dot">.com</span>
             </div>
-            <span class="win-title-text">identification required</span>
+            <p class="login-tagline">select your operational theatre</p>
         </div>
-        <div class="win-body login-body">
-            <div class="login-gif-slot">
-                <img src="session.gif" alt="" class="login-gif" onerror="this.style.display='none'">
+        <div class="win-window login-window">
+            <div class="win-titlebar login-titlebar">
+                <!-- No traffic-light buttons on login -->
+                <span class="win-title-text">identification required</span>
             </div>
-            <div class="login-box">
-                <button class="main-btn" onclick="startLoading('en')">
-                    CHECK MY CRABS<br><small>( international )</small>
-                </button>
-                <div class="or-divider">// or //</div>
-                <button class="gascony-btn" onclick="startLoading('fr')">
-                    CRABE M'A TUER<br><small>( gascogne occupée )</small>
-                </button>
+            <div class="win-body login-body">
+                <div class="login-gif-slot">
+                    <img src="session.gif" alt="" class="login-gif" onerror="this.style.display='none'">
+                </div>
+                <div class="login-box">
+                    <button class="main-btn" onclick="startLoading('en')">
+                        CHECK MY CRABS<br><small>( international )</small>
+                    </button>
+                    <div class="or-divider">// or //</div>
+                    <button class="gascony-btn" onclick="startLoading('fr')">
+                        CRABE M'A TUER<br><small>( gascogne occupée )</small>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="win-statusbar">
-            <span>READY</span>
-            <span>[ ENCRYPTED ]</span>
-            <span id="login-clock"></span>
+            <div class="win-statusbar">
+                <span>READY</span>
+                <span>[ ENCRYPTED ]</span>
+                <span id="login-clock"></span>
+            </div>
         </div>
     </div>
+
     <div class="login-character-wrap">
         <img src="character.png" alt="" class="login-character" onerror="this.style.display='none'">
     </div>
 </section>
 
-<!-- LOADING -->
+
+<!-- ═══════════════════════════════════════════
+     SCREEN: LOADING
+     No traffic-light buttons.
+═══════════════════════════════════════════ -->
 <section id="screen-loading" class="screen screen-loading" style="display:none;">
     <canvas id="bg-canvas-loading" class="bg-canvas"></canvas>
     <div class="win-window loading-window">
-        <div class="win-titlebar">
-            <div class="win-btn-group">
-                <button class="win-btn win-btn-cls" tabindex="-1"></button>
-                <button class="win-btn" tabindex="-1"></button>
-                <button class="win-btn" tabindex="-1"></button>
-            </div>
+        <div class="win-titlebar login-titlebar">
+            <!-- No traffic-light buttons on loading -->
             <span class="win-title-text" id="loading-titlebar-text">system initialisation — moultlook v1.0</span>
         </div>
         <div class="win-body loading-body">
@@ -81,49 +91,92 @@
     </div>
 </section>
 
-<!-- APP -->
+
+<!-- ═══════════════════════════════════════════
+     SCREEN: APP
+═══════════════════════════════════════════ -->
 <section id="screen-app" class="screen screen-app" style="display:none;">
     <canvas id="bg-canvas-app" class="bg-canvas"></canvas>
-    <div class="scrolling-banner">
+
+    <div class="scrolling-banner" id="scrolling-banner">
         <div id="banner-text" class="banner-text"></div>
     </div>
-    <div class="app-window">
-        <div class="app-titlebar win-titlebar">
-            <div class="win-btn-group">
-                <button class="win-btn win-btn-cls" tabindex="-1"></button>
-                <button class="win-btn" tabindex="-1"></button>
-                <button class="win-btn" tabindex="-1"></button>
+
+    <!-- Console layout — flex row, expands when side panel opens -->
+    <div id="console-layout" class="console-layout">
+
+        <!-- Main window -->
+        <div class="app-window" id="app-window">
+            <div class="app-titlebar win-titlebar">
+                <div class="win-btn-group">
+                    <!-- Red  = moult / reload -->
+                    <button class="win-btn btn-red"    id="btn-red"    onclick="moult()"           title="Moult (reload)"></button>
+                    <!-- Blue = minimize / hide console -->
+                    <button class="win-btn btn-blue"   id="btn-blue"   onclick="minimizeConsole()" title="Minimize — view background"></button>
+                    <!-- Yellow = toggle side panel -->
+                    <button class="win-btn btn-yellow" id="btn-yellow" onclick="toggleSidePanel()" title="Open transmission panel"></button>
+                </div>
+                <span class="win-title-text">🦀 &nbsp;<span id="app-win-title">MOULTLOOK</span></span>
             </div>
-            <span class="win-title-text">🦀 &nbsp;<span id="app-win-title">MOULTLOOK</span></span>
+            <!-- NO MENUBAR -->
+            <div class="app-layout">
+                <aside id="sidebar" class="sidebar">
+                    <div id="sidebar-toggle" class="moult-header">
+                        <span class="hamburger">≡</span>
+                        <span class="label-full">MOULTLOOK</span>
+                        <span class="label-vert">M O U L T L O O K</span>
+                    </div>
+                    <nav class="nav-links" id="sidebar-nav"></nav>
+                    <div class="nav-item moult-btn" onclick="moult()">
+                        <span class="icon">🦀</span>
+                        <span class="txt">MOULT</span>
+                    </div>
+                </aside>
+                <section class="middle-row" id="email-list"></section>
+                <main class="content-view" id="content-view"></main>
+            </div>
         </div>
-        <div class="app-menubar">
-            <span class="menubar-item">Fichier</span>
-            <span class="menubar-item">Édition</span>
-            <span class="menubar-item">Affichage</span>
-            <span class="menubar-item">Mue</span>
-            <span class="menubar-item">?</span>
-        </div>
-        <div class="app-layout">
-            <aside id="sidebar" class="sidebar">
-                <div id="sidebar-toggle" class="moult-header">
-                    <span class="hamburger">≡</span>
-                    <span class="label-full">MOULTLOOK</span>
-                    <span class="label-vert">M O U L T L O O K</span>
+
+        <!-- Side panel (hidden until yellow) -->
+        <div id="side-panel" class="side-panel" style="display:none;">
+            <div class="side-titlebar">
+                <span class="side-title-text">// TRANSMISSION //</span>
+                <button class="side-close-btn" onclick="toggleSidePanel()">[ × ]</button>
+            </div>
+            <div class="side-body">
+                <!-- Clock -->
+                <div class="side-clock-wrap">
+                    <div id="side-clock" class="side-clock">00:00:00.000</div>
+                    <div id="side-date"  class="side-date">---</div>
                 </div>
-                <nav class="nav-links" id="sidebar-nav"></nav>
-                <div class="nav-item moult-btn" onclick="moult()">
-                    <span class="icon">🦀</span>
-                    <span class="txt">MOULT</span>
+                <!-- birt.gif -->
+                <div class="side-birt-wrap">
+                    <img src="birt.gif" alt="birt" class="side-birt"
+                         onerror="this.style.display='none'">
                 </div>
-            </aside>
-            <section class="middle-row" id="email-list"></section>
-            <main class="content-view" id="content-view"></main>
+                <!-- Berylism banner placeholder -->
+                <div class="side-banner-wrap" onclick="openBerylism()" title="Open berylism.org">
+                    <div class="side-banner-placeholder">
+                        <span class="side-banner-text">BERYLISM<br>.ORG</span>
+                        <span class="side-banner-sub">[ click to transmit ]</span>
+                    </div>
+                </div>
+            </div>
         </div>
+
+    </div><!-- /console-layout -->
+
+    <!-- Minimized gif — shown when console is hidden -->
+    <div id="app-minimized-gif" class="floating-trigger app-restore-trigger"
+         style="display:none;" onclick="restoreConsole()">
+        <img src="session.gif" alt="" class="trigger-gif">
     </div>
+
     <footer class="mirror-footer">
         <button id="lang-toggle-btn" onclick="toggleLanguage()"></button>
     </footer>
 </section>
+
 
 <script src="data.js"></script>
 <script src="script.js"></script>
