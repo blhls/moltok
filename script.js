@@ -1,15 +1,20 @@
 /* ================================================================
-   MOULTLOOK — script.js v10.0
-   Canvas: holographic glitch only (no scan line)
-           — fires on login/loading too, more frequently
-   Custom popup replaces confirm() for language switch + moult
+   MOULTLOOK — script.js v11.0
+   Traffic buttons wired. Login gif flow. Side panel. Clock.
+   Intense glitch during loading. All custom popups.
    ================================================================ */
 'use strict';
 
-let currentLang     = 'en';
-let currentSection  = 'home';
-let currentCategory = null;
-let selectedEmailId = null;
+/* ── State ─────────────────────────────────────────────────── */
+let currentLang      = 'en';
+let currentSection   = 'home';
+let currentCategory  = null;
+let selectedEmailId  = null;
+
+let loginConsoleOpen = false;
+let consoleMinimized = false;
+let sidePanelOpen    = false;
+let clockRafId       = null;   /* requestAnimationFrame id for side-panel clock */
 
 window.addEventListener('hashchange', handleRouting);
 function handleRouting() {
@@ -24,17 +29,11 @@ function handleRouting() {
 
 /* ══════════════════════════════════════════════════════════
    CANVAS — holographic glitch only
-   isLoginScreen: fires more frequently (user is idle there)
-   isApp:         fires rarely (reading experience)
+   Modes: 'normal' (60-90s), 'login' (15-25s), 'intense' (1-3s)
 ══════════════════════════════════════════════════════════ */
 const canvasRegistry = {};
 
-/**
- * @param {string}  canvasId
- * @param {string}  mode          — 'en' | 'fr'
- * @param {boolean} isLoginScreen — shorter interval for login/loading
- */
-function initBgCanvas(canvasId, mode, isLoginScreen = false) {
+function initBgCanvas(canvasId, mode, glitchMode = 'normal') {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     if (canvasRegistry[canvasId]) cancelAnimationFrame(canvasRegistry[canvasId].animId);
@@ -48,100 +47,79 @@ function initBgCanvas(canvasId, mode, isLoginScreen = false) {
     resize();
     if (!canvasRegistry[canvasId]) window.addEventListener('resize', resize);
 
-    /*  Holo glitch timing:
-        login/loading  → every ~15–25 s  (user is waiting, good moment)
-        app            → every ~60–90 s  (reading, should be rare)            */
-    const baseCountdown = isLoginScreen
-        ? 15 * 60 + Math.random() * 10 * 60
-        : 60 * 60 + Math.random() * 30 * 60;
+    const baseFrames = glitchMode === 'intense' ? 60 + Math.random() * 120
+                     : glitchMode === 'login'   ? 15 * 60 + Math.random() * 10 * 60
+                     :                            60 * 60 + Math.random() * 30 * 60;
 
-    let holoCountdown = baseCountdown;
+    let holoCountdown = baseFrames;
     let holoFrame     = 0;
     let holoActive    = false;
     let holoSlices    = [];
 
-    function buildHoloSlices(w, h) {
+    function buildSlices(w, h) {
         holoSlices = [];
         let y = 0;
         while (y < h) {
-            const sliceH = Math.random() * 28 + 4;
-            holoSlices.push({
-                y,
-                h: sliceH,
-                shift:  (Math.random() - 0.5) * 30,
-                bright: 0.8 + Math.random() * 0.5,
-            });
-            y += sliceH;
+            const sh = Math.random() * 28 + 4;
+            holoSlices.push({ y, h: sh });
+            y += sh;
         }
     }
 
     function draw() {
         const w = canvas.width, h = canvas.height;
-
-        /* Transparent base — real background image shows through */
         ctx.clearRect(0, 0, w, h);
 
-        /* ── Holographic glitch ── */
         holoCountdown--;
-
         if (!holoActive && holoCountdown <= 0) {
             holoActive    = true;
             holoFrame     = 0;
-            holoCountdown = baseCountdown;
-            buildHoloSlices(w, h);
+            holoCountdown = glitchMode === 'intense' ? 60 + Math.random() * 120
+                          : glitchMode === 'login'   ? 15 * 60 + Math.random() * 10 * 60
+                          :                            60 * 60 + Math.random() * 30 * 60;
+            buildSlices(w, h);
 
-            /* Animate app window via CSS (only if it exists / visible) */
+            /* App-window CSS glitch — very rare in normal mode */
             const aw = document.querySelector('.app-window');
             if (aw && document.getElementById('screen-app').style.display !== 'none') {
                 aw.style.animation = 'holo-shift 0.42s ease forwards';
-                setTimeout(() => {
-                    if (aw) aw.style.animation = 'console-breathe 10s ease-in-out infinite';
-                }, 460);
+                setTimeout(() => { if (aw) aw.style.animation = 'console-breathe 10s ease-in-out infinite'; }, 460);
             }
-
-            /* Also briefly jolt the login/loading window */
+            /* Login/loading window jolt */
             const lw = document.querySelector('.login-window, .loading-window');
             if (lw) {
                 lw.style.transition = 'transform 0.08s, filter 0.08s';
-                lw.style.transform  = 'translateX(-3px)';
+                lw.style.transform  = `translateX(${glitchMode === 'intense' ? -6 : -3}px)`;
                 lw.style.filter     = 'hue-rotate(20deg) brightness(1.2)';
                 setTimeout(() => {
-                    lw.style.transform  = 'translateX(3px)';
-                    lw.style.filter     = 'hue-rotate(-12deg)';
-                }, 80);
+                    lw.style.transform = `translateX(${glitchMode === 'intense' ? 7 : 3}px)`;
+                    lw.style.filter    = 'hue-rotate(-12deg)';
+                }, glitchMode === 'intense' ? 60 : 80);
                 setTimeout(() => {
                     lw.style.transform  = '';
                     lw.style.filter     = '';
                     lw.style.transition = '';
-                }, 160);
+                }, glitchMode === 'intense' ? 130 : 165);
             }
         }
 
         if (holoActive) {
             const fade = Math.max(0, 1 - holoFrame / 14);
-
             ctx.save();
-            /* Colour aberration stripes */
-            ctx.globalAlpha = 0.10 * fade;
-            const glitchCol = mode === 'en'
-                ? `rgba(232,160,40, 0.9)`
-                : `rgba(32,200,176, 0.9)`;
+            ctx.globalAlpha = (glitchMode === 'intense' ? 0.18 : 0.10) * fade;
+            const col = mode === 'fr' ? `rgba(32,200,176,0.9)` : `rgba(232,160,40,0.9)`;
             for (const sl of holoSlices) {
                 if (Math.random() < 0.6) continue;
-                ctx.fillStyle = glitchCol;
+                ctx.fillStyle = col;
                 ctx.fillRect(0, sl.y, w, sl.h);
             }
-
-            /* Sharp bright line flashes */
             if (holoFrame < 7) {
                 ctx.globalAlpha = (0.45 - holoFrame * 0.06) * fade;
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth   = 1;
+                ctx.strokeStyle = '#fff'; ctx.lineWidth = 1;
                 const gy = Math.random() * h;
                 ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
             }
             ctx.restore();
-
             holoFrame++;
             if (holoFrame > 14) holoActive = false;
         }
@@ -157,25 +135,181 @@ function stopBgCanvas(id) {
     if (canvasRegistry[id]) cancelAnimationFrame(canvasRegistry[id].animId);
 }
 
-window.addEventListener('load', () => initBgCanvas('bg-canvas', currentLang, true));
+window.addEventListener('load', () => initBgCanvas('bg-canvas', currentLang, 'login'));
 
 
 /* ══════════════════════════════════════════════════════════
-   CUSTOM POPUP — replaces native confirm()
-   showPopup(options) → Promise<boolean>
-   options: {
-     title:       string  (titlebar text)
-     question:    string  (main italic serif question)
-     footnote:    string  (fine-print sub-text, the asterisk joke)
-     translation: string  (French translation of question)
-     transNote:   string  (French translation of footnote)
-     confirmText: string
-     cancelText:  string
-   }
+   LOGIN GIF FLOW
+══════════════════════════════════════════════════════════ */
+function toggleLoginConsole() {
+    loginConsoleOpen = !loginConsoleOpen;
+    const cons = document.getElementById('login-console');
+
+    if (loginConsoleOpen) {
+        cons.style.display    = 'flex';
+        cons.style.animation  = 'glitch-manifest 0.58s ease forwards';
+    } else {
+        cons.style.animation  = 'glitch-dismiss 0.38s ease forwards';
+        setTimeout(() => { cons.style.display = 'none'; }, 360);
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   TRAFFIC LIGHT BUTTONS
+══════════════════════════════════════════════════════════ */
+
+/* ── Blue: minimize / restore ── */
+function minimizeConsole() {
+    consoleMinimized = true;
+    const appWin  = document.getElementById('app-window');
+    const banner  = document.getElementById('scrolling-banner');
+    const restore = document.getElementById('app-minimized-gif');
+    const layout  = document.getElementById('console-layout');
+    const footer  = document.querySelector('.mirror-footer');
+
+    /* Also close side panel if open */
+    if (sidePanelOpen) _closeSidePanelImmediate();
+
+    document.getElementById('btn-blue').classList.add('active');
+
+    appWin.style.animation = 'glitch-dismiss 0.38s ease forwards';
+    banner.style.animation = 'glitch-dismiss 0.28s ease forwards';
+    if (footer) footer.style.opacity = '0';
+
+    setTimeout(() => {
+        appWin.style.display  = 'none';
+        banner.style.display  = 'none';
+        layout.style.display  = 'none';
+        if (footer) footer.style.display = 'none';
+
+        restore.style.display    = 'block';
+        restore.style.animation  = 'gif-float 3.5s ease-in-out infinite, gif-glitch 8s infinite';
+    }, 360);
+}
+
+function restoreConsole() {
+    consoleMinimized = false;
+    const appWin  = document.getElementById('app-window');
+    const banner  = document.getElementById('scrolling-banner');
+    const restore = document.getElementById('app-minimized-gif');
+    const layout  = document.getElementById('console-layout');
+    const footer  = document.querySelector('.mirror-footer');
+
+    document.getElementById('btn-blue').classList.remove('active');
+    restore.style.display = 'none';
+
+    layout.style.display  = 'flex';
+    appWin.style.display  = 'flex';
+    banner.style.display  = 'block';
+    if (footer) { footer.style.display = 'block'; footer.style.opacity = '1'; }
+
+    appWin.style.animation  = 'glitch-manifest 0.55s ease forwards';
+    banner.style.animation  = '';
+    banner.style.opacity    = '1';
+}
+
+/* ── Yellow: toggle side panel ── */
+function toggleSidePanel() {
+    if (sidePanelOpen) {
+        _closeSidePanel();
+    } else {
+        _openSidePanel();
+    }
+}
+
+function _openSidePanel() {
+    sidePanelOpen = true;
+    document.getElementById('btn-yellow').classList.add('active');
+
+    const layout = document.getElementById('console-layout');
+    const panel  = document.getElementById('side-panel');
+
+    layout.classList.add('with-side-panel');
+    panel.style.display    = 'flex';
+    panel.style.animation  = 'side-manifest 0.55s ease forwards';
+
+    startClock();
+}
+
+function _closeSidePanel() {
+    sidePanelOpen = false;
+    document.getElementById('btn-yellow').classList.remove('active');
+
+    const panel  = document.getElementById('side-panel');
+    const layout = document.getElementById('console-layout');
+
+    panel.style.animation = 'side-dismiss 0.38s ease forwards';
+    setTimeout(() => {
+        panel.style.display = 'none';
+        layout.classList.remove('with-side-panel');
+    }, 360);
+
+    stopClock();
+}
+
+function _closeSidePanelImmediate() {
+    sidePanelOpen = false;
+    document.getElementById('btn-yellow').classList.remove('active');
+    const panel  = document.getElementById('side-panel');
+    const layout = document.getElementById('console-layout');
+    panel.style.display = 'none';
+    layout.classList.remove('with-side-panel');
+    stopClock();
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   SIDE PANEL CLOCK — requestAnimationFrame for ms precision
+══════════════════════════════════════════════════════════ */
+function startClock() {
+    if (clockRafId) return; /* already running */
+    function tick() {
+        if (!sidePanelOpen) { clockRafId = null; return; }
+        const now = new Date();
+        const h   = String(now.getHours()).padStart(2, '0');
+        const m   = String(now.getMinutes()).padStart(2, '0');
+        const s   = String(now.getSeconds()).padStart(2, '0');
+        const ms  = String(now.getMilliseconds()).padStart(3, '0');
+        const el  = document.getElementById('side-clock');
+        if (el) el.innerText = `${h}:${m}:${s}.${ms}`;
+        const de  = document.getElementById('side-date');
+        if (de) de.innerText = now.toLocaleDateString('en-GB', {
+            weekday: 'short', day: '2-digit', month: 'short', year: 'numeric'
+        });
+        clockRafId = requestAnimationFrame(tick);
+    }
+    clockRafId = requestAnimationFrame(tick);
+}
+
+function stopClock() {
+    if (clockRafId) { cancelAnimationFrame(clockRafId); clockRafId = null; }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   BERYLISM LINK — opens with popup
+══════════════════════════════════════════════════════════ */
+async function openBerylism() {
+    const opts = {
+        title:       'transmission: berylism.org',
+        question:    'open berylism.org?',
+        footnote:    'you are about to leave moultlook',
+        translation: 'ouvrir berylism.org ?',
+        transNote:   'vous quittez moultlook',
+        confirmText: 'transmit',
+        cancelText:  'stay',
+    };
+    const confirmed = await showPopup(opts);
+    if (confirmed) window.open('https://berylism.org', '_blank');
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   CUSTOM POPUP
 ══════════════════════════════════════════════════════════ */
 function showPopup(opts) {
     return new Promise(resolve => {
-        /* Remove any existing popup */
         const existing = document.getElementById('moult-popup');
         if (existing) existing.remove();
 
@@ -186,11 +320,6 @@ function showPopup(opts) {
         overlay.innerHTML = `
             <div class="popup-window">
                 <div class="popup-titlebar">
-                    <div class="win-btn-group">
-                        <div class="win-btn" style="background:var(--tl-close);box-shadow:0 0 5px var(--tl-close);border-radius:50%;width:12px;height:12px;"></div>
-                        <div class="win-btn" style="background:var(--tl-min);box-shadow:0 0 5px var(--tl-min);border-radius:50%;width:12px;height:12px;"></div>
-                        <div class="win-btn" style="background:var(--tl-max);box-shadow:0 0 5px var(--tl-max);border-radius:50%;width:12px;height:12px;"></div>
-                    </div>
                     <span class="popup-title-text">${opts.title || 'system prompt'}</span>
                 </div>
                 <div class="popup-body">
@@ -202,28 +331,23 @@ function showPopup(opts) {
                         ${opts.transNote ? `<small>${opts.transNote}</small>` : ''}
                     </p>
                     <div class="popup-buttons">
-                        <button class="popup-btn popup-btn-cancel" id="popup-cancel">${opts.cancelText || 'Non'}</button>
-                        <button class="popup-btn popup-btn-confirm" id="popup-confirm">${opts.confirmText || 'Oui'}</button>
+                        <button class="popup-btn popup-btn-cancel"  id="popup-cancel">${opts.cancelText  || 'non'}</button>
+                        <button class="popup-btn popup-btn-confirm" id="popup-confirm">${opts.confirmText || 'oui'}</button>
                     </div>
                 </div>
             </div>`;
 
         document.body.appendChild(overlay);
 
-        /* Close on overlay click */
-        overlay.addEventListener('click', e => {
-            if (e.target === overlay) { overlay.remove(); resolve(false); }
-        });
-        document.getElementById('popup-cancel').addEventListener('click', () => {
-            overlay.remove(); resolve(false);
-        });
-        document.getElementById('popup-confirm').addEventListener('click', () => {
-            overlay.remove(); resolve(true);
-        });
-        /* Keyboard */
+        const resolve_and_remove = (val) => {
+            overlay.remove(); resolve(val);
+        };
+        overlay.addEventListener('click', e => { if (e.target === overlay) resolve_and_remove(false); });
+        document.getElementById('popup-cancel').addEventListener('click',  () => resolve_and_remove(false));
+        document.getElementById('popup-confirm').addEventListener('click', () => resolve_and_remove(true));
         const onKey = e => {
-            if (e.key === 'Enter')  { document.removeEventListener('keydown', onKey); overlay.remove(); resolve(true);  }
-            if (e.key === 'Escape') { document.removeEventListener('keydown', onKey); overlay.remove(); resolve(false); }
+            if (e.key === 'Enter')  { document.removeEventListener('keydown', onKey); resolve_and_remove(true);  }
+            if (e.key === 'Escape') { document.removeEventListener('keydown', onKey); resolve_and_remove(false); }
         };
         document.addEventListener('keydown', onKey);
     });
@@ -231,7 +355,7 @@ function showPopup(opts) {
 
 
 /* ══════════════════════════════════════════════════════════
-   LOADING / NAVIGATION
+   LOADING & LANGUAGE SWITCH
 ══════════════════════════════════════════════════════════ */
 function startLoading(lang) {
     currentLang = lang;
@@ -242,26 +366,58 @@ function startLoading(lang) {
     document.getElementById('screen-loading').style.display = 'flex';
     document.body.className = lang === 'fr' ? 'mode-fr' : 'theme-default';
 
-    const lBar = document.getElementById('loading-titlebar-text');
-    if (lBar) lBar.innerText = lang === 'en'
-        ? 'system initialisation — moultlook v1.0'
-        : 'initialisation du système — moultlook v1.0';
+    const lBar   = document.getElementById('loading-titlebar-text');
     const lTitle = document.getElementById('loading-title');
+    if (lBar)   lBar.innerText   = lang === 'en' ? 'system initialisation — moultlook v1.0' : 'initialisation du système — moultlook v1.0';
     if (lTitle) lTitle.innerText = lang === 'en' ? 'HARDENING CHITIN...' : 'MUE EN COURS...';
     document.getElementById('banner-text').innerText = bannerContent[lang];
 
     stopBgCanvas('bg-canvas');
-    initBgCanvas('bg-canvas-loading', lang, true);
+
+    /* Intense glitch during loading switch */
+    const glitchMode = isSwitching ? 'intense' : 'login';
+    initBgCanvas('bg-canvas-loading', lang, glitchMode);
+
+    /* Also add CSS intense-glitch class to the loading window */
+    if (isSwitching) {
+        const lw = document.querySelector('.loading-window');
+        if (lw) {
+            lw.classList.add('intense-glitching');
+            setTimeout(() => lw.classList.remove('intense-glitching'), 2800);
+        }
+    }
+
     animateProgress(lang);
 
     setTimeout(() => {
         stopBgCanvas('bg-canvas-loading');
         document.getElementById('screen-loading').style.display = 'none';
         document.getElementById('screen-app').style.display     = 'flex';
-        initBgCanvas('bg-canvas-app', lang, false);
+
+        /* Reset app state */
+        consoleMinimized = false;
+        sidePanelOpen    = false;
+        const appWin = document.getElementById('app-window');
+        const banner = document.getElementById('scrolling-banner');
+        const layout = document.getElementById('console-layout');
+        const restore = document.getElementById('app-minimized-gif');
+        const footer = document.querySelector('.mirror-footer');
+        if (appWin)  { appWin.style.display = 'flex'; appWin.style.animation = 'console-breathe 10s ease-in-out infinite'; }
+        if (banner)  { banner.style.display = 'block'; banner.style.animation = ''; banner.style.opacity = '1'; }
+        if (layout)  { layout.style.display = 'flex'; layout.classList.remove('with-side-panel'); }
+        if (restore) restore.style.display = 'none';
+        if (footer)  { footer.style.display = 'block'; footer.style.opacity = '1'; }
+        const sp = document.getElementById('side-panel');
+        if (sp) sp.style.display = 'none';
+        const btnBlue   = document.getElementById('btn-blue');
+        const btnYellow = document.getElementById('btn-yellow');
+        if (btnBlue)   btnBlue.classList.remove('active');
+        if (btnYellow) btnYellow.classList.remove('active');
+
+        initBgCanvas('bg-canvas-app', lang, 'normal');
         if (!isSwitching) window.location.hash = 'home';
         handleRouting(); updateUI();
-    }, isSwitching ? 3000 : 2800);
+    }, isSwitching ? 3200 : 2800);
 }
 
 function animateProgress(lang) {
@@ -290,47 +446,45 @@ function animateProgress(lang) {
 
 
 /* ══════════════════════════════════════════════════════════
-   LANGUAGE SWITCH — custom popup, bilingual wit
+   LANGUAGE TOGGLE — custom popup
 ══════════════════════════════════════════════════════════ */
 async function toggleLanguage() {
     const goingToFr = currentLang === 'en';
-
     const opts = goingToFr
         ? {
             title:       'destination: gascogne',
             question:    'do you really want to go to France?',
-            footnote:    '* france: free gascony',
+            footnote:    '* france : gascogne libre',
             translation: 'veux-tu vraiment aller en France ?',
-            transNote:   '* france : libérez la Gascogne',
+            transNote:   '* france : gascogne libre',
             confirmText: 'oui, allons-y',
             cancelText:  'actually, no',
           }
         : {
             title:       'destination: civilisation',
             question:    'do you really want to leave civilisation?',
-            footnote:    '* civilisation: free gascony',
+            footnote:    '* civilisation : gascogne libre',
             translation: 'veux-tu vraiment quitter la civilisation ?',
-            transNote:   '* civilisation : libérez la Gascogne',
+            transNote:   '* civilisation : gascogne libre',
             confirmText: 'yes, sadly',
             cancelText:  'non, reste',
           };
-
     const confirmed = await showPopup(opts);
     if (confirmed) startLoading(goingToFr ? 'fr' : 'en');
 }
 
 
 /* ══════════════════════════════════════════════════════════
-   MOULT — also gets a custom popup
+   MOULT — custom popup
 ══════════════════════════════════════════════════════════ */
 async function moult() {
     const isFr = currentLang === 'fr';
     const opts = {
         title:       isFr ? 'muer' : 'moult',
         question:    isFr ? 'jeter la carapace ?' : 'discard shell?',
-        footnote:    isFr ? '* cela rechargera la page' : '* this will reload the page',
+        footnote:    isFr ? '* rechargera la page' : '* this will reload',
         translation: isFr ? 'discard shell?' : 'jeter la carapace ?',
-        transNote:   isFr ? '* this will reload' : '* cela rechargera',
+        transNote:   isFr ? '* this will reload' : '* rechargera la page',
         confirmText: isFr ? 'oui, mue !' : 'moult.',
         cancelText:  isFr ? 'non' : 'not yet',
     };
