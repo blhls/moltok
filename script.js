@@ -1,8 +1,8 @@
 /* ================================================================
-   MOULTLOOK — script.js v9.0
-   Canvas: scan line only (alters wallpaper as it passes)
-           + very rare holographic console glitch
-   No sine waves. No particles.
+   MOULTLOOK — script.js v10.0
+   Canvas: holographic glitch only (no scan line)
+           — fires on login/loading too, more frequently
+   Custom popup replaces confirm() for language switch + moult
    ================================================================ */
 'use strict';
 
@@ -23,16 +23,18 @@ function handleRouting() {
 
 
 /* ══════════════════════════════════════════════════════════
-   CANVAS — Scan line + rare holo glitch
-   The canvas is transparent. It only draws:
-   1. A horizontal line that slides top→bottom, leaving a
-      brief brightness/colour-shift stripe on the wallpaper
-   2. Occasional full-canvas glitch flash (very rare)
+   CANVAS — holographic glitch only
+   isLoginScreen: fires more frequently (user is idle there)
+   isApp:         fires rarely (reading experience)
 ══════════════════════════════════════════════════════════ */
-
 const canvasRegistry = {};
 
-function initBgCanvas(canvasId, mode) {
+/**
+ * @param {string}  canvasId
+ * @param {string}  mode          — 'en' | 'fr'
+ * @param {boolean} isLoginScreen — shorter interval for login/loading
+ */
+function initBgCanvas(canvasId, mode, isLoginScreen = false) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     if (canvasRegistry[canvasId]) cancelAnimationFrame(canvasRegistry[canvasId].animId);
@@ -46,26 +48,27 @@ function initBgCanvas(canvasId, mode) {
     resize();
     if (!canvasRegistry[canvasId]) window.addEventListener('resize', resize);
 
-    /* ── Scan line state ── */
-    let scanY    = -10;
-    const scanSpeed = 0.6;          /* pixels per frame — slow, deliberate */
-    const trailH    = 60;           /* height of the brightening trail behind line */
+    /*  Holo glitch timing:
+        login/loading  → every ~15–25 s  (user is waiting, good moment)
+        app            → every ~60–90 s  (reading, should be rare)            */
+    const baseCountdown = isLoginScreen
+        ? 15 * 60 + Math.random() * 10 * 60
+        : 60 * 60 + Math.random() * 30 * 60;
 
-    /* ── Holo glitch state — triggers every ~60–90s ── */
-    let holoCountdown = 60 * 60 + Math.random() * 30 * 60;  /* ~60–90s at 60fps */
+    let holoCountdown = baseCountdown;
     let holoFrame     = 0;
     let holoActive    = false;
-    /* Glitch line positions (random horizontal slices that shift) */
     let holoSlices    = [];
 
     function buildHoloSlices(w, h) {
         holoSlices = [];
         let y = 0;
         while (y < h) {
-            const sliceH = Math.random() * 30 + 4;
+            const sliceH = Math.random() * 28 + 4;
             holoSlices.push({
-                y, h: sliceH,
-                shift: (Math.random() - 0.5) * 28,
+                y,
+                h: sliceH,
+                shift:  (Math.random() - 0.5) * 30,
                 bright: 0.8 + Math.random() * 0.5,
             });
             y += sliceH;
@@ -75,87 +78,63 @@ function initBgCanvas(canvasId, mode) {
     function draw() {
         const w = canvas.width, h = canvas.height;
 
-        /* Fully transparent base */
+        /* Transparent base — real background image shows through */
         ctx.clearRect(0, 0, w, h);
 
-        /* ── Scan line ── */
-        scanY += scanSpeed;
-        if (scanY > h + trailH) scanY = -trailH;
-
-        /* Trail above the line — subtle brightness wash */
-        if (scanY > 0) {
-            const trailTop    = Math.max(0, scanY - trailH);
-            const trailBottom = Math.min(h, scanY);
-            const trailGrad   = ctx.createLinearGradient(0, trailTop, 0, trailBottom);
-            trailGrad.addColorStop(0, 'rgba(255,255,255,0)');
-            trailGrad.addColorStop(0.6, 'rgba(232,160,40,0.04)');
-            trailGrad.addColorStop(1, 'rgba(232,160,40,0.09)');
-            ctx.fillStyle = trailGrad;
-            ctx.fillRect(0, trailTop, w, trailBottom - trailTop);
-        }
-
-        /* The line itself — amber glow */
-        if (scanY >= 0 && scanY <= h) {
-            /* Diffuse glow band */
-            const lineGrad = ctx.createLinearGradient(0, scanY - 6, 0, scanY + 6);
-            lineGrad.addColorStop(0, 'rgba(232,160,40,0)');
-            lineGrad.addColorStop(0.4, 'rgba(232,160,40,0.35)');
-            lineGrad.addColorStop(0.5, 'rgba(255,220,130,0.65)');
-            lineGrad.addColorStop(0.6, 'rgba(232,160,40,0.35)');
-            lineGrad.addColorStop(1, 'rgba(232,160,40,0)');
-            ctx.fillStyle = lineGrad;
-            ctx.fillRect(0, scanY - 6, w, 12);
-
-            /* Sharp bright core */
-            ctx.strokeStyle = 'rgba(255,240,180,0.55)';
-            ctx.lineWidth   = 1;
-            ctx.shadowBlur  = 8;
-            ctx.shadowColor = 'rgba(232,160,40,0.6)';
-            ctx.beginPath();
-            ctx.moveTo(0, Math.round(scanY));
-            ctx.lineTo(w, Math.round(scanY));
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-        }
-
-        /* ── Holographic glitch — very rare ── */
+        /* ── Holographic glitch ── */
         holoCountdown--;
+
         if (!holoActive && holoCountdown <= 0) {
             holoActive    = true;
             holoFrame     = 0;
-            holoCountdown = 60 * 60 + Math.random() * 30 * 60; /* reset */
+            holoCountdown = baseCountdown;
             buildHoloSlices(w, h);
 
-            /* Also animate the app window via CSS */
+            /* Animate app window via CSS (only if it exists / visible) */
             const aw = document.querySelector('.app-window');
-            if (aw) {
+            if (aw && document.getElementById('screen-app').style.display !== 'none') {
                 aw.style.animation = 'holo-shift 0.42s ease forwards';
                 setTimeout(() => {
                     if (aw) aw.style.animation = 'console-breathe 10s ease-in-out infinite';
-                }, 450);
+                }, 460);
+            }
+
+            /* Also briefly jolt the login/loading window */
+            const lw = document.querySelector('.login-window, .loading-window');
+            if (lw) {
+                lw.style.transition = 'transform 0.08s, filter 0.08s';
+                lw.style.transform  = 'translateX(-3px)';
+                lw.style.filter     = 'hue-rotate(20deg) brightness(1.2)';
+                setTimeout(() => {
+                    lw.style.transform  = 'translateX(3px)';
+                    lw.style.filter     = 'hue-rotate(-12deg)';
+                }, 80);
+                setTimeout(() => {
+                    lw.style.transform  = '';
+                    lw.style.filter     = '';
+                    lw.style.transition = '';
+                }, 160);
             }
         }
 
         if (holoActive) {
-            /* Draw shifted/brightened horizontal slices over canvas */
-            const progress = holoFrame / 12;
-            const fade     = Math.max(0, 1 - holoFrame / 12);
+            const fade = Math.max(0, 1 - holoFrame / 14);
 
             ctx.save();
-            ctx.globalAlpha = 0.12 * fade;
+            /* Colour aberration stripes */
+            ctx.globalAlpha = 0.10 * fade;
+            const glitchCol = mode === 'en'
+                ? `rgba(232,160,40, 0.9)`
+                : `rgba(32,200,176, 0.9)`;
             for (const sl of holoSlices) {
-                if (Math.random() < 0.35) continue; /* only some slices glitch */
-                /* Colour aberration stripe */
-                const col = currentLang === 'en'
-                    ? `rgba(232,160,40, ${0.2 * fade})`
-                    : `rgba(32,200,176, ${0.2 * fade})`;
-                ctx.fillStyle = col;
+                if (Math.random() < 0.6) continue;
+                ctx.fillStyle = glitchCol;
                 ctx.fillRect(0, sl.y, w, sl.h);
             }
 
-            /* Occasional sharp bright line at random position */
-            if (holoFrame < 6) {
-                ctx.globalAlpha = (0.5 - holoFrame * 0.08) * fade;
+            /* Sharp bright line flashes */
+            if (holoFrame < 7) {
+                ctx.globalAlpha = (0.45 - holoFrame * 0.06) * fade;
                 ctx.strokeStyle = '#fff';
                 ctx.lineWidth   = 1;
                 const gy = Math.random() * h;
@@ -164,7 +143,7 @@ function initBgCanvas(canvasId, mode) {
             ctx.restore();
 
             holoFrame++;
-            if (holoFrame > 12) holoActive = false;
+            if (holoFrame > 14) holoActive = false;
         }
 
         canvasRegistry[canvasId].animId = requestAnimationFrame(draw);
@@ -178,7 +157,77 @@ function stopBgCanvas(id) {
     if (canvasRegistry[id]) cancelAnimationFrame(canvasRegistry[id].animId);
 }
 
-window.addEventListener('load', () => initBgCanvas('bg-canvas', currentLang));
+window.addEventListener('load', () => initBgCanvas('bg-canvas', currentLang, true));
+
+
+/* ══════════════════════════════════════════════════════════
+   CUSTOM POPUP — replaces native confirm()
+   showPopup(options) → Promise<boolean>
+   options: {
+     title:       string  (titlebar text)
+     question:    string  (main italic serif question)
+     footnote:    string  (fine-print sub-text, the asterisk joke)
+     translation: string  (French translation of question)
+     transNote:   string  (French translation of footnote)
+     confirmText: string
+     cancelText:  string
+   }
+══════════════════════════════════════════════════════════ */
+function showPopup(opts) {
+    return new Promise(resolve => {
+        /* Remove any existing popup */
+        const existing = document.getElementById('moult-popup');
+        if (existing) existing.remove();
+
+        const overlay = document.createElement('div');
+        overlay.id        = 'moult-popup';
+        overlay.className = 'popup-overlay';
+
+        overlay.innerHTML = `
+            <div class="popup-window">
+                <div class="popup-titlebar">
+                    <div class="win-btn-group">
+                        <div class="win-btn" style="background:var(--tl-close);box-shadow:0 0 5px var(--tl-close);border-radius:50%;width:12px;height:12px;"></div>
+                        <div class="win-btn" style="background:var(--tl-min);box-shadow:0 0 5px var(--tl-min);border-radius:50%;width:12px;height:12px;"></div>
+                        <div class="win-btn" style="background:var(--tl-max);box-shadow:0 0 5px var(--tl-max);border-radius:50%;width:12px;height:12px;"></div>
+                    </div>
+                    <span class="popup-title-text">${opts.title || 'system prompt'}</span>
+                </div>
+                <div class="popup-body">
+                    <p class="popup-main">${opts.question}</p>
+                    ${opts.footnote ? `<p class="popup-footnote">${opts.footnote}</p>` : ''}
+                    <div class="popup-hr"></div>
+                    <p class="popup-translation">
+                        ${opts.translation || ''}
+                        ${opts.transNote ? `<small>${opts.transNote}</small>` : ''}
+                    </p>
+                    <div class="popup-buttons">
+                        <button class="popup-btn popup-btn-cancel" id="popup-cancel">${opts.cancelText || 'Non'}</button>
+                        <button class="popup-btn popup-btn-confirm" id="popup-confirm">${opts.confirmText || 'Oui'}</button>
+                    </div>
+                </div>
+            </div>`;
+
+        document.body.appendChild(overlay);
+
+        /* Close on overlay click */
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay) { overlay.remove(); resolve(false); }
+        });
+        document.getElementById('popup-cancel').addEventListener('click', () => {
+            overlay.remove(); resolve(false);
+        });
+        document.getElementById('popup-confirm').addEventListener('click', () => {
+            overlay.remove(); resolve(true);
+        });
+        /* Keyboard */
+        const onKey = e => {
+            if (e.key === 'Enter')  { document.removeEventListener('keydown', onKey); overlay.remove(); resolve(true);  }
+            if (e.key === 'Escape') { document.removeEventListener('keydown', onKey); overlay.remove(); resolve(false); }
+        };
+        document.addEventListener('keydown', onKey);
+    });
+}
 
 
 /* ══════════════════════════════════════════════════════════
@@ -201,14 +250,15 @@ function startLoading(lang) {
     if (lTitle) lTitle.innerText = lang === 'en' ? 'HARDENING CHITIN...' : 'MUE EN COURS...';
     document.getElementById('banner-text').innerText = bannerContent[lang];
 
-    initBgCanvas('bg-canvas-loading', lang);
+    stopBgCanvas('bg-canvas');
+    initBgCanvas('bg-canvas-loading', lang, true);
     animateProgress(lang);
 
     setTimeout(() => {
         stopBgCanvas('bg-canvas-loading');
         document.getElementById('screen-loading').style.display = 'none';
         document.getElementById('screen-app').style.display     = 'flex';
-        initBgCanvas('bg-canvas-app', lang);
+        initBgCanvas('bg-canvas-app', lang, false);
         if (!isSwitching) window.location.hash = 'home';
         handleRouting(); updateUI();
     }, isSwitching ? 3000 : 2800);
@@ -236,6 +286,56 @@ function animateProgress(lang) {
         if (ti > msgIdx) { msgIdx = ti; if (sub) sub.innerText = msgs[msgIdx]; }
         if (progress >= 100) { if (sub) sub.innerText = msgs[msgs.length - 1]; clearInterval(iv); }
     }, 400);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   LANGUAGE SWITCH — custom popup, bilingual wit
+══════════════════════════════════════════════════════════ */
+async function toggleLanguage() {
+    const goingToFr = currentLang === 'en';
+
+    const opts = goingToFr
+        ? {
+            title:       'destination: gascogne',
+            question:    'do you really want to go to France?',
+            footnote:    '* france: free gascony',
+            translation: 'veux-tu vraiment aller en France ?',
+            transNote:   '* france : libérez la Gascogne',
+            confirmText: 'oui, allons-y',
+            cancelText:  'actually, no',
+          }
+        : {
+            title:       'destination: civilisation',
+            question:    'do you really want to leave civilisation?',
+            footnote:    '* civilisation: free gascony',
+            translation: 'veux-tu vraiment quitter la civilisation ?',
+            transNote:   '* civilisation : libérez la Gascogne',
+            confirmText: 'yes, sadly',
+            cancelText:  'non, reste',
+          };
+
+    const confirmed = await showPopup(opts);
+    if (confirmed) startLoading(goingToFr ? 'fr' : 'en');
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   MOULT — also gets a custom popup
+══════════════════════════════════════════════════════════ */
+async function moult() {
+    const isFr = currentLang === 'fr';
+    const opts = {
+        title:       isFr ? 'muer' : 'moult',
+        question:    isFr ? 'jeter la carapace ?' : 'discard shell?',
+        footnote:    isFr ? '* cela rechargera la page' : '* this will reload the page',
+        translation: isFr ? 'discard shell?' : 'jeter la carapace ?',
+        transNote:   isFr ? '* this will reload' : '* cela rechargera',
+        confirmText: isFr ? 'oui, mue !' : 'moult.',
+        cancelText:  isFr ? 'non' : 'not yet',
+    };
+    const confirmed = await showPopup(opts);
+    if (confirmed) location.reload();
 }
 
 
@@ -390,13 +490,6 @@ function jumpToEmail(id)  {
     const e = emails.find(x => x.id === id); if (!e) return;
     selectedEmailId = id; navigate(e.section, e.category);
 }
-function moult() {
-    const msg = currentLang === 'en'
-        ? 'Discard shell? This will reload.'
-        : 'Jeter la carapace ? La page va se recharger.';
-    if (confirm(msg)) location.reload();
-}
-function toggleLanguage() { startLoading(currentLang === 'en' ? 'fr' : 'en'); }
 
 document.getElementById('sidebar-toggle').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('collapsed');
