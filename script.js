@@ -130,7 +130,17 @@ function stopBgCanvas(id) {
   if (canvasRegistry[id]) cancelAnimationFrame(canvasRegistry[id].animId);
 }
 
-window.addEventListener('load', () => initBgCanvas('bg-canvas', currentLang, 'login'));
+window.addEventListener('load', () => { initBgCanvas('bg-canvas', currentLang, 'login'); updateBranding(); });
+
+/* ── BRANDING (banners + logos) ───────────────────────────── */
+function updateBranding() {
+  const landingBanner = document.getElementById('login-banner-img');
+  if (landingBanner && typeof banners !== 'undefined') landingBanner.src = banners.main;
+  const appBanner = document.getElementById('app-banner-img');
+  if (appBanner && typeof banners !== 'undefined') appBanner.src = banners[currentLang] || banners.main;
+  const sideLogo = document.getElementById('side-logo-img');
+  if (sideLogo && typeof logos !== 'undefined') sideLogo.src = logos[currentLang] || logos.main;
+}
 
 /* ══════════════════════════════════════════════════════════
 LOGIN GIF FLOW
@@ -138,13 +148,18 @@ LOGIN GIF FLOW
 function toggleLoginConsole() {
   loginConsoleOpen = !loginConsoleOpen;
   const cons = document.getElementById('login-console');
+  const trig = document.getElementById('login-trigger');
 
   if (loginConsoleOpen) {
+    if (trig) trig.style.display = 'none';
     cons.style.display = 'flex';
     cons.style.animation = 'glitch-manifest 0.58s ease forwards';
   } else {
     cons.style.animation = 'glitch-dismiss 0.38s ease forwards';
-    setTimeout(() => { cons.style.display = 'none'; }, 360);
+    setTimeout(() => {
+      cons.style.display = 'none';
+      if (trig) trig.style.display = 'block';
+    }, 360);
   }
 }
 
@@ -397,6 +412,7 @@ function startLoading(lang) {
     if (btnYellow) btnYellow.classList.remove('active');
 
     initBgCanvas('bg-canvas-app', lang, 'normal');
+    updateBranding();
     if (!isSwitching) window.location.hash = 'home';
     handleRouting(); updateUI();
   }, isSwitching ? 3200 : 2800);
@@ -557,27 +573,37 @@ function renderEmailContent() {
     const email = emails.find(e => e.id === selectedEmailId);
     const demi = demiurges[email.category] || {
       name: email.from, catchphrase: '',
-      image: 'https://via.placeholder.com/42x42/1C0C08/E8A028?text=?',
+      image: 'avatar_self.png',
+      sign: 'm_selfsign.png',
     };
     let bodyContent = `<div class="email-body">${email.body}</div>`;
-    if (email.type === 'pdf') bodyContent = `<iframe src="${email.url}" width="100%" height="520px"></iframe>`;
+    if (email.type === 'pdf') bodyContent = `<div class="email-body"><iframe src="${email.url}" width="100%" height="520px"></iframe></div>`;
+    const signHtml = demi.sign ? `<img src="${demi.sign}" class="email-sign" alt="">` : '';
     view.innerHTML = `
       <div class="mini-profile">
         <img src="${demi.image}" class="mini-img" alt="${demi.name}">
         <div><strong>${demi.name}</strong><small>${demi.catchphrase}</small></div>
       </div>
       <div class="email-container">
-        <div class="close-btn" onclick="closeEmail()">[ × ]</div>
-        <div class="email-header"><h2>${email.subject}</h2><p>${email.date} // ${email.from}</p></div>
-        <hr>${bodyContent}
+        <div class="email-header">
+          ${signHtml}
+          <div class="close-btn" onclick="closeEmail()">[ × ]</div>
+          <h2>${email.subject}</h2>
+          <p>${email.date} // ${email.from}</p>
+        </div>
+        ${bodyContent}
       </div>`;
   } else if (currentCategory && currentLang === 'en') {
     const demi = demiurges[currentCategory];
     view.innerHTML = `
       <div class="demiurge-profile">
-        <h2>${demi.name}</h2>
-        <p class="demi-quote">"${demi.catchphrase}"</p><hr>
-        <p>${demi.description}</p>
+        <img src="${demi.image}" class="demiurge-avatar-big" alt="${demi.name}">
+        <div>
+          <h2>${demi.name}</h2>
+          <p class="demi-quote">"${demi.catchphrase}"</p>
+          <hr>
+          <p>${demi.description}</p>
+        </div>
       </div>`;
   } else {
     view.innerHTML = `<div class="empty-state">[ select an item to view ]</div>`;
@@ -628,7 +654,18 @@ function executeSearch() {
 function renderStaticContent() {
   const view = document.getElementById('content-view');
   if (currentSection === 'home') {
-    view.innerHTML = `<div class="home-panel"><h2>// System //</h2><hr><p>${homeContent[currentLang]}</p></div>`;
+    if (currentLang === 'fr' && typeof homeAvatar !== 'undefined' && homeAvatar.fr) {
+      view.innerHTML = `<div class="home-panel">
+        <img src="${homeAvatar.fr}" class="home-avatar" alt="">
+        <div>
+          <h2>// Adishatz //</h2>
+          <hr>
+          <p>${homeContent.fr}</p>
+        </div>
+      </div>`;
+    } else {
+      view.innerHTML = `<div class="home-panel"><h2>// System //</h2><hr><p>${homeContent[currentLang]}</p></div>`;
+    }
   } else if (currentSection === 'shell') {
     view.innerHTML = shellContent;
   }
