@@ -1,3 +1,7 @@
+/* ================================================================
+MOULTLOOK — data.js v14.0
+================================================================ */
+
 const bannerContent = {
   en: "★ LATEST NEWS: MOULTLOOK.COM IS LIVE ★ EVOLVE OR DIE ★ CRAB EVOLUTION ACCELERATING ★ STAY PROTECTED ★ THE DEMIURGES ARE WATCHING ★ MOULT OR PERISH ★ CHITIN DENSITY AT CRITICAL LEVELS ★ ",
   fr: "★ DERNIÈRES NOUVELLES : MOULTLOOK.COM EST EN LIGNE ★ ÉVOLUEZ OU MUREZ ★ LA GASCOGNE VOUS OBSERVE ★ L'ÉVOLUTION EST INÉVITABLE ★ LA MUE A COMMENCÉ ★ DENSITÉ CHITINEUSE EN HAUSSE ★ "
@@ -10,7 +14,7 @@ const demiurges = {
     catchphrase: "Obedience is the first step to evolution.",
     image: "avatar_patriarchy.png",
     sign:  "m_patsign.png",
-    description: "The architect of the room you're sitting in. The load-bearing wall you never questioned."
+    description: "The architect of the room you're sitting in. The load-bearing wall you never questioned. Has been sending correspondence since before you were born. Opens with 'as per my last email'."
   },
   imperialism: {
     name: "The Map Drawer",
@@ -18,7 +22,7 @@ const demiurges = {
     catchphrase: "What's yours is mine, eventually.",
     image: "avatar_imperialism.png",
     sign:  "m_impsign.png",
-    description: "Always looking over your shoulder. Drew the borders. Lost the legend."
+    description: "Always looking over your shoulder. Drew the borders. Lost the legend. Still insists the lines are natural. Currently reorganising someone else's inbox."
   },
   capitalism: {
     name: "The Invisible Hand",
@@ -26,7 +30,7 @@ const demiurges = {
     catchphrase: "I'll sell you the air if you've got the coin.",
     image: "avatar_capitalism.png",
     sign:  "m_crabsign_detailed.png",
-    description: "Constantly trying to monetize your shell. Currently processing your dopamine feed."
+    description: "Constantly trying to monetise your shell. Currently processing your dopamine feed. Has never once been held accountable. Responds only to profit motives and vibes."
   },
   notes: {
     name: "Inner Monologue / Nòtas",
@@ -34,7 +38,7 @@ const demiurges = {
     catchphrase: "Digital chitin.",
     image: "avatar_self.png",
     sign:  "m_selfsign.png",
-    description: "A collection of thoughts and raw data. Unfiltered. Possibly dangerous. Possibly nothing."
+    description: "A collection of thoughts and raw data. Unfiltered. Possibly dangerous. Possibly nothing. The only correspondent who doesn't need a reply."
   }
 };
 
@@ -77,7 +81,7 @@ const banners = {
 
 const shellContent = `
 <div class="shell-panel">
-<h2>// YOUR SHELL //</h2>
-<hr>
-<p>This section is reserved for personal data. The carapace is forming. Content pending next moult cycle.</p>
+  <h2>// YOUR SHELL //</h2>
+  <hr>
+  <p>This section is reserved for personal data. The carapace is forming. Content pending next moult cycle.</p>
 </div>`;
