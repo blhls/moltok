@@ -121,9 +121,12 @@ window.addEventListener('load', () => {
   updateBranding();
 });
 
-/* ══════════════════════════════════════════════════════════
-BRANDING — banners + logos switch by lang
-══════════════════════════════════════════════════════════ */
+// ================================================================
+// SCRIPT.JS PATCH — find updateBranding() and replace the whole
+// function with this version. It now also updates the retracted
+// mini logo so it switches language with everything else.
+// ================================================================
+
 function updateBranding() {
   const landingBanner = document.getElementById('login-banner-img');
   if (landingBanner && typeof banners !== 'undefined')
@@ -132,6 +135,11 @@ function updateBranding() {
   const appBanner = document.getElementById('app-banner-img');
   if (appBanner && typeof banners !== 'undefined')
     appBanner.src = banners[currentLang] || banners.main;
+
+  // Mini logo that shows in the retracted banner strip
+  const retractedLogo = document.getElementById('banner-retracted-logo');
+  if (retractedLogo && typeof logos !== 'undefined')
+    retractedLogo.src = logos[currentLang] || logos.main;
 
   const sideLogo = document.getElementById('side-logo-img');
   if (sideLogo && typeof logos !== 'undefined')
