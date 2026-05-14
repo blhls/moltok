@@ -15,14 +15,13 @@
 <section id="screen-login" class="screen screen-login">
   <canvas id="bg-canvas" class="bg-canvas"></canvas>
 
-  <!-- floating session.gif trigger — hides when console opens -->
   <div id="login-trigger" class="floating-trigger" onclick="toggleLoginConsole()">
     <img src="session.gif" alt="" class="trigger-gif">
   </div>
 
   <div id="login-console" class="login-console-wrap" style="display:none;">
-    <!-- Orbitron banner replaces old big-glitch h1 -->
     <div class="login-banner-wrap">
+      <img id="login-logo" src="m_mltlklogo_mainfinal.png" class="login-logo" alt="">
       <img id="login-banner-img" src="mltlkbanner_main.png" class="banner-img" alt="MOULTLOOK">
       <p class="login-banner-tagline">select your operational theatre</p>
     </div>
@@ -87,7 +86,6 @@
     <div id="banner-text" class="banner-text"></div>
   </div>
 
-  <!-- Retractable Orbitron banner strip — collapses to glowing line after load -->
   <div id="app-banner-strip" class="app-banner-strip">
     <img id="app-banner-img" src="mltlkbanner_int.png" class="banner-img" alt="MOULTLOOK">
   </div>
@@ -110,22 +108,18 @@
       <div class="app-layout">
         <aside id="sidebar" class="sidebar">
 
-          <!-- Hamburger toggle -->
           <div id="sidebar-toggle" class="moult-header">
             <span class="hamburger">≡</span>
             <span class="label-full">MOULTLOOK</span>
             <span class="label-vert">M O U L T L O O K</span>
           </div>
 
-          <!-- Logo slot — switches with language -->
           <div class="sidebar-logo-wrap" id="sidebar-logo-wrap">
             <img id="sidebar-logo-img" src="m_mltlklogo_int.png" alt="">
           </div>
 
-          <!-- Nav links rendered by script.js -->
           <nav class="nav-links" id="sidebar-nav"></nav>
 
-          <!-- Moult button always at bottom -->
           <div class="nav-item moult-btn" onclick="moult()">
             <img src="m_moult.png" class="nav-icon" alt="moult">
             <span class="txt">MOULT</span>
@@ -137,7 +131,6 @@
       </div>
     </div>
 
-    <!-- Side panel — transmission / clock / berylism -->
     <div id="side-panel" class="side-panel" style="display:none;">
       <div class="side-titlebar">
         <span class="side-title-text">// TRANSMISSION //</span>
@@ -149,42 +142,36 @@
           <div id="side-date"  class="side-date">---</div>
         </div>
 
-        <!-- Logo -->
         <div class="side-logo-wrap">
           <img id="side-logo-img" src="m_mltlklogo_int.png" class="logo-img" alt="">
         </div>
 
-        <!-- Birt gif -->
         <div class="side-birt-wrap">
           <img src="birt.gif" alt="birt" class="side-birt" onerror="this.style.display='none'">
         </div>
 
-        <!-- Berylism clickable banner — real image -->
         <div class="side-banner-wrap" onclick="openBerylism()" title="Open berylism.org">
           <img src="m_borgbanner.png" class="side-banner-img" alt="berylism.org">
         </div>
       </div>
     </div>
 
-  </div><!-- /console-layout -->
+  </div>
 
-  <!-- Minimised state restore trigger -->
   <div id="app-minimized-gif" class="floating-trigger app-restore-trigger"
     style="display:none;" onclick="restoreConsole()">
     <img src="session.gif" alt="" class="trigger-gif">
   </div>
 
-  <!-- Language toggle footer -->
   <footer class="mirror-footer">
     <button id="lang-toggle-btn" onclick="toggleLanguage()"></button>
   </footer>
 
-</section><!-- /screen-app -->
+</section>
 
 <script src="data.js"></script>
 <script src="script.js"></script>
 <script>
-  // Login clock tick
   function updateLoginClock() {
     const el = document.getElementById('login-clock');
     if (el) el.innerText = new Date().toLocaleTimeString();
