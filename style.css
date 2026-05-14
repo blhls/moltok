@@ -1758,3 +1758,424 @@ v15 FIXES — paste this at the VERY END of style.css
   width: 72px !important;
   height: 72px !important;
 }
+
+/* ================================================================
+v16 FIXES — paste at the VERY END of style.css
+Icons per-canvas-fill size, bigger avatars, full-width banners,
+logo sidebar toggle, retracted banner strip with logo.
+================================================================ */
+
+/* ── CRAB BUTTONS — sepia-first, no brightness(0) ───────────
+   brightness(0) before sepia = black + sepia = still black.
+   Drop it. sepia(1) tints white/grey, keeps black linework.
+══════════════════════════════════════════════════════════════ */
+.btn-red {
+  filter:
+    sepia(1) saturate(10) hue-rotate(330deg) brightness(1.3)
+    drop-shadow(0 0 5px rgba(208,64,64,0.65)) !important;
+}
+.btn-blue {
+  filter:
+    sepia(1) saturate(10) hue-rotate(140deg) brightness(1.3)
+    drop-shadow(0 0 5px rgba(32,200,176,0.65)) !important;
+}
+.btn-yellow {
+  filter:
+    sepia(1) saturate(10) hue-rotate(20deg) brightness(1.6)
+    drop-shadow(0 0 5px rgba(200,160,48,0.65)) !important;
+}
+.btn-red:hover {
+  filter:
+    sepia(1) saturate(14) hue-rotate(330deg) brightness(1.9)
+    drop-shadow(0 0 10px rgba(208,64,64,1)) !important;
+}
+.btn-blue:hover {
+  filter:
+    sepia(1) saturate(14) hue-rotate(140deg) brightness(1.9)
+    drop-shadow(0 0 10px rgba(32,200,176,1)) !important;
+}
+.btn-yellow:hover {
+  filter:
+    sepia(1) saturate(14) hue-rotate(20deg) brightness(2.2)
+    drop-shadow(0 0 10px rgba(200,160,48,1)) !important;
+}
+.btn-blue.active {
+  filter:
+    sepia(1) saturate(16) hue-rotate(140deg) brightness(2.3)
+    drop-shadow(0 0 14px rgba(32,200,176,1)) !important;
+}
+.btn-yellow.active {
+  filter:
+    sepia(1) saturate(16) hue-rotate(20deg) brightness(2.5)
+    drop-shadow(0 0 14px rgba(200,160,48,1)) !important;
+}
+
+/* ── ICONS — per-canvas-fill sizing ─────────────────────────
+   Problem: all PNGs are ~1024px canvases but subjects fill
+   wildly different percentages. Drafts (knife) fills ~45%,
+   Home fills ~12%. At same CSS size, home appears tiny.
+   Fix: scale each icon so its visible subject ≈ same apparent
+   size as drafts at its reference display.
+   Reference: drafts looks good at 80px.
+══════════════════════════════════════════════════════════════ */
+
+/* Base — applied to all, overridden per-icon below */
+.nav-icon {
+  width:           80px !important;
+  height:          80px !important;
+  flex-shrink:     0 !important;
+  display:         block !important;
+  object-fit:      contain !important;
+}
+
+/* Drafts (knife) — ~45% fill, reference. 80px is correct. */
+.nav-icon[src*="m_drafts"] {
+  width:  80px !important;
+  height: 80px !important;
+}
+
+/* Sent (paper plane) — ~32% fill */
+.nav-icon[src*="m_sent"] {
+  width:  112px !important;
+  height: 112px !important;
+}
+
+/* Archive (folder) — ~30% fill */
+.nav-icon[src*="m_archive"] {
+  width:  120px !important;
+  height: 120px !important;
+}
+
+/* Inbox (mailbox) — ~28% fill */
+.nav-icon[src*="m_inbox"] {
+  width:  128px !important;
+  height: 128px !important;
+}
+
+/* Shell (snail shell) — ~28% fill */
+.nav-icon[src*="m_shell"] {
+  width:  128px !important;
+  height: 128px !important;
+}
+
+/* Search (magnifying glass) — ~22% fill */
+.nav-icon[src*="m_search"] {
+  width:  152px !important;
+  height: 152px !important;
+}
+
+/* Unread (triangle+eye) — ~40% fill */
+.nav-icon[src*="m_unread"] {
+  width:  88px !important;
+  height: 88px !important;
+}
+
+/* Home (house silhouette) — ~12% fill, tiny subject */
+.nav-icon[src*="m_home"] {
+  width:  200px !important;
+  height: 200px !important;
+}
+
+/* Gascony flag, france flag, world globe — keep natural size */
+.nav-icon[src*="m_france"],
+.nav-icon[src*="m_world"],
+.nav-icon[src*="m_gascony"] {
+  width:  56px !important;
+  height: 56px !important;
+  filter: drop-shadow(0 0 6px rgba(232,160,40,0.6)) !important;
+}
+.mode-fr .nav-icon[src*="m_france"],
+.mode-fr .nav-icon[src*="m_world"],
+.mode-fr .nav-icon[src*="m_gascony"] {
+  filter: drop-shadow(0 0 6px rgba(32,200,176,0.6)) !important;
+}
+
+/* Moult icon — new PNG has white, will tint. ~35% fill. */
+.moult-btn .nav-icon,
+.nav-icon[src*="m_moult"] {
+  width:  96px !important;
+  height: 96px !important;
+  filter:
+    sepia(1) saturate(16) hue-rotate(5deg) brightness(1.6) contrast(1.2)
+    drop-shadow(0 0 20px rgba(255,187,64,1))
+    drop-shadow(0 0 42px rgba(255,187,64,0.6)) !important;
+  animation: moult-pulse 2.8s ease-in-out infinite !important;
+}
+.mode-fr .moult-btn .nav-icon,
+.mode-fr .nav-icon[src*="m_moult"] {
+  filter:
+    sepia(1) saturate(16) hue-rotate(135deg) brightness(1.6) contrast(1.2)
+    drop-shadow(0 0 20px rgba(72,224,200,1))
+    drop-shadow(0 0 42px rgba(72,224,200,0.6)) !important;
+}
+
+/* Title crab icon in titlebar */
+.title-crab {
+  width:  30px !important;
+  height: 30px !important;
+  filter:
+    sepia(1) saturate(10) hue-rotate(5deg) brightness(1.4) contrast(1.18)
+    drop-shadow(0 0 8px rgba(232,160,40,0.9)) !important;
+}
+.mode-fr .title-crab {
+  filter:
+    sepia(1) saturate(10) hue-rotate(135deg) brightness(1.4) contrast(1.18)
+    drop-shadow(0 0 8px rgba(32,200,176,0.9)) !important;
+}
+
+/* nav-item needs to flex-center the big icons cleanly */
+.nav-item {
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 14px !important;
+  overflow: hidden;
+}
+
+/* The oversized icons (home, search) overflow into the label text.
+   Clip them to a square viewport. */
+.nav-item {
+  overflow: hidden !important;
+}
+
+/* moult button room */
+.moult-btn {
+  padding-top:    16px !important;
+  padding-bottom: 16px !important;
+  background:     rgba(232,160,40,0.13) !important;
+  border-top:     1px solid rgba(232,160,40,0.28) !important;
+  margin:         6px 8px 8px !important;
+}
+.moult-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(232,160,40,0.18);
+  pointer-events: none;
+}
+.moult-btn:hover {
+  background: rgba(232,160,40,0.24) !important;
+}
+.mode-fr .moult-btn {
+  background: rgba(32,200,176,0.13) !important;
+  border-top-color: rgba(32,200,176,0.28) !important;
+}
+.mode-fr .moult-btn:hover {
+  background: rgba(32,200,176,0.24) !important;
+}
+
+/* Sidebar wide enough for the icon sizes */
+.sidebar {
+  width:     270px !important;
+  min-width: 270px !important;
+}
+.sidebar.collapsed {
+  width:     52px !important;
+  min-width: 52px !important;
+}
+/* In collapsed state, icons shrink back to a visible but compact size */
+.sidebar.collapsed .nav-icon {
+  width:  36px !important;
+  height: 36px !important;
+}
+
+/* ── SIDEBAR LOGO — clickable, pointer cursor ────────────────
+   JS adds onclick in index.html. Give it the visual cue.
+══════════════════════════════════════════════════════════════ */
+.sidebar-logo-wrap {
+  cursor: pointer;
+  padding: 16px 14px 12px !important;
+  border-bottom: 1px solid rgba(232,160,40,0.10) !important;
+  transition: background 0.2s;
+}
+.sidebar-logo-wrap:hover {
+  background: rgba(232,160,40,0.07);
+}
+.mode-fr .sidebar-logo-wrap:hover {
+  background: rgba(32,200,176,0.07);
+}
+.sidebar-logo-wrap img {
+  width:       auto !important;
+  height:      auto !important;
+  max-width:   150px !important;
+  max-height:  65px !important;
+  object-fit:  contain !important;
+  display:     block;
+  margin:      0 auto;
+  transition:  filter 0.2s, opacity 0.2s;
+}
+.sidebar-logo-wrap:hover img {
+  opacity: 0.85;
+}
+.sidebar.collapsed .sidebar-logo-wrap img {
+  max-width:  34px !important;
+  max-height: 34px !important;
+}
+
+/* ── APP BANNER STRIP — retracted state shows mini logo ──────
+   Height increased to 38px when retracted so the logo fits.
+   Full banner image hides; mini logo + glowing line appear.
+══════════════════════════════════════════════════════════════ */
+.app-banner-strip {
+  cursor: default;
+  position: relative;
+}
+.app-banner-strip.retracted {
+  max-height:     38px !important;
+  padding:        4px 14px !important;
+  opacity:        0.9;
+  background:     transparent !important;
+  justify-content: flex-start !important;
+  gap:            10px;
+  border-bottom:  2px solid rgba(232,160,40,0.55);
+  box-shadow:     0 2px 18px rgba(232,160,40,0.22);
+  cursor:         pointer !important;
+}
+.mode-fr .app-banner-strip.retracted {
+  border-bottom-color: rgba(32,200,176,0.55);
+  box-shadow:          0 2px 18px rgba(32,200,176,0.22);
+}
+.app-banner-strip.retracted .banner-img {
+  opacity:        0 !important;
+  pointer-events: none;
+  position:       absolute;
+}
+/* Mini logo that appears in the retracted strip */
+.banner-retracted-logo {
+  display:         none;
+  height:          28px;
+  width:           auto;
+  object-fit:      contain;
+  image-rendering: pixelated;
+  opacity:         0;
+  transition:      opacity 0.35s;
+  filter:          drop-shadow(0 0 6px rgba(232,160,40,0.75));
+  flex-shrink:     0;
+}
+.mode-fr .banner-retracted-logo {
+  filter: drop-shadow(0 0 6px rgba(32,200,176,0.75));
+}
+.app-banner-strip.retracted .banner-retracted-logo {
+  display:  block;
+  opacity:  1;
+}
+/* Small label next to the mini logo */
+.banner-retracted-label {
+  font-family:    var(--font-ui);
+  font-size:      9px;
+  font-weight:    700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color:          rgba(232,160,40,0.65);
+  display:        none;
+  white-space:    nowrap;
+  text-shadow:    0 0 8px rgba(232,160,40,0.5);
+}
+.mode-fr .banner-retracted-label {
+  color:       rgba(32,200,176,0.65);
+  text-shadow: 0 0 8px rgba(32,200,176,0.5);
+}
+.app-banner-strip.retracted .banner-retracted-label {
+  display: block;
+}
+
+/* ── BANNERS — full width presence ───────────────────────────
+══════════════════════════════════════════════════════════════ */
+.login-banner-wrap .banner-img {
+  max-width: min(900px, 97vw) !important;
+}
+.app-banner-strip .banner-img {
+  max-width: min(800px, 92vw) !important;
+}
+/* Box shadow/stroke under banner for readability */
+.app-banner-strip .banner-img {
+  filter:
+    drop-shadow(0 0 18px rgba(232,160,40,0.6))
+    drop-shadow(0 0 40px rgba(232,160,40,0.25))
+    drop-shadow(0 2px 4px rgba(0,0,0,0.8)) !important;
+}
+.mode-fr .app-banner-strip .banner-img {
+  filter:
+    drop-shadow(0 0 18px rgba(32,200,176,0.6))
+    drop-shadow(0 0 40px rgba(32,200,176,0.25))
+    drop-shadow(0 2px 4px rgba(0,0,0,0.8)) !important;
+}
+
+/* ── LANDING LOGO — give it room ─────────────────────────────
+══════════════════════════════════════════════════════════════ */
+.login-logo {
+  max-width:  min(340px, 52vw) !important;
+  max-height: none !important;
+  width:      auto !important;
+  height:     auto !important;
+  object-fit: contain !important;
+  filter:
+    drop-shadow(0 0 26px rgba(232,160,40,0.9))
+    drop-shadow(0 0 56px rgba(232,160,40,0.45)) !important;
+  animation:  logo-breathe 5s ease-in-out infinite !important;
+}
+
+/* ── SIDE PANEL LOGO — no stretching ─────────────────────────
+══════════════════════════════════════════════════════════════ */
+.side-logo-wrap .logo-img,
+#side-logo-img {
+  width:      auto !important;
+  height:     auto !important;
+  max-width:  230px !important;
+  max-height: 72px !important;
+  object-fit: contain !important;
+  display:    block;
+  margin:     0 auto;
+}
+
+/* ── CONTACT CARD AVATAR — full dossier scale ────────────────
+   "I wanna feel like I'm DMing big imperialism"
+══════════════════════════════════════════════════════════════ */
+.contact-avatar {
+  width:   200px !important;
+  height:  200px !important;
+}
+.contact-card-header {
+  padding:     36px 36px 30px !important;
+  gap:         30px !important;
+  align-items: flex-start !important;
+}
+.contact-name {
+  font-size:    clamp(18px, 2.4vw, 30px) !important;
+  margin-bottom: 10px !important;
+}
+.contact-quote {
+  font-size: clamp(14px, 1.7vw, 19px) !important;
+}
+.contact-status {
+  font-size:     11px !important;
+  margin-bottom: 10px !important;
+}
+.contact-card-body {
+  padding: 30px 36px !important;
+}
+.contact-description {
+  font-size:   clamp(15px, 1.7vw, 19px) !important;
+  line-height: 1.9 !important;
+}
+.demiurge-profile {
+  max-width: 860px !important;
+}
+@media (max-width: 700px) {
+  .contact-avatar { width: 130px !important; height: 130px !important; }
+  .contact-card-header { flex-direction: column; align-items: center; text-align: center; }
+}
+
+/* ── MINI PROFILE (above email) ──────────────────────────────
+══════════════════════════════════════════════════════════════ */
+.mini-img {
+  width:  70px !important;
+  height: 70px !important;
+}
+
+/* ── HOME PANEL — declutter the left side ───────────────────
+   Max-width was too wide and looked padded/convoluted.
+══════════════════════════════════════════════════════════════ */
+.home-panel {
+  max-width: 640px !important;
+  padding:   28px 32px !important;
+}
