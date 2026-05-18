@@ -3,147 +3,194 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOULTLOOK.COM</title>
+  <title>MOULTLOOK — Berylist Console</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;1,300;1,400;1,600;1,700&family=Oxanium:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Orbitron:wght@400;500;600;700;800;900&family=Oxanium:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-default">
 
-<!-- ═══ LOGIN SCREEN ═══════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     LANDING / CHARACTER SELECT
+     ═══════════════════════════════════════════════════════════ -->
 <section id="screen-login" class="screen screen-login">
   <canvas id="bg-canvas" class="bg-canvas"></canvas>
+  <div class="login-vignette"></div>
+  <div class="login-grain"></div>
 
-  <!-- floating session.gif — hides when console opens -->
-  <div id="login-trigger" class="floating-trigger" onclick="toggleLoginConsole()">
+  <!-- Initial floating trigger (session.gif) — click to summon console -->
+  <div id="login-trigger" class="floating-trigger" onclick="openLoginConsole()">
     <img src="session.gif" alt="" class="trigger-gif">
+    <div class="trigger-ping"></div>
+    <div class="trigger-label">// CLICK TO INITIALISE //</div>
   </div>
 
+  <!-- Console (hidden initially, revealed by clicking the trigger) -->
   <div id="login-console" class="login-console-wrap" style="display:none;">
-    <!-- Logo + banner on landing -->
+
+    <!-- Top: main logo + title -->
     <div class="login-banner-wrap">
       <img id="login-logo" src="m_mltlklogo_mainfinal.png" class="login-logo" alt="">
-      <img id="login-banner-img" src="mltlkbanner_main.png" class="banner-img" alt="MOULTLOOK">
-      <p class="login-banner-tagline">select your operational theatre</p>
+      <h1 class="login-title">
+        <span class="lt-letter" style="--d:0.00s">M</span><span class="lt-letter" style="--d:0.06s">O</span><span class="lt-letter" style="--d:0.12s">U</span><span class="lt-letter" style="--d:0.18s">L</span><span class="lt-letter" style="--d:0.24s">T</span><span class="lt-letter" style="--d:0.30s">L</span><span class="lt-letter" style="--d:0.36s">O</span><span class="lt-letter" style="--d:0.42s">O</span><span class="lt-letter" style="--d:0.48s">K</span>
+      </h1>
+      <p class="login-subtitle">— berylist console for crustacean correspondence —</p>
+      <p class="login-tagline">select your operational theatre</p>
     </div>
 
-    <div class="win-window login-window">
-      <div class="win-titlebar login-titlebar">
-        <span class="win-title-text">identification required</span>
-      </div>
-      <div class="win-body login-body">
-        <div class="login-gif-slot">
-          <img src="session.gif" alt="" class="login-gif" onerror="this.style.display='none'">
+    <!-- Character-select cards -->
+    <div class="char-select-wrap">
+
+      <div class="char-card" onclick="startLoading('en')">
+        <div class="char-card-inner">
+          <div class="char-flag-strip">
+            <img src="m_france.png" class="char-flag" alt="">
+            <span class="char-flag-label">INTERNATIONAL</span>
+          </div>
+          <div class="char-portrait">
+            <img src="m_mltlklogo_int.png" class="char-logo" alt="MOULTLOOK INT">
+            <img src="session.gif" class="char-dancer" alt="">
+            <div class="char-glow"></div>
+          </div>
+          <div class="char-cta">
+            <span class="char-cta-line">CHECK MY CRABS<span class="ast">*</span></span>
+            <span class="char-cta-sub">// english //</span>
+          </div>
         </div>
-        <div class="login-box">
-          <button class="main-btn" onclick="startLoading('en')">
-            CHECK MY CRABS<br><small>( international )</small>
-          </button>
-          <div class="or-divider">// or //</div>
-          <button class="gascony-btn" onclick="startLoading('fr')">
-            CRABE M'A TUER<br><small>( gascogne occupée )</small>
-          </button>
-        </div>
       </div>
-      <div class="win-statusbar">
-        <span>READY</span>
-        <span>[ ENCRYPTED ]</span>
-        <span id="login-clock"></span>
+
+      <div class="char-divider"><span>OR</span></div>
+
+      <div class="char-card char-card-fr" onclick="startLoading('fr')">
+        <div class="char-card-inner">
+          <div class="char-flag-strip">
+            <img src="m_francogasconha.png" class="char-flag" alt="">
+            <span class="char-flag-label">GASCOGNE OCCUPÉE</span>
+          </div>
+          <div class="char-portrait">
+            <img src="m_mltlklogo_gascony.png" class="char-logo" alt="MOULTLOOK GASCONY">
+            <img src="session.gif" class="char-dancer" alt="">
+            <div class="char-glow"></div>
+          </div>
+          <div class="char-cta">
+            <span class="char-cta-line">CRABE M'A TUER<span class="ast">*</span></span>
+            <span class="char-cta-sub">// francogasconha //</span>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="login-character-wrap">
-    <img src="character.png" alt="" class="login-character" onerror="this.style.display='none'">
+    <!-- Asterisk explanations -->
+    <div class="login-asterisks">
+      <p><span class="ast">*</span> <strong>CRABS</strong> : carcinisation related announcements and berylist sentencings</p>
+      <p><span class="ast">*</span> <strong>CRABE</strong> : chroniques réquisitoires annonciatrices et brachyoures évocateurs</p>
+    </div>
+
+    <!-- Bottom status bar -->
+    <div class="login-status-bar">
+      <span class="ls-item">READY</span>
+      <span class="ls-item">[ ENCRYPTED ]</span>
+      <span class="ls-item" id="login-clock">--:--:--</span>
+      <span class="ls-item">v 2.0 // MOULTLOOK</span>
+    </div>
   </div>
 </section>
 
-<!-- ═══ LOADING SCREEN ════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     LOADING
+     ═══════════════════════════════════════════════════════════ -->
 <section id="screen-loading" class="screen screen-loading" style="display:none;">
   <canvas id="bg-canvas-loading" class="bg-canvas"></canvas>
-  <div class="win-window loading-window">
-    <div class="win-titlebar login-titlebar">
-      <span class="win-title-text" id="loading-titlebar-text">system initialisation — moultlook v1.0</span>
+  <div class="login-vignette"></div>
+
+  <div class="loading-window">
+    <div class="loading-titlebar">
+      <span class="loading-titlebar-text" id="loading-titlebar-text">SYSTEM INITIALISATION — MOULTLOOK v2.0</span>
+      <span class="loading-titlebar-dots"><span></span><span></span><span></span></span>
     </div>
-    <div class="win-body loading-body">
+    <div class="loading-body">
       <div class="loading-gif-slot">
-        <img src="session.gif" alt="" class="loading-gif" id="loading-gif"
-          onerror="this.parentElement.innerHTML='<span class=\'gif-fallback\'>🦀</span>'">
+        <img src="session.gif" alt="" class="loading-gif" id="loading-gif">
       </div>
-      <h2 id="loading-title" class="loading-title-text">HARDENING...</h2>
-      <div class="win-progress-outer">
-        <div class="win-progress-inner" id="progress-bar"></div>
+      <h2 id="loading-title" class="loading-title-text">HARDENING<span class="dots">...</span></h2>
+      <div class="loading-progress-track">
+        <div class="loading-progress-fill" id="progress-bar"></div>
+        <div class="loading-progress-stripes"></div>
       </div>
       <p class="loading-sub" id="loading-sub">loading modules...</p>
+      <ul class="loading-log" id="loading-log"></ul>
     </div>
   </div>
 </section>
 
-<!-- ═══ APP SCREEN ════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     APP — MAIN CONSOLE
+     ═══════════════════════════════════════════════════════════ -->
 <section id="screen-app" class="screen screen-app" style="display:none;">
   <canvas id="bg-canvas-app" class="bg-canvas"></canvas>
+  <div class="app-vignette"></div>
 
-  <div class="scrolling-banner" id="scrolling-banner">
-    <div id="banner-text" class="banner-text"></div>
-  </div>
+  <!-- Top text banner -->
+  <header class="app-header">
+    <div class="app-header-left">
+      <span class="app-header-logo" id="app-header-logo">MOULTLOOK</span>
+      <span class="app-header-sep">//</span>
+      <span class="app-header-sub" id="app-header-sub">INTERNATIONAL</span>
+    </div>
+    <div class="app-header-ticker">
+      <div class="ticker-track" id="ticker-track"></div>
+    </div>
+    <div class="app-header-right">
+      <span class="app-header-clock" id="app-header-clock">00:00:00</span>
+      <button class="lang-toggle" onclick="toggleLanguage()" title="Switch theatre">
+        <img id="lang-toggle-icon" src="m_world.png" alt="">
+        <span class="lang-toggle-label" id="lang-toggle-label">FR</span>
+      </button>
+    </div>
+  </header>
 
-  <!-- Retractable banner strip.
-       Contains a mini logo (hidden until strip retracts)
-       and the full banner image.
-       The whole strip is the click hitbox when retracted. -->
-  <div id="app-banner-strip" class="app-banner-strip" onclick="handleBannerClick()">
-    <img id="banner-retracted-logo" class="banner-retracted-logo" src="m_mltlklogo_int.png" alt="">
-    <span class="banner-retracted-label">MOULTLOOK</span>
-    <img id="app-banner-img" src="mltlkbanner_int.png" class="banner-img" alt="MOULTLOOK">
-  </div>
-
+  <!-- Main app window -->
   <div id="console-layout" class="console-layout">
-
     <div class="app-window" id="app-window">
-      <div class="app-titlebar win-titlebar">
+
+      <div class="app-titlebar">
         <div class="win-btn-group">
-          <button class="win-btn btn-red"    id="btn-red"    onclick="moult()"           title="Moult (reload)"></button>
-          <button class="win-btn btn-blue"   id="btn-blue"   onclick="minimizeConsole()" title="Minimise — view background"></button>
-          <button class="win-btn btn-yellow" id="btn-yellow" onclick="toggleSidePanel()" title="Open transmission panel"></button>
+          <button class="win-btn btn-red"    onclick="moult()"           title="Moult — reload"></button>
+          <button class="win-btn btn-blue"   onclick="minimizeConsole()" title="Minimise"></button>
+          <button class="win-btn btn-yellow" onclick="toggleSidePanel()" title="Open transmission"></button>
         </div>
-        <span class="win-title-text">
+        <span class="app-titlebar-title">
           <img src="m_moult.png" class="title-crab" alt="">
-          &nbsp;<span id="app-win-title">MOULTLOOK</span>
+          <span id="app-win-title">MOULTLOOK</span>
         </span>
+        <span class="app-titlebar-meta" id="app-titlebar-meta">// READY //</span>
       </div>
 
       <div class="app-layout">
+        <!-- Sidebar: compact, no scroll -->
         <aside id="sidebar" class="sidebar">
-
-          <div id="sidebar-toggle" class="moult-header">
-            <span class="hamburger">≡</span>
-            <span class="label-full">MOULTLOOK</span>
-            <span class="label-vert">M O U L T L O O K</span>
-          </div>
-
-          <!-- Logo — click to collapse/expand sidebar -->
-          <div class="sidebar-logo-wrap"
-               id="sidebar-logo-wrap"
-               onclick="document.getElementById('sidebar-toggle').click()"
-               title="Toggle sidebar">
+          <div class="sidebar-logo-wrap" id="sidebar-logo-wrap">
             <img id="sidebar-logo-img" src="m_mltlklogo_int.png" alt="">
           </div>
-
           <nav class="nav-links" id="sidebar-nav"></nav>
-
-          <div class="nav-item moult-btn" onclick="moult()">
-            <img src="m_moult.png" class="nav-icon" alt="moult">
-            <span class="txt">MOULT</span>
+          <div class="sidebar-footer">
+            <button class="moult-btn" onclick="moult()">
+              <img src="m_moult.png" class="moult-icon" alt="">
+              <span class="moult-label">MOULT</span>
+            </button>
           </div>
         </aside>
 
+        <!-- Email list -->
         <section class="middle-row" id="email-list"></section>
+
+        <!-- Content view -->
         <main class="content-view" id="content-view"></main>
       </div>
     </div>
 
-    <!-- Side panel -->
+    <!-- Transmission side panel -->
     <div id="side-panel" class="side-panel" style="display:none;">
       <div class="side-titlebar">
         <span class="side-title-text">// TRANSMISSION //</span>
@@ -154,59 +201,61 @@
           <div id="side-clock" class="side-clock">00:00:00.000</div>
           <div id="side-date"  class="side-date">---</div>
         </div>
-        <div class="side-logo-wrap">
-          <img id="side-logo-img" src="m_mltlklogo_int.png" class="logo-img" alt="">
-        </div>
         <div class="side-birt-wrap">
-          <img src="birt.gif" alt="birt" class="side-birt" onerror="this.style.display='none'">
+          <img src="birt.gif" alt="" class="side-birt" onerror="this.style.display='none'">
         </div>
-        <div class="side-banner-wrap" onclick="openBerylism()" title="Open berylism.org">
-          <img src="m_borgbanner.png" class="side-banner-img" alt="berylism.org">
+        <div class="side-quote-wrap">
+          <p class="side-quote" id="side-quote">"on est toujours dans le Moyen-Âge de quelque-chose"</p>
+          <p class="side-quote-attr">— Claire Lacombe, 22.9.25</p>
         </div>
+        <button class="side-borg-btn" onclick="openBerylism()">
+          <span>VISIT BERYLISM.ORG</span>
+          <span class="side-borg-arrow">→</span>
+        </button>
       </div>
     </div>
-
-  </div><!-- /console-layout -->
-
-  <!-- Minimised restore trigger -->
-  <div id="app-minimized-gif" class="floating-trigger app-restore-trigger"
-    style="display:none;" onclick="restoreConsole()">
-    <img src="session.gif" alt="" class="trigger-gif">
   </div>
 
-  <!-- Language toggle footer -->
-  <footer class="mirror-footer">
-    <button id="lang-toggle-btn" onclick="toggleLanguage()"></button>
-  </footer>
+  <!-- Minimised restore trigger -->
+  <div id="app-minimized-gif" class="floating-trigger app-restore-trigger" style="display:none;" onclick="restoreConsole()">
+    <img src="session.gif" alt="" class="trigger-gif">
+    <div class="trigger-label">// CLICK TO RESTORE //</div>
+  </div>
+
+  <!-- ANEMONE / MOLTOK ASSISTANT — bottom right -->
+  <div id="moltok-widget" class="moltok-widget">
+    <!-- Anemone with hidden moltok -->
+    <div id="moltok-anchor" class="moltok-anchor" onclick="toggleMoltok()">
+      <img src="m_anemona_detailed.png" class="moltok-anemona" alt="anemone">
+      <img id="moltok-emerging" src="m_moltok.png" class="moltok-emerging" alt="moltok">
+      <div class="moltok-anchor-glow"></div>
+      <div class="moltok-anchor-ripple"></div>
+      <span class="moltok-anchor-hint">// poke //</span>
+    </div>
+
+    <!-- Chat panel -->
+    <div id="moltok-panel" class="moltok-panel" style="display:none;">
+      <div class="moltok-titlebar">
+        <span class="moltok-title-text">// MOLTOK //</span>
+        <span class="moltok-title-status">ONLINE</span>
+        <button class="moltok-close" onclick="toggleMoltok()">[ × ]</button>
+      </div>
+      <div class="moltok-portrait">
+        <img src="m_moltok.png" class="moltok-portrait-img" alt="moltok">
+      </div>
+      <div id="moltok-messages" class="moltok-messages"></div>
+      <div class="moltok-input-row">
+        <input type="text" id="moltok-input" class="moltok-input"
+               placeholder="speak to moltok..."
+               onkeydown="if(event.key==='Enter') moltokRespond()">
+        <button class="moltok-send-btn" onclick="moltokRespond()">→</button>
+      </div>
+    </div>
+  </div>
 
 </section>
 
 <script src="data.js"></script>
 <script src="script.js"></script>
-<script>
-  // Login clock
-  function updateLoginClock() {
-    const el = document.getElementById('login-clock');
-    if (el) el.innerText = new Date().toLocaleTimeString();
-  }
-  setInterval(updateLoginClock, 1000);
-  updateLoginClock();
-
-  // Banner strip click handler
-  // When expanded: do nothing (clicking banner doesn't retract it,
-  //   only time-based retract does).
-  // When retracted: expand it briefly.
-  function handleBannerClick() {
-    const strip = document.getElementById('app-banner-strip');
-    if (!strip) return;
-    if (strip.classList.contains('retracted')) {
-      strip.classList.remove('retracted');
-      clearTimeout(strip._retractTimer);
-      strip._retractTimer = setTimeout(function() {
-        strip.classList.add('retracted');
-      }, 5000);
-    }
-  }
-</script>
 </body>
 </html>
