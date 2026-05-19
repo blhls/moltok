@@ -19,17 +19,14 @@
   <div class="login-vignette"></div>
   <div class="login-grain"></div>
 
-  <!-- Initial floating trigger (session.gif) — click to summon console -->
   <div id="login-trigger" class="floating-trigger" onclick="openLoginConsole()">
     <img src="session.gif" alt="" class="trigger-gif">
     <div class="trigger-ping"></div>
     <div class="trigger-label">// CLICK TO INITIALISE //</div>
   </div>
 
-  <!-- Console (hidden initially, revealed by clicking the trigger) -->
   <div id="login-console" class="login-console-wrap" style="display:none;">
 
-    <!-- Top: main logo + title -->
     <div class="login-banner-wrap">
       <img id="login-logo" src="m_mltlklogo_mainfinal.png" class="login-logo" alt="">
       <h1 class="login-title">
@@ -39,13 +36,19 @@
       <p class="login-tagline">select your operational theatre</p>
     </div>
 
-    <!-- Character-select cards -->
+    <!-- CRABS / CRABE asterisks — prominent, above the cards -->
+    <div class="login-asterisks">
+      <span><span class="ast">*</span><strong>CRABS</strong> : carcinisation related announcements &amp; berylist sentencings</span>
+      <span class="ast-sep">·</span>
+      <span><span class="ast">*</span><strong>CRABE</strong> : chroniques réquisitoires annonciatrices &amp; brachyoures évocateurs</span>
+    </div>
+
     <div class="char-select-wrap">
 
       <div class="char-card" onclick="startLoading('en')">
         <div class="char-card-inner">
           <div class="char-flag-strip">
-            <img src="m_france.png" class="char-flag" alt="">
+            <img src="m_world.png" class="char-flag" alt="">
             <span class="char-flag-label">INTERNATIONAL</span>
           </div>
           <div class="char-portrait">
@@ -81,13 +84,6 @@
       </div>
     </div>
 
-    <!-- Asterisk explanations -->
-    <div class="login-asterisks">
-      <p><span class="ast">*</span> <strong>CRABS</strong> : carcinisation related announcements and berylist sentencings</p>
-      <p><span class="ast">*</span> <strong>CRABE</strong> : chroniques réquisitoires annonciatrices et brachyoures évocateurs</p>
-    </div>
-
-    <!-- Bottom status bar -->
     <div class="login-status-bar">
       <span class="ls-item">READY</span>
       <span class="ls-item">[ ENCRYPTED ]</span>
@@ -103,7 +99,6 @@
 <section id="screen-loading" class="screen screen-loading" style="display:none;">
   <canvas id="bg-canvas-loading" class="bg-canvas"></canvas>
   <div class="login-vignette"></div>
-
   <div class="loading-window">
     <div class="loading-titlebar">
       <span class="loading-titlebar-text" id="loading-titlebar-text">SYSTEM INITIALISATION — MOULTLOOK v2.0</span>
@@ -111,7 +106,7 @@
     </div>
     <div class="loading-body">
       <div class="loading-gif-slot">
-        <img src="session.gif" alt="" class="loading-gif" id="loading-gif">
+        <img src="session.gif" alt="" class="loading-gif">
       </div>
       <h2 id="loading-title" class="loading-title-text">HARDENING<span class="dots">...</span></h2>
       <div class="loading-progress-track">
@@ -125,16 +120,64 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
+     LANG SWITCH POPUP (avoids misclick)
+     ═══════════════════════════════════════════════════════════ -->
+<div id="lang-popup" class="lang-popup-overlay" style="display:none;" onclick="closeLangPopupOutside(event)">
+  <div class="lang-popup">
+    <div class="lang-popup-title">// SWITCH OPERATIONAL THEATRE //</div>
+    <div class="lang-popup-cards">
+      <div class="lang-popup-card" id="lang-popup-en" onclick="confirmLangSwitch('en')">
+        <img src="m_world.png" class="lang-popup-flag" alt="">
+        <div class="lang-popup-card-name">INTERNATIONAL</div>
+        <div class="lang-popup-card-sub">// english //</div>
+      </div>
+      <div class="lang-popup-card lang-popup-card-fr" id="lang-popup-fr" onclick="confirmLangSwitch('fr')">
+        <img src="m_francogasconha.png" class="lang-popup-flag" alt="">
+        <div class="lang-popup-card-name">GASCOGNE OCCUPÉE</div>
+        <div class="lang-popup-card-sub">// francogasconha //</div>
+      </div>
+    </div>
+    <button class="lang-popup-cancel" onclick="closeLangPopup()">[ × cancel ]</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SEARCH OVERLAY — supersection, above everything
+     ═══════════════════════════════════════════════════════════ -->
+<div id="search-overlay" class="search-overlay" style="display:none;" onclick="closeSearchOutside(event)">
+  <div class="search-overlay-inner">
+    <div class="search-ov-titlebar">
+      <span class="search-ov-title" id="search-ov-title">// SEARCH THE CARAPACE //</span>
+      <button class="search-ov-close" onclick="closeSearchOverlay()">[ × ]</button>
+    </div>
+    <div class="search-ov-input-row">
+      <input type="text" id="search-ov-input" class="search-ov-input"
+             placeholder="query..."
+             onkeydown="if(event.key==='Enter') executeSearchOverlay(); if(event.key==='Escape') closeSearchOverlay()">
+      <button class="search-ov-btn" onclick="executeSearchOverlay()">SEARCH →</button>
+    </div>
+    <div class="search-ov-body">
+      <div class="search-ov-diver-wrap">
+        <img src="m_searchresults.png" class="search-ov-diver" alt="search guide"
+             onerror="this.style.display='none'">
+      </div>
+      <div id="search-ov-results" class="search-ov-results">
+        <p class="search-ov-prompt" id="search-ov-prompt">type a query and press enter</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
      APP — MAIN CONSOLE
      ═══════════════════════════════════════════════════════════ -->
 <section id="screen-app" class="screen screen-app" style="display:none;">
   <canvas id="bg-canvas-app" class="bg-canvas"></canvas>
   <div class="app-vignette"></div>
 
-  <!-- Top text banner -->
   <header class="app-header">
     <div class="app-header-left">
-      <span class="app-header-logo" id="app-header-logo">MOULTLOOK</span>
+      <span class="app-header-logo">MOULTLOOK</span>
       <span class="app-header-sep">//</span>
       <span class="app-header-sub" id="app-header-sub">INTERNATIONAL</span>
     </div>
@@ -142,23 +185,30 @@
       <div class="ticker-track" id="ticker-track"></div>
     </div>
     <div class="app-header-right">
+      <button class="header-search-btn" onclick="openSearchOverlay()" title="Search">
+        <img src="m_search.png" class="header-search-icon" alt="search">
+      </button>
       <span class="app-header-clock" id="app-header-clock">00:00:00</span>
-      <button class="lang-toggle" onclick="toggleLanguage()" title="Switch theatre">
-        <img id="lang-toggle-icon" src="m_world.png" alt="">
+      <button class="lang-toggle" onclick="openLangPopup()" title="Switch theatre">
+        <img id="lang-toggle-icon" src="m_francogasconha.png" alt="">
         <span class="lang-toggle-label" id="lang-toggle-label">FR</span>
       </button>
     </div>
   </header>
 
-  <!-- Main app window -->
   <div id="console-layout" class="console-layout">
     <div class="app-window" id="app-window">
 
       <div class="app-titlebar">
         <div class="win-btn-group">
-          <button class="win-btn btn-red"    onclick="moult()"           title="Moult — reload"></button>
-          <button class="win-btn btn-blue"   onclick="minimizeConsole()" title="Minimise"></button>
-          <button class="win-btn btn-yellow" onclick="toggleSidePanel()" title="Open transmission"></button>
+          <!-- Pixel art buttons sprite — click zones are the thirds of the image -->
+          <div class="win-btn-sprite-wrap">
+            <img src="m_buttons.png" class="win-btn-sprite" alt="window controls">
+            <!-- Invisible click zones overlaid on the sprite -->
+            <button class="win-zone" style="left:0"      onclick="moult()"           title="Moult"></button>
+            <button class="win-zone" style="left:33.3%"  onclick="minimizeConsole()" title="Minimise"></button>
+            <button class="win-zone" style="left:66.6%"  onclick="toggleSidePanel()" title="Transmission"></button>
+          </div>
         </div>
         <span class="app-titlebar-title">
           <img src="m_moult.png" class="title-crab" alt="">
@@ -168,9 +218,10 @@
       </div>
 
       <div class="app-layout">
-        <!-- Sidebar: compact, no scroll -->
         <aside id="sidebar" class="sidebar">
-          <div class="sidebar-logo-wrap" id="sidebar-logo-wrap">
+          <!-- Logo — click = toggle middle row -->
+          <div class="sidebar-logo-wrap" id="sidebar-logo-wrap"
+               onclick="toggleMiddleRow()" title="toggle list">
             <img id="sidebar-logo-img" src="m_mltlklogo_int.png" alt="">
           </div>
           <nav class="nav-links" id="sidebar-nav"></nav>
@@ -182,15 +233,11 @@
           </div>
         </aside>
 
-        <!-- Email list -->
         <section class="middle-row" id="email-list"></section>
-
-        <!-- Content view -->
         <main class="content-view" id="content-view"></main>
       </div>
     </div>
 
-    <!-- Transmission side panel -->
     <div id="side-panel" class="side-panel" style="display:none;">
       <div class="side-titlebar">
         <span class="side-title-text">// TRANSMISSION //</span>
@@ -199,32 +246,31 @@
       <div class="side-body">
         <div class="side-clock-wrap">
           <div id="side-clock" class="side-clock">00:00:00.000</div>
-          <div id="side-date"  class="side-date">---</div>
+          <div id="side-date" class="side-date">---</div>
         </div>
         <div class="side-birt-wrap">
           <img src="birt.gif" alt="" class="side-birt" onerror="this.style.display='none'">
         </div>
         <div class="side-quote-wrap">
-          <p class="side-quote" id="side-quote">"on est toujours dans le Moyen-Âge de quelque-chose"</p>
+          <p class="side-quote">"on est toujours dans le Moyen-Âge de quelque-chose"</p>
           <p class="side-quote-attr">— Claire Lacombe, 22.9.25</p>
         </div>
-        <button class="side-borg-btn" onclick="openBerylism()">
-          <span>VISIT BERYLISM.ORG</span>
-          <span class="side-borg-arrow">→</span>
-        </button>
+        <!-- borgbanner image link -->
+        <a href="https://berylism.org" target="_blank" rel="noopener" class="borg-banner-link">
+          <img src="m_borgbanner.png" class="borg-banner-img" alt="berylism.org"
+               onerror="this.outerHTML='<span class=side-borg-fallback>BERYLISM.ORG →</span>'">
+        </a>
       </div>
     </div>
   </div>
 
-  <!-- Minimised restore trigger -->
   <div id="app-minimized-gif" class="floating-trigger app-restore-trigger" style="display:none;" onclick="restoreConsole()">
     <img src="session.gif" alt="" class="trigger-gif">
     <div class="trigger-label">// CLICK TO RESTORE //</div>
   </div>
 
-  <!-- ANEMONE / MOLTOK ASSISTANT — bottom right -->
+  <!-- MOLTOK — bottom right -->
   <div id="moltok-widget" class="moltok-widget">
-    <!-- Anemone with hidden moltok -->
     <div id="moltok-anchor" class="moltok-anchor" onclick="toggleMoltok()">
       <img src="m_anemona_detailed.png" class="moltok-anemona" alt="anemone">
       <img id="moltok-emerging" src="m_moltok.png" class="moltok-emerging" alt="moltok">
@@ -233,12 +279,17 @@
       <span class="moltok-anchor-hint">// poke //</span>
     </div>
 
-    <!-- Chat panel -->
     <div id="moltok-panel" class="moltok-panel" style="display:none;">
       <div class="moltok-titlebar">
         <span class="moltok-title-text">// MOLTOK //</span>
         <span class="moltok-title-status">ONLINE</span>
         <button class="moltok-close" onclick="toggleMoltok()">[ × ]</button>
+      </div>
+      <div class="moltok-disclaimer">
+        <span class="moltok-disc-icon">⚠</span>
+        MOLTOK is an AI assistant. All subjects accepted.
+        Moltok <em>may</em> make blistakes. Bliz dooubl-chekbl blesponsbl.
+        By continuing, you acknowledge MOLTOK's nature as a crab.
       </div>
       <div class="moltok-portrait">
         <img src="m_moltok.png" class="moltok-portrait-img" alt="moltok">
