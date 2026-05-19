@@ -11,9 +11,9 @@
 </head>
 <body class="theme-default">
 
-<!-- ═══════════════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════
      LANDING / CHARACTER SELECT
-     ═══════════════════════════════════════════════════════════ -->
+     ═══════════════════════════════════════════════ -->
 <section id="screen-login" class="screen screen-login">
   <canvas id="bg-canvas" class="bg-canvas"></canvas>
   <div class="login-vignette"></div>
@@ -28,23 +28,24 @@
   <div id="login-console" class="login-console-wrap" style="display:none;">
 
     <div class="login-banner-wrap">
-      <img id="login-logo" src="m_mltlklogo_mainfinal.png" class="login-logo" alt="">
+      <img src="m_mltlklogo_mainfinal.png" class="login-logo" alt="">
       <h1 class="login-title">
-        <span class="lt-letter" style="--d:0.00s">M</span><span class="lt-letter" style="--d:0.06s">O</span><span class="lt-letter" style="--d:0.12s">U</span><span class="lt-letter" style="--d:0.18s">L</span><span class="lt-letter" style="--d:0.24s">T</span><span class="lt-letter" style="--d:0.30s">L</span><span class="lt-letter" style="--d:0.36s">O</span><span class="lt-letter" style="--d:0.42s">O</span><span class="lt-letter" style="--d:0.48s">K</span>
+        <span class="lt-letter" style="--d:0.00s">M</span><span
+          class="lt-letter" style="--d:0.06s">O</span><span
+          class="lt-letter" style="--d:0.12s">U</span><span
+          class="lt-letter" style="--d:0.18s">L</span><span
+          class="lt-letter" style="--d:0.24s">T</span><span
+          class="lt-letter" style="--d:0.30s">L</span><span
+          class="lt-letter" style="--d:0.36s">O</span><span
+          class="lt-letter" style="--d:0.42s">O</span><span
+          class="lt-letter" style="--d:0.48s">K</span>
       </h1>
-      <p class="login-subtitle">— berylist console for crustacean correspondence —</p>
       <p class="login-tagline">select your operational theatre</p>
-    </div>
-
-    <!-- CRABS / CRABE asterisks — prominent, above the cards -->
-    <div class="login-asterisks">
-      <span><span class="ast">*</span><strong>CRABS</strong> : carcinisation related announcements &amp; berylist sentencings</span>
-      <span class="ast-sep">·</span>
-      <span><span class="ast">*</span><strong>CRABE</strong> : chroniques réquisitoires annonciatrices &amp; brachyoures évocateurs</span>
     </div>
 
     <div class="char-select-wrap">
 
+      <!-- INT card -->
       <div class="char-card" onclick="startLoading('en')">
         <div class="char-card-inner">
           <div class="char-flag-strip">
@@ -52,19 +53,22 @@
             <span class="char-flag-label">INTERNATIONAL</span>
           </div>
           <div class="char-portrait">
-            <img src="m_mltlklogo_int.png" class="char-logo" alt="MOULTLOOK INT">
-            <img src="session.gif" class="char-dancer" alt="">
+            <img src="session.gif" class="char-dancer-center" alt="">
             <div class="char-glow"></div>
           </div>
           <div class="char-cta">
             <span class="char-cta-line">CHECK MY CRABS<span class="ast">*</span></span>
             <span class="char-cta-sub">// english //</span>
           </div>
+          <div class="char-asterisk">
+            <span class="ast">*</span><strong>CRABS</strong> : carcinisation related announcements &amp; berylist sentencings
+          </div>
         </div>
       </div>
 
       <div class="char-divider"><span>OR</span></div>
 
+      <!-- GASCONY card -->
       <div class="char-card char-card-fr" onclick="startLoading('fr')">
         <div class="char-card-inner">
           <div class="char-flag-strip">
@@ -72,13 +76,15 @@
             <span class="char-flag-label">GASCOGNE OCCUPÉE</span>
           </div>
           <div class="char-portrait">
-            <img src="m_mltlklogo_gascony.png" class="char-logo" alt="MOULTLOOK GASCONY">
-            <img src="session.gif" class="char-dancer" alt="">
+            <img src="session.gif" class="char-dancer-center" alt="">
             <div class="char-glow"></div>
           </div>
           <div class="char-cta">
             <span class="char-cta-line">CRABE M'A TUER<span class="ast">*</span></span>
             <span class="char-cta-sub">// francogasconha //</span>
+          </div>
+          <div class="char-asterisk">
+            <span class="ast">*</span><strong>CRABE</strong> : chroniques réquisitoires annonciatrices &amp; brachyoures évocateurs
           </div>
         </div>
       </div>
@@ -93,9 +99,9 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════
      LOADING
-     ═══════════════════════════════════════════════════════════ -->
+     ═══════════════════════════════════════════════ -->
 <section id="screen-loading" class="screen screen-loading" style="display:none;">
   <canvas id="bg-canvas-loading" class="bg-canvas"></canvas>
   <div class="login-vignette"></div>
@@ -119,9 +125,24 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     LANG SWITCH POPUP (avoids misclick)
-     ═══════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════
+     MOULT POPUP — return to landing
+     ═══════════════════════════════════════════════ -->
+<div id="moult-popup" class="moult-popup-overlay" style="display:none;" onclick="closeMoultPopupOutside(event)">
+  <div class="moult-popup">
+    <img src="session.gif" class="moult-popup-gif" alt="">
+    <div class="moult-popup-title">// MOULT //</div>
+    <p class="moult-popup-text">Shed your shell and return to the landing screen?<br>Your session will be reset.</p>
+    <div class="moult-popup-btns">
+      <button class="moult-popup-confirm" onclick="confirmMoult()">MOULT →</button>
+      <button class="moult-popup-cancel"  onclick="closeMoultPopup()">[ cancel ]</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     LANG SWITCH POPUP
+     ═══════════════════════════════════════════════ -->
 <div id="lang-popup" class="lang-popup-overlay" style="display:none;" onclick="closeLangPopupOutside(event)">
   <div class="lang-popup">
     <div class="lang-popup-title">// SWITCH OPERATIONAL THEATRE //</div>
@@ -141,9 +162,9 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SEARCH OVERLAY — supersection, above everything
-     ═══════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════
+     SEARCH OVERLAY
+     ═══════════════════════════════════════════════ -->
 <div id="search-overlay" class="search-overlay" style="display:none;" onclick="closeSearchOutside(event)">
   <div class="search-overlay-inner">
     <div class="search-ov-titlebar">
@@ -158,19 +179,19 @@
     </div>
     <div class="search-ov-body">
       <div class="search-ov-diver-wrap">
-        <img src="m_searchresults.png" class="search-ov-diver" alt="search guide"
+        <img src="m_searchresults.png" class="search-ov-diver" alt=""
              onerror="this.style.display='none'">
       </div>
       <div id="search-ov-results" class="search-ov-results">
-        <p class="search-ov-prompt" id="search-ov-prompt">type a query and press enter</p>
+        <p class="search-ov-prompt">type a query and press enter</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
+<!-- ═══════════════════════════════════════════════
      APP — MAIN CONSOLE
-     ═══════════════════════════════════════════════════════════ -->
+     ═══════════════════════════════════════════════ -->
 <section id="screen-app" class="screen screen-app" style="display:none;">
   <canvas id="bg-canvas-app" class="bg-canvas"></canvas>
   <div class="app-vignette"></div>
@@ -201,13 +222,11 @@
 
       <div class="app-titlebar">
         <div class="win-btn-group">
-          <!-- Pixel art buttons sprite — click zones are the thirds of the image -->
+          <!-- m_buttons.png as background, transparent click zones on top -->
           <div class="win-btn-sprite-wrap">
-            <img src="m_buttons.png" class="win-btn-sprite" alt="window controls">
-            <!-- Invisible click zones overlaid on the sprite -->
-            <button class="win-zone" style="left:0"      onclick="moult()"           title="Moult"></button>
-            <button class="win-zone" style="left:33.3%"  onclick="minimizeConsole()" title="Minimise"></button>
-            <button class="win-zone" style="left:66.6%"  onclick="toggleSidePanel()" title="Transmission"></button>
+            <button class="win-zone" onclick="moultConfirm()" title="Moult — return to landing"></button>
+            <button class="win-zone" onclick="minimizeConsole()"  title="Minimise"></button>
+            <button class="win-zone" onclick="toggleSidePanel()"  title="Transmission"></button>
           </div>
         </div>
         <span class="app-titlebar-title">
@@ -219,14 +238,13 @@
 
       <div class="app-layout">
         <aside id="sidebar" class="sidebar">
-          <!-- Logo — click = toggle middle row -->
           <div class="sidebar-logo-wrap" id="sidebar-logo-wrap"
                onclick="toggleMiddleRow()" title="toggle list">
             <img id="sidebar-logo-img" src="m_mltlklogo_int.png" alt="">
           </div>
           <nav class="nav-links" id="sidebar-nav"></nav>
           <div class="sidebar-footer">
-            <button class="moult-btn" onclick="moult()">
+            <button class="moult-btn" onclick="moultConfirm()">
               <img src="m_moult.png" class="moult-icon" alt="">
               <span class="moult-label">MOULT</span>
             </button>
@@ -255,7 +273,6 @@
           <p class="side-quote">"on est toujours dans le Moyen-Âge de quelque-chose"</p>
           <p class="side-quote-attr">— Claire Lacombe, 22.9.25</p>
         </div>
-        <!-- borgbanner image link -->
         <a href="https://berylism.org" target="_blank" rel="noopener" class="borg-banner-link">
           <img src="m_borgbanner.png" class="borg-banner-img" alt="berylism.org"
                onerror="this.outerHTML='<span class=side-borg-fallback>BERYLISM.ORG →</span>'">
@@ -272,7 +289,7 @@
   <!-- MOLTOK — bottom right -->
   <div id="moltok-widget" class="moltok-widget">
     <div id="moltok-anchor" class="moltok-anchor" onclick="toggleMoltok()">
-      <img src="m_anemona_detailed.png" class="moltok-anemona" alt="anemone">
+      <img src="m_anemona_detailed.png" class="moltok-anemona icon-mono" alt="anemone">
       <img id="moltok-emerging" src="m_moltok.png" class="moltok-emerging" alt="moltok">
       <div class="moltok-anchor-glow"></div>
       <div class="moltok-anchor-ripple"></div>
@@ -291,8 +308,10 @@
         Moltok <em>may</em> make blistakes. Bliz dooubl-chekbl blesponsbl.
         By continuing, you acknowledge MOLTOK's nature as a crab.
       </div>
+      <!-- chat portrait uses m_moltokchat.png -->
       <div class="moltok-portrait">
-        <img src="m_moltok.png" class="moltok-portrait-img" alt="moltok">
+        <img src="m_moltokchat.png" class="moltok-portrait-img" alt="moltok"
+             onerror="this.src='m_moltok.png'">
       </div>
       <div id="moltok-messages" class="moltok-messages"></div>
       <div class="moltok-input-row">
