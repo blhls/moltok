@@ -1,810 +1,333 @@
 /* ============================================================
-   MOULTLOOK v2.0 — script.js
+   MOULTLOOK v3.0 — script.js
+   One state machine, one column, fewer moving parts.
    ============================================================ */
 'use strict';
 
-/* ── State ────────────────────────────────────────────────── */
-let currentLang      = 'en';
-let currentSection   = 'home';
-let currentCategory  = null;
-let selectedEmailId  = null;
-let consoleMinimized = false;
-let sidePanelOpen    = false;
-let moltokOpen       = false;
-let moltokGreeted    = false;
-let middleRowVisible = false;
+/* ── State ──────────────────────────────────────────────── */
+let lang     = 'en';       // 'en' | 'fr'
+let view     = 'feed';     // 'home' | 'feed' | 'article' | 'shell'
+let category = 'all';      // 'all' | demiurge key
+let query    = '';
+let articleId = null;
+let moltokOpen = false, moltokGreeted = false;
 
-/* category → sign image */
-const categorySign = {
+const signOf = {
   patriarchy:  'm_patsign.png',
   imperialism: 'm_impsign.png',
-  capitalism:  'm_crabsign_detailed.png',
+  capitalism:  'm_capisign.png',
   notes:       'm_selfsign.png',
 };
 
-/* ══════════════════════════════════════════════════════════
-   HOLOGRAPHIC CANVAS — subtle, title-glitch only
-   ══════════════════════════════════════════════════════════ */
-const canvasRegistry = {};
+const catLabel = k => (demiurges[k] ? demiurges[k].label[lang] : k);
 
-function initBgCanvas(id, mode, glitchMode) {
-  const canvas = document.getElementById(id);
-  if (!canvas) return;
-  if (canvasRegistry[id]) cancelAnimationFrame(canvasRegistry[id].animId);
-
-  const ctx = canvas.getContext('2d');
-  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const base = glitchMode === 'intense' ? 80 : glitchMode === 'login' ? 900 : 3600;
-  let countdown = base + Math.random() * base;
-  let active = false, frame = 0, slices = [];
-
-  function buildSlices(w, h) { slices = []; let y = 0; while (y < h) { const sh = Math.random() * 20 + 3; slices.push({ y, h: sh }); y += sh; } }
-
-  function triggerTitleGlitch() {
-    const el = document.getElementById('app-win-title') || document.querySelector('.app-header-logo');
-    if (!el) return;
-    el.style.animation = 'title-glitch 0.55s ease forwards';
-    setTimeout(() => { if (el) el.style.animation = ''; }, 580);
-  }
-
-  function draw() {
-    const w = canvas.width, h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
-    countdown--;
-    if (!active && countdown <= 0) {
-      active = true; frame = 0;
-      countdown = base + Math.random() * base;
-      buildSlices(w, h);
-      triggerTitleGlitch();
-    }
-    if (active) {
-      const fade = Math.max(0, 1 - frame / 10);
-      const col = mode === 'fr' ? 'rgba(32,200,176,0.7)' : 'rgba(232,160,40,0.7)';
-      ctx.save(); ctx.globalAlpha = 0.065 * fade;
-      for (const sl of slices) { if (Math.random() < 0.55) continue; ctx.fillStyle = col; ctx.fillRect(0, sl.y, w, sl.h); }
-      ctx.restore();
-      frame++;
-      if (frame > 10) active = false;
-    }
-    canvasRegistry[id] = { ...canvasRegistry[id], animId: requestAnimationFrame(draw) };
-  }
-  canvasRegistry[id] = { animId: null };
-  canvasRegistry[id].animId = requestAnimationFrame(draw);
+/* ── Landing / loading ──────────────────────────────────── */
+function openSelect() {
+  document.getElementById('landing-trigger').hidden = true;
+  document.getElementById('landing-select').hidden  = false;
 }
 
-function stopBgCanvas(id) { if (canvasRegistry[id]) cancelAnimationFrame(canvasRegistry[id].animId); }
-
-/* ══════════════════════════════════════════════════════════
-   LANDING
-   ══════════════════════════════════════════════════════════ */
-function openLoginConsole() {
-  const trigger = document.getElementById('login-trigger');
-  const con     = document.getElementById('login-console');
-  if (trigger) trigger.style.display = 'none';
-  if (con) con.style.display = 'flex';
-  burstSparkles(window.innerWidth / 2, window.innerHeight - 100, 14);
-}
-
-function startLoading(lang) {
-  currentLang = lang;
-  document.body.classList.toggle('mode-fr', lang === 'fr');
-  document.getElementById('screen-login').style.display   = 'none';
-  document.getElementById('screen-loading').style.display = 'flex';
-  stopBgCanvas('bg-canvas');
-  initBgCanvas('bg-canvas-loading', lang, 'intense');
-  _clearLoadingUI();
-  runLoadingSequence(lang, finishLoading);
-}
-
-function _clearLoadingUI() {
-  const bar = document.getElementById('progress-bar');
-  const log = document.getElementById('loading-log');
-  if (bar) bar.style.width = '0%';
-  if (log) log.innerHTML = '';
-}
-
-function runLoadingSequence(lang, onDone) {
-  const bar   = document.getElementById('progress-bar');
-  const title = document.getElementById('loading-title');
-  const sub   = document.getElementById('loading-sub');
-  const log   = document.getElementById('loading-log');
-  const tbar  = document.getElementById('loading-titlebar-text');
-  const isFr  = lang === 'fr';
-
-  if (tbar) tbar.textContent = isFr
-    ? 'INITIALISATION SYSTÈME — MOULTLOOK v2.0'
-    : 'SYSTEM INITIALISATION — MOULTLOOK v2.0';
-
-  const stages = isFr ? [
-    { p: 12,  t: 'INITIALISATION',   s: 'connexion gasconha...', logs: ['boot...', 'chitin loader v3', 'init holo-bus'] },
-    { p: 34,  t: 'AUTHENTIFICATION', s: 'vérification carapace...', logs: ['scan coquille', 'signature ok'] },
-    { p: 58,  t: 'DURCISSEMENT',     s: 'chargement modules...', logs: ['load: inbox', 'load: démiurges', 'load: coquille'] },
-    { p: 82,  t: 'CALIBRAGE',        s: 'sync rivière...', logs: ['sync gironde', 'sync occitan'] },
-    { p: 100, t: 'PRÊT',             s: 'console opérationnelle.', logs: ['prêt.'] },
-  ] : [
-    { p: 12,  t: 'INITIALISING',   s: 'establishing connection...', logs: ['boot...', 'chitin loader v3', 'init holo-bus'] },
-    { p: 34,  t: 'AUTHENTICATING', s: 'verifying carapace...', logs: ['scan shell', 'crab signature ok'] },
-    { p: 58,  t: 'HARDENING',      s: 'loading modules...', logs: ['load: inbox', 'load: demiurges', 'load: shell'] },
-    { p: 82,  t: 'CALIBRATING',    s: 'sync hivemind...', logs: ['sync continental', 'sync moult-net'] },
-    { p: 100, t: 'READY',          s: 'console operational.', logs: ['ready.'] },
-  ];
-
-  let i = 0;
-  function step() {
-    if (i >= stages.length) { if (onDone) setTimeout(onDone, 600); return; }
-    const s = stages[i];
-    if (bar)   bar.style.width = s.p + '%';
-    if (title) title.innerHTML = s.t + '<span class="dots">...</span>';
-    if (sub)   sub.textContent = s.s;
-    if (log) {
-      s.logs.forEach((ln, dx) => {
-        setTimeout(() => {
-          const li = document.createElement('li');
-          li.innerHTML = '<span class="log-mark">▸</span> ' + ln;
-          log.appendChild(li);
-          while (log.children.length > 6) log.removeChild(log.firstChild);
-        }, dx * 110);
-      });
-    }
-    i++;
-    setTimeout(step, 820 + Math.random() * 360);
-  }
-  step();
-}
-
-function finishLoading() {
-  document.getElementById('screen-loading').style.display = 'none';
-  document.getElementById('screen-app').style.display     = 'flex';
-  stopBgCanvas('bg-canvas-loading');
-  initBgCanvas('bg-canvas-app', currentLang, 'normal');
-  initApp();
-}
-
-/* ══════════════════════════════════════════════════════════
-   APP INIT
-   ══════════════════════════════════════════════════════════ */
-function initApp() {
-  currentSection   = 'home';
-  currentCategory  = null;
-  middleRowVisible = false; // home starts with list hidden
-  updateBranding();
-  buildTicker();
-  buildSidebarNav();
-  _applyMiddleRowVisibility();
-  renderMiddleList();
-  renderContentView();
-  startClock();
-  updateLangToggle();
-}
-
-function updateBranding() {
-  const sidebarLogo = document.getElementById('sidebar-logo-img');
-  if (sidebarLogo) sidebarLogo.src = logos[currentLang] || logos.main;
-  const headerSub = document.getElementById('app-header-sub');
-  if (headerSub) headerSub.textContent = currentLang === 'fr' ? 'GASCOGNE OCCUPÉE' : 'INTERNATIONAL';
-  document.body.classList.toggle('mode-fr', currentLang === 'fr');
-}
-
-function buildTicker() {
-  const track = document.getElementById('ticker-track');
-  if (!track) return;
-  const txt = (bannerContent && bannerContent[currentLang]) || bannerContent.en;
-  track.innerHTML = (txt + ' ').repeat(2).replace(/★/g, '<span class="tk-star">★</span>');
-}
-
-/* ══════════════════════════════════════════════════════════
-   SIDEBAR NAV — search first, no drafts, no world
-   ══════════════════════════════════════════════════════════ */
-function buildSidebarNav() {
-  const nav = document.getElementById('sidebar-nav');
-  if (!nav) return;
-  const isFr = currentLang === 'fr';
-
-  // Search always first and distinct
-  let html = `<div class="nav-item nav-search" onclick="openSearchOverlay()">
-                <img src="m_search.png" class="nav-icon" alt="search">
-                <span class="nav-label">${isFr ? 'CHERCHER' : 'SEARCH'}</span>
-              </div>`;
-
-  const items = [
-    { key: 'home',    icon: 'm_anemhome.png',  label: isFr ? 'ANEMOSTAU' : 'ANEMHOME', mono: true  },
-    { key: 'unread',  icon: 'm_unread.png',     label: isFr ? 'NOUVEAU'   : 'UNREAD',   mono: true  },
-    { key: 'inbox',   icon: 'm_inbox.png',      label: isFr ? 'BOÎTE'     : 'INBOX',    mono: true  },
-    { key: 'sent',    icon: 'm_sent.png',       label: isFr ? 'ENVOYÉS'   : 'SENT',     mono: true  },
-    { key: 'archive', icon: 'm_archive.png',    label: isFr ? 'ARCHIVES'  : 'ARCHIVE',  mono: true  },
-    { key: 'shell',   icon: 'm_shell.png',      label: isFr ? 'COQUILLE'  : 'SHELL',    mono: true  },
-  ];
-
-  for (const it of items) {
-    const active = currentSection === it.key ? ' active' : '';
-    const mono   = it.mono ? ' icon-mono' : '';
-    html += `<div class="nav-item${active}" onclick="navigate('${it.key}')">
-               <img src="${it.icon}" class="nav-icon${mono}" alt="${it.key}">
-               <span class="nav-label">${it.label}</span>
-             </div>`;
-
-    if (it.key === 'inbox' && currentSection === 'inbox') {
-      html += '<div class="nav-sub">';
-      const cats = Object.keys(demiurges);
-      const lmap = { patriarchy: isFr ? 'patriarcat' : 'patriarchy', imperialism: isFr ? 'impérialisme' : 'imperialism', capitalism: isFr ? 'capitalisme' : 'capitalism', notes: isFr ? 'notas' : 'notes' };
-      for (const c of cats) {
-        const a = currentCategory === c ? ' active' : '';
-        html += `<div class="nav-sub-item${a}" onclick="navigate('inbox','${c}'); event.stopPropagation();">
-                   <span class="nav-sub-mark">↳</span> ${lmap[c] || c}
-                 </div>`;
-      }
-      html += '</div>';
-    }
-  }
-  nav.innerHTML = html;
-}
-
-/* ══════════════════════════════════════════════════════════
-   NAVIGATION
-   ══════════════════════════════════════════════════════════ */
-function navigate(section, category) {
-  currentSection  = section;
-  currentCategory = category || null;
-  selectedEmailId = null;
-
-  // sections that hide middle row
-  const noList = ['home', 'shell'];
-  middleRowVisible = !noList.includes(section);
-  if (section === 'unread') middleRowVisible = true;
-
-  _applyMiddleRowVisibility();
-  buildSidebarNav();
-  updateTitlebar();
-  renderMiddleList();
-  renderContentView();
-}
-
-function toggleMiddleRow() {
-  middleRowVisible = !middleRowVisible;
-  _applyMiddleRowVisibility();
-  burstSparkles(60, window.innerHeight / 2, 6);
-}
-
-function _applyMiddleRowVisibility() {
-  const mr = document.getElementById('email-list');
-  if (!mr) return;
-  mr.classList.toggle('hidden', !middleRowVisible);
-}
-
-function updateTitlebar() {
-  const winTitle = document.getElementById('app-win-title');
-  if (winTitle) {
-    winTitle.textContent = (currentSection === 'inbox' && currentCategory)
-      ? 'MOULTLOOK / INBOX / ' + currentCategory.toUpperCase()
-      : 'MOULTLOOK / ' + currentSection.toUpperCase();
-  }
-  const meta = document.getElementById('app-titlebar-meta');
-  if (meta) meta.textContent = '// ' + (currentLang === 'fr' ? 'PRÊT' : 'READY') + ' //';
-}
-
-/* ══════════════════════════════════════════════════════════
-   MIDDLE LIST
-   ══════════════════════════════════════════════════════════ */
-function _signForEmail(e) {
-  const sign = categorySign[e.category];
-  if (!sign) return '';
-  return `<img src="${sign}" class="email-sign-mini" alt="">`;
-}
-
-function renderMiddleList() {
-  const list = document.getElementById('email-list');
-  if (!list) return;
-
-  if (currentSection === 'unread') {
-    const pool = emails
-      .filter(e => e.lang === currentLang)
-      .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-    const latest  = pool[0];
-    const seeAlso = pool.slice(1, 3);
-    let html = `<div class="list-header"><span class="list-header-title">${currentLang === 'fr' ? 'NOUVEAU' : 'UNREAD'}</span></div>`;
-    if (latest) {
-      const a = selectedEmailId === latest.id ? ' active' : '';
-      html += `<div class="email-item${a}" onclick="selectEmail(${latest.id})">
-                 <div class="email-item-top">${_signForEmail(latest)}<span class="email-from">${latest.from}</span></div>
-                 <div class="email-subject">${latest.subject}</div>
-                 <div class="email-meta"><span class="email-date">${latest.date}</span></div>
-               </div>`;
-    }
-    if (seeAlso.length) {
-      html += `<div class="list-sep">// see also</div>`;
-      for (const e of seeAlso) {
-        const a = selectedEmailId === e.id ? ' active' : '';
-        html += `<div class="email-item${a}" onclick="selectEmail(${e.id})">
-                   <div class="email-item-top">${_signForEmail(e)}<span class="email-from">${e.from}</span></div>
-                   <div class="email-subject">${e.subject}</div>
-                   <div class="email-meta"><span class="email-date">${e.date}</span></div>
-                 </div>`;
-      }
-    }
-    list.innerHTML = html;
-    return;
-  }
-
-  if (['inbox','sent','archive'].includes(currentSection)) {
-    let pool = emails.filter(e => e.lang === currentLang && e.section === currentSection);
-    if (currentSection === 'inbox' && currentCategory) pool = pool.filter(e => e.category === currentCategory);
-    const label = currentSection.toUpperCase() + (currentCategory ? ' / ' + currentCategory.toUpperCase() : '');
-    let html = `<div class="list-header"><span class="list-header-title">${label}</span><span class="list-header-count">${pool.length}</span></div>`;
-    if (!pool.length) {
-      html += `<div class="list-empty">${currentLang === 'fr' ? '— rien ici —' : '— nothing here —'}</div>`;
-    } else {
-      for (const e of pool) {
-        const a = selectedEmailId === e.id ? ' active' : '';
-        html += `<div class="email-item${a}" onclick="selectEmail(${e.id})">
-                   <div class="email-item-top">${_signForEmail(e)}<span class="email-from">${e.from}</span></div>
-                   <div class="email-subject">${e.subject}</div>
-                   <div class="email-snippet">${(e.body || '').slice(0, 65)}</div>
-                   <div class="email-meta">
-                     <span class="email-date">${e.date}</span>
-                     ${(e.tags||[]).slice(0,1).map(t=>`<span class="email-tag">#${t}</span>`).join('')}
-                   </div>
-                 </div>`;
-      }
-    }
-    list.innerHTML = html;
-    return;
-  }
-
-  list.innerHTML = `<div class="list-header"><span class="list-header-title">${currentSection.toUpperCase()}</span></div>
-                    <div class="list-empty">${currentLang === 'fr' ? '— calme plat —' : '— quiet here —'}</div>`;
-}
-
-function selectEmail(id) {
-  selectedEmailId = id;
-  renderMiddleList();
-  renderContentView();
-}
-
-/* ══════════════════════════════════════════════════════════
-   CONTENT VIEW
-   ══════════════════════════════════════════════════════════ */
-function renderContentView() {
-  const cv = document.getElementById('content-view');
-  if (!cv) return;
-
-  if (selectedEmailId) {
-    const e = emails.find(x => x.id === selectedEmailId);
-    if (e) { cv.innerHTML = renderEmailView(e); return; }
-  }
-
-  switch (currentSection) {
-    case 'home':   cv.innerHTML = renderHome(); break;
-    case 'unread':
-      const latest = emails.filter(e => e.lang === currentLang).sort((a,b) => (b.date||'').localeCompare(a.date||''))[0];
-      if (latest) { selectedEmailId = latest.id; renderMiddleList(); cv.innerHTML = renderEmailView(latest); }
-      else cv.innerHTML = `<div class="home-panel"><p class="home-body">${currentLang==='fr' ? '— rien à lire —' : '— nothing to read —'}</p></div>`;
-      break;
-    case 'inbox':
-      cv.innerHTML = (currentCategory && demiurges[currentCategory]) ? renderDemiurge(currentCategory) : renderInboxLanding();
-      break;
-    case 'shell':  cv.innerHTML = renderShell();  break;
-    default:       cv.innerHTML = renderSectionPlaceholder(currentSection); break;
-  }
-}
-
-function renderHome() {
-  const isFr = currentLang === 'fr';
-  const txt  = homeContent[currentLang] || homeContent.en;
-  return `<div class="home-panel">
-            <h1 class="home-headline">${isFr ? 'BENVENGUTS' : 'WELCOME'}</h1>
-            <p class="home-body">${txt}</p>
-            <div class="home-divider"></div>
-            <div class="home-meta">
-              <div class="home-meta-item">${isFr ? 'cycles écoulés' : 'cycles elapsed'}: <span class="hm-val">${Math.floor(Math.random()*9000)+1000}</span></div>
-              <div class="home-meta-item">${isFr ? 'densité chitineuse' : 'chitin density'}: <span class="hm-val">${(Math.random()*30+70).toFixed(1)}%</span></div>
-              <div class="home-meta-item">status: <span class="hm-val">ACTIVE</span></div>
-            </div>
-          </div>`;
-}
-
-function renderInboxLanding() {
-  const isFr = currentLang === 'fr';
-  let html = `<div class="demiurge-panel">
-                <h2 class="home-headline">${isFr ? 'CORRESPONDANTS' : 'CORRESPONDENTS'}</h2>
-                <p class="home-body" style="text-align:left; font-size:1rem;">${isFr ? 'choisissez un démiurge pour filtrer.' : 'select a demiurge to filter.'}</p>`;
-  for (const [k, d] of Object.entries(demiurges)) {
-    const sc = d.status === 'Idle' ? ' idle' : d.status === 'Busy' ? ' busy' : '';
-    html += `<div class="demiurge-header" onclick="navigate('inbox','${k}')">
-               <img src="${d.image}" class="demiurge-avatar" alt="${d.name}">
-               <div class="demiurge-info">
-                 <div class="demiurge-status"><span class="status-dot${sc}"></span>${d.status}</div>
-                 <div class="demiurge-name">${d.name}</div>
-                 <div class="demiurge-catchphrase">"${d.catchphrase}"</div>
-               </div>
-               <img src="${d.sign}" class="demiurge-sign-header" alt="">
-               <div class="demiurge-hint">→ click to filter</div>
-             </div>`;
-  }
-  return html + '</div>';
-}
-
-function renderDemiurge(cat) {
-  const d = demiurges[cat];
-  if (!d) return renderInboxLanding();
-  const sc = d.status === 'Idle' ? ' idle' : d.status === 'Busy' ? ' busy' : '';
-  return `<div class="demiurge-panel">
-            <div class="demiurge-header" style="cursor:default; pointer-events:none; transform:none;">
-              <img src="${d.image}" class="demiurge-avatar" alt="${d.name}">
-              <div class="demiurge-info">
-                <div class="demiurge-status"><span class="status-dot${sc}"></span>${d.status}</div>
-                <div class="demiurge-name">${d.name}</div>
-                <div class="demiurge-catchphrase">"${d.catchphrase}"</div>
-              </div>
-              <img src="${d.sign}" class="demiurge-sign-header" alt="">
-            </div>
-            <div class="demiurge-description">${d.description}</div>
-            <p class="home-body" style="text-align:left; font-size:0.95rem; margin-top:6px;">← ${currentLang==='fr' ? 'sélectionnez un message.' : 'select a message from the list.'}</p>
-          </div>`;
-}
-
-function renderEmailView(e) {
-  const sign = categorySign[e.category] ? `<img src="${categorySign[e.category]}" class="email-view-sign" alt="">` : '';
-  let body = `<div class="email-view-body">${e.body || ''}</div>`;
-  if (e.type === 'pdf' && e.url) {
-    body += `<div class="email-view-pdf">📎 <a href="${e.url}" target="_blank" rel="noopener">${currentLang==='fr' ? 'ouvrir la pièce jointe' : 'open attachment'}</a></div>`;
-  }
-  return `<div class="email-view">
-            <div class="email-view-header">
-              <div class="email-view-header-left">
-                <div class="email-view-meta-row">
-                  ${sign}
-                  <div class="email-view-from">${e.from}</div>
-                </div>
-                <h1 class="email-view-subject">${e.subject}</h1>
-                <div class="email-view-date">${e.date} · #${(e.tags||[]).join(' #')}</div>
-              </div>
-              <button class="close-btn" onclick="closeEmail()">[ × ]</button>
-            </div>
-            ${body}
-          </div>`;
-}
-
-function closeEmail() { selectedEmailId = null; renderMiddleList(); renderContentView(); }
-
-function renderShell()  { return shellContent; }
-
-function renderSectionPlaceholder(sec) {
-  const isFr = currentLang === 'fr';
-  const map = { sent: ['OUTGOING TRANSMISSIONS', 'TRANSMISSIONS ENVOYÉES'], archive: ['BURIED CORRESPONDENCE', 'CORRESPONDANCE ENTERRÉE'] };
-  const title = (map[sec] || [sec.toUpperCase(), sec.toUpperCase()])[isFr ? 1 : 0];
-  return `<div class="home-panel">
-            <h1 class="home-headline">${title}</h1>
-            <p class="home-body">← ${isFr ? 'choisissez un message.' : 'pick a message from the list.'}</p>
-          </div>`;
-}
-
-/* ══════════════════════════════════════════════════════════
-   MOULT POPUP — return to landing
-   ══════════════════════════════════════════════════════════ */
-function moultConfirm() {
-  const popup = document.getElementById('moult-popup');
-  if (popup) popup.style.display = 'flex';
-  burstSparkles(55, 30, 10);
-}
-
-function closeMoultPopup() {
-  const popup = document.getElementById('moult-popup');
-  if (popup) popup.style.display = 'none';
-}
-
-function closeMoultPopupOutside(e) { if (e.target.id === 'moult-popup') closeMoultPopup(); }
-
-function confirmMoult() {
-  closeMoultPopup();
-  // Reset state
-  currentSection   = 'home';
-  currentCategory  = null;
-  selectedEmailId  = null;
-  sidePanelOpen    = false;
-  moltokOpen       = false;
-  moltokGreeted    = false;
-  middleRowVisible = false;
-  consoleMinimized = false;
-
-  // Hide moltok panel if open
-  const mp = document.getElementById('moltok-panel');
-  const mw = document.getElementById('moltok-widget');
-  if (mp) mp.style.display = 'none';
-  if (mw) mw.classList.remove('open');
-  const sp = document.getElementById('side-panel');
-  if (sp) sp.style.display = 'none';
-  const layout = document.getElementById('console-layout');
-  if (layout) layout.classList.remove('minimized');
-  const rg = document.getElementById('app-minimized-gif');
-  if (rg) rg.style.display = 'none';
-
-  burstSparkles(window.innerWidth / 2, window.innerHeight / 2, 28);
-
-  // Switch screens
-  setTimeout(() => {
-    stopBgCanvas('bg-canvas-app');
-    document.getElementById('screen-app').style.display   = 'none';
-    document.getElementById('screen-login').style.display = 'flex';
-    // Reset login
-    const trigger = document.getElementById('login-trigger');
-    const con     = document.getElementById('login-console');
-    if (trigger) trigger.style.display = 'flex';
-    if (con)     con.style.display     = 'none';
-    initBgCanvas('bg-canvas', currentLang, 'login');
-  }, 250);
-}
-
-/* titlebar visual flash (no longer navigates — moultConfirm does that) */
-function moult() { moultConfirm(); }
-
-/* ══════════════════════════════════════════════════════════
-   CONSOLE CONTROLS
-   ══════════════════════════════════════════════════════════ */
-function minimizeConsole() {
-  const layout = document.getElementById('console-layout');
-  const rg     = document.getElementById('app-minimized-gif');
-  if (!layout) return;
-  consoleMinimized = !consoleMinimized;
-  layout.classList.toggle('minimized', consoleMinimized);
-  if (rg) rg.style.display = consoleMinimized ? 'flex' : 'none';
-}
-
-function restoreConsole() {
-  const layout = document.getElementById('console-layout');
-  const rg     = document.getElementById('app-minimized-gif');
-  consoleMinimized = false;
-  if (layout) layout.classList.remove('minimized');
-  if (rg) rg.style.display = 'none';
-}
-
-function toggleSidePanel() {
-  const sp = document.getElementById('side-panel');
-  if (!sp) return;
-  sidePanelOpen = !sidePanelOpen;
-  sp.style.display = sidePanelOpen ? 'flex' : 'none';
-}
-
-/* ══════════════════════════════════════════════════════════
-   LANGUAGE — popup + loading screen
-   ══════════════════════════════════════════════════════════ */
-function openLangPopup() {
-  const popup = document.getElementById('lang-popup');
-  if (!popup) return;
-  const en = document.getElementById('lang-popup-en');
-  const fr = document.getElementById('lang-popup-fr');
-  if (en) en.style.borderColor = currentLang === 'en' ? 'var(--amber)' : '';
-  if (fr) fr.style.borderColor = currentLang === 'fr' ? 'var(--teal)'  : '';
-  popup.style.display = 'flex';
-  burstSparkles(window.innerWidth - 40, 22, 8);
-}
-
-function closeLangPopup() { const p = document.getElementById('lang-popup'); if (p) p.style.display = 'none'; }
-function closeLangPopupOutside(e) { if (e.target.id === 'lang-popup') closeLangPopup(); }
-
-function confirmLangSwitch(targetLang) {
-  if (targetLang === currentLang) { closeLangPopup(); return; }
-  closeLangPopup();
-  document.getElementById('screen-app').style.display     = 'none';
-  document.getElementById('screen-loading').style.display = 'flex';
-  currentLang = targetLang;
-  document.body.classList.toggle('mode-fr', targetLang === 'fr');
-  stopBgCanvas('bg-canvas-app');
-  _clearLoadingUI();
-  initBgCanvas('bg-canvas-loading', targetLang, 'intense');
-  runLoadingSequence(targetLang, function () {
-    document.getElementById('screen-loading').style.display = 'none';
-    document.getElementById('screen-app').style.display     = 'flex';
-    stopBgCanvas('bg-canvas-loading');
-    initBgCanvas('bg-canvas-app', targetLang, 'normal');
-    currentSection = 'home'; currentCategory = null; selectedEmailId = null;
-    middleRowVisible = false; moltokGreeted = false;
-    updateBranding(); buildTicker(); buildSidebarNav();
-    _applyMiddleRowVisibility(); renderMiddleList(); renderContentView(); updateLangToggle();
-    burstSparkles(window.innerWidth / 2, window.innerHeight / 2, 22);
+function enter(l) {
+  lang = l;
+  document.body.classList.toggle('mode-fr', l === 'fr');
+  show('screen-landing', false);
+  show('screen-loading', true);
+  runLoading(() => {
+    show('screen-loading', false);
+    document.body.classList.add('in-app');
+    show('screen-app', true);
+    view = 'feed'; category = 'all'; query = ''; articleId = null;
+    syncChrome(); render();
   });
 }
 
-function updateLangToggle() {
-  const icon  = document.getElementById('lang-toggle-icon');
-  const label = document.getElementById('lang-toggle-label');
-  if (!icon || !label) return;
-  if (currentLang === 'en') { icon.src = 'm_francogasconha.png'; label.textContent = 'FR'; }
-  else                       { icon.src = 'm_world.png';          label.textContent = 'INT'; }
+function runLoading(done) {
+  const fill  = document.getElementById('loading-fill');
+  const sub   = document.getElementById('loading-sub');
+  const title = document.getElementById('loading-title');
+  const isFr  = lang === 'fr';
+  title.textContent = isFr ? 'DURCISSEMENT…' : 'HARDENING…';
+  const steps = isFr
+    ? [[30,'scan coquille…'],[65,'chargement des démiurges…'],[100,'prêt.']]
+    : [[30,'scanning shell…'],[65,'loading demiurges…'],[100,'ready.']];
+  fill.style.width = '0%';
+  let i = 0;
+  (function step() {
+    if (i >= steps.length) { setTimeout(done, 350); return; }
+    fill.style.width = steps[i][0] + '%';
+    sub.textContent  = steps[i][1];
+    i++; setTimeout(step, 520);
+  })();
 }
 
-/* ══════════════════════════════════════════════════════════
-   SEARCH OVERLAY
-   ══════════════════════════════════════════════════════════ */
-function openSearchOverlay() {
-  const ov = document.getElementById('search-overlay');
-  if (!ov) return;
-  ov.style.display = 'flex';
-  const inp = document.getElementById('search-ov-input');
-  if (inp) { inp.value = ''; setTimeout(() => inp.focus(), 60); }
-  const res = document.getElementById('search-ov-results');
-  if (res) res.innerHTML = `<p class="search-ov-prompt">${currentLang==='fr' ? 'tapez une requête...' : 'type a query...'}</p>`;
-  const t = document.getElementById('search-ov-title');
-  if (t) t.textContent = currentLang==='fr' ? '// RECHERCHE DANS LE CARAPACE //' : '// SEARCH THE CARAPACE //';
-  burstSparkles(window.innerWidth / 2, 80, 10);
+function show(id, on) {
+  const el = document.getElementById(id);
+  if (el) el.hidden = !on;
 }
 
-function closeSearchOverlay() { const ov = document.getElementById('search-overlay'); if (ov) ov.style.display = 'none'; }
-function closeSearchOutside(e) { if (e.target.id === 'search-overlay') closeSearchOverlay(); }
-
-function executeSearchOverlay() {
-  const inp = document.getElementById('search-ov-input');
-  const out = document.getElementById('search-ov-results');
-  if (!inp || !out) return;
-  const q = inp.value.trim().toLowerCase();
-  if (!q) return;
-  const hits = emails.filter(e =>
-    e.lang === currentLang && (
-      (e.subject||'').toLowerCase().includes(q) ||
-      (e.body||'').toLowerCase().includes(q)    ||
-      (e.from||'').toLowerCase().includes(q)    ||
-      (e.tags||[]).some(t => t.toLowerCase().includes(q))
-    )
-  );
-  if (!hits.length) { out.innerHTML = `<p class="search-no-results">${currentLang==='fr' ? '— aucun résultat —' : '— no results —'}</p>`; return; }
-  out.innerHTML = hits.map(r =>
-    `<div class="search-result">
-       <div class="search-result-info">
-         <div class="email-from">${r.from}</div>
-         <div class="email-subject">${r.subject}</div>
-         <div class="email-snippet">${(r.body||'').slice(0,90)}</div>
-       </div>
-       <button class="read-btn" onclick="jumpToEmail(${r.id})">${currentLang==='fr' ? 'LIRE →' : 'READ →'}</button>
-     </div>`
-  ).join('');
+/* ── Chrome sync (header, rail, ticker) ─────────────────── */
+function syncChrome() {
+  const isFr = lang === 'fr';
+  document.getElementById('wordmark-sub').textContent = isFr ? 'GASCOGNE OCCUPÉE' : 'INTERNATIONAL';
+  document.getElementById('rail-home-label').textContent  = isFr ? 'ANEMOSTAU' : 'ANEMHOME';
+  document.getElementById('rail-feed-label').textContent  = isFr ? 'CRABE*' : 'CRABS*';
+  document.getElementById('rail-shell-label').textContent = isFr ? 'TA COQUILLE' : 'YOUR SHELL';
+  document.getElementById('lang-btn-icon').src   = isFr ? 'm_world.png' : 'm_francogasconha.png';
+  document.getElementById('lang-btn-label').textContent = isFr ? 'INT' : 'FR';
+  const t = (bannerContent[lang] || '').repeat(2).replace(/★/g, '<span class="tk">★</span>');
+  document.getElementById('ticker-track').innerHTML = t;
+  ['home','feed','shell'].forEach(k => {
+    document.getElementById('rail-' + k).classList.toggle('active',
+      view === k || (k === 'feed' && view === 'article'));
+  });
 }
 
-function jumpToEmail(id) {
-  const e = emails.find(x => x.id === id);
-  if (!e) return;
-  closeSearchOverlay();
-  currentSection = e.section; currentCategory = e.category || null; selectedEmailId = id;
-  middleRowVisible = true;
-  _applyMiddleRowVisibility(); buildSidebarNav(); updateTitlebar(); renderMiddleList(); renderContentView();
+/* ── Router ─────────────────────────────────────────────── */
+function go(v) {
+  view = v;
+  if (v !== 'article') articleId = null;
+  syncChrome(); render();
+  document.getElementById('main').focus({ preventScroll: false });
+  window.scrollTo({ top: 0 });
 }
 
-/* ══════════════════════════════════════════════════════════
-   CLOCKS
-   ══════════════════════════════════════════════════════════ */
-function startClock() {
-  function tick() {
-    const now = new Date();
-    const hh = String(now.getHours()).padStart(2,'0');
-    const mm = String(now.getMinutes()).padStart(2,'0');
-    const ss = String(now.getSeconds()).padStart(2,'0');
-    const ms = String(now.getMilliseconds()).padStart(3,'0');
-    const ah = document.getElementById('app-header-clock');
-    if (ah) ah.textContent = `${hh}:${mm}:${ss}`;
-    const sc = document.getElementById('side-clock');
-    if (sc) sc.textContent = `${hh}:${mm}:${ss}.${ms}`;
-    const sd = document.getElementById('side-date');
-    if (sd) sd.textContent = now.toDateString().toUpperCase();
-    requestAnimationFrame(tick);
+function openArticle(id) {
+  articleId = id; view = 'article';
+  syncChrome(); render();
+  window.scrollTo({ top: 0 });
+}
+
+function setCategory(c) { category = c; render(); }
+function setQuery(q)    { query = q.toLowerCase(); renderFeedList(); }
+
+/* ── Render ─────────────────────────────────────────────── */
+function render() {
+  const main = document.getElementById('main');
+  if (view === 'home')    { main.innerHTML = tplHome();    return; }
+  if (view === 'shell')   { main.innerHTML = tplShell();   return; }
+  if (view === 'article') { main.innerHTML = tplArticle(); return; }
+  main.innerHTML = tplFeed();
+  renderFeedList();
+}
+
+function tplHome() {
+  const isFr = lang === 'fr';
+  return `<section class="xp-window">
+    <div class="xp-titlebar">
+      <img src="m_anemhome.png" alt="" class="xp-titlebar-icon">
+      <span class="xp-titlebar-text">${isFr ? 'ANEMOSTAU' : 'ANEMHOME'}</span>
+    </div>
+    <div class="panel-body">
+      <div class="home-hero"><img src="m_anemhome.png" alt="" class="icon-tint"></div>
+      <h2>${isFr ? 'BENVENGUTS' : 'WELCOME'}</h2>
+      <p>${homeContent[lang]}</p>
+      <hr class="panel-divider">
+      <p class="fine">${isFr
+        ? 'moultlook est un client mail fictif. les démiurges écrivent, nous répondons. commencez par CRABE*.'
+        : 'moultlook is a fictional mail client. the demiurges write, we reply. start with CRABS*.'}</p>
+    </div>
+  </section>`;
+}
+
+function tplShell() {
+  return `<section class="xp-window">
+    <div class="xp-titlebar">
+      <img src="m_shell.png" alt="" class="xp-titlebar-icon">
+      <span class="xp-titlebar-text">${lang === 'fr' ? 'TA COQUILLE — CONDITIONS' : 'YOUR SHELL — TERMS'}</span>
+    </div>
+    <div class="panel-body">${shellContent[lang]}</div>
+  </section>`;
+}
+
+function tplFeed() {
+  const isFr = lang === 'fr';
+  const chips = ['all', ...Object.keys(demiurges)].map(k => {
+    const active = category === k ? ' active' : '';
+    const icon = k === 'all' ? '' : `<img src="${signOf[k]}" alt="">`;
+    const label = k === 'all' ? (isFr ? 'tout' : 'all') : catLabel(k);
+    return `<button class="chip${active}" onclick="setCategory('${k}')">${icon}${label}</button>`;
+  }).join('');
+  return `
+    <div class="feed-controls">
+      <div class="feed-search">
+        <label class="visually-hidden" for="feed-q">${isFr ? 'Rechercher' : 'Search'}</label>
+        <input id="feed-q" type="search" placeholder="${isFr ? 'rechercher dans le carapace…' : 'search the carapace…'}"
+               value="${query}" oninput="setQuery(this.value)">
+        <span class="search-glyph"><img src="m_search.png" alt=""></span>
+      </div>
+      <div class="chips" role="group" aria-label="${isFr ? 'Filtrer par démiurge' : 'Filter by demiurge'}">${chips}</div>
+    </div>
+    <div id="feed-list" class="feed-list" style="display:flex; flex-direction:column; gap:18px;"></div>`;
+}
+
+function renderFeedList() {
+  const box = document.getElementById('feed-list');
+  if (!box) return;
+  let pool = articles
+    .filter(a => a.lang === lang)
+    .filter(a => category === 'all' || a.category === category)
+    .filter(a => !query
+      || a.title.toLowerCase().includes(query)
+      || a.body.toLowerCase().includes(query)
+      || a.from.toLowerCase().includes(query))
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  if (!pool.length) {
+    box.innerHTML = `<div class="xp-window"><div class="feed-empty">${lang === 'fr' ? '— calme plat —' : '— quiet here —'}</div></div>`;
+    return;
   }
-  tick();
+  box.innerHTML = pool.map(a => `
+    <button class="xp-window card" onclick="openArticle(${a.id})">
+      <span class="xp-titlebar">
+        <img src="${signOf[a.category] || 'm_unknown.png'}" alt="" class="xp-titlebar-icon">
+        <span class="xp-titlebar-text">${a.from}</span>
+      </span>
+      <span class="card-body">
+        <span class="card-text">
+          <span class="card-title">${a.title}</span>
+          <span class="card-snippet">${a.body.replace(/<[^>]+>/g,'').slice(0, 110)}…</span>
+          <span class="card-meta">
+            <span class="m-ink">${catLabel(a.category)}</span>
+            <span>${a.date}</span>
+          </span>
+        </span>
+      </span>
+    </button>`).join('');
 }
-function updateLoginClock() { const el = document.getElementById('login-clock'); if (el) el.textContent = new Date().toLocaleTimeString(); }
-setInterval(updateLoginClock, 1000);
-updateLoginClock();
 
-/* ══════════════════════════════════════════════════════════
-   MOLTOK
-   ══════════════════════════════════════════════════════════ */
-const moltokPresets = [
-  'blblblbllbbb :)', 'bll...blbllb.', 'blbl bl blblb~',
-  'blblblblblbl !!', 'b...bl...blblb.', 'blbllblbll :)',
-  'BLBLBLBLBL :)', 'bl bl. blblbl...', 'bllbllbllbll~',
-  'blb. blb. bl. :)', 'blblblblbl ??', 'bl... bl... :3',
+function tplArticle() {
+  const a = articles.find(x => x.id === articleId);
+  if (!a) { view = 'feed'; return tplFeed(); }
+  const isFr = lang === 'fr';
+  const pdf = a.pdf
+    ? `<div class="article-pdf">📎 <a href="${a.pdf}" target="_blank" rel="noopener">${isFr ? 'ouvrir la pièce jointe' : 'open attachment'}</a></div>`
+    : '';
+  const paragraphs = a.body.split('\n\n').map(p => `<p>${p}</p>`).join('');
+  return `
+    <button class="back-btn" onclick="go('feed')">← ${isFr ? 'retour' : 'back'}</button>
+    <article class="xp-window article">
+      <div class="xp-titlebar">
+        <img src="${signOf[a.category] || 'm_unknown.png'}" alt="" class="xp-titlebar-icon">
+        <span class="xp-titlebar-text">${a.from}</span>
+      </div>
+      <div class="article-body-wrap">
+        <header class="article-head">
+          <div class="article-cat"><img src="${signOf[a.category]}" alt="">${catLabel(a.category)}</div>
+          <h1 class="article-title">${a.title}</h1>
+          <div class="article-date">${a.date}</div>
+        </header>
+        <div class="article-body">${paragraphs}</div>
+        ${pdf}
+      </div>
+    </article>`;
+}
+
+/* ── Popups ─────────────────────────────────────────────── */
+function openMoultPopup()  {
+  document.getElementById('moult-popup-text').textContent = lang === 'fr'
+    ? 'Quitter la carapace et revenir à l\u2019écran d\u2019accueil ?'
+    : 'Shed your shell and return to the landing screen?';
+  show('moult-popup', true);
+}
+function closeMoultPopup() { show('moult-popup', false); }
+function confirmMoult() {
+  closeMoultPopup();
+  moltokOpen = false; moltokGreeted = false;
+  const mp = document.getElementById('moltok-panel');
+  if (mp) mp.hidden = true;
+  document.getElementById('moltok-anchor').setAttribute('aria-expanded', 'false');
+  document.body.classList.remove('in-app');
+  show('screen-app', false);
+  document.getElementById('landing-trigger').hidden = false;
+  document.getElementById('landing-select').hidden  = true;
+  show('screen-landing', true);
+  window.scrollTo({ top: 0 });
+}
+
+function openLangPopup()  { show('lang-popup', true); }
+function closeLangPopup() { show('lang-popup', false); }
+function confirmLang(l) {
+  closeLangPopup();
+  if (l === lang) return;
+  lang = l;
+  document.body.classList.toggle('mode-fr', l === 'fr');
+  show('screen-app', false);
+  show('screen-loading', true);
+  runLoading(() => {
+    show('screen-loading', false);
+    show('screen-app', true);
+    view = 'feed'; category = 'all'; query = ''; articleId = null;
+    moltokGreeted = false;
+    syncChrome(); render();
+  });
+}
+
+/* ── Moltok ─────────────────────────────────────────────── */
+const blPresets = [
+  'blblblbllbbb :)', 'bll…blbllb.', 'blbl bl blblb~', 'blblblblblbl !!',
+  'b…bl…blblb.', 'BLBLBLBLBL :)', 'bl bl. blblbl…', 'bllbllbllbll~',
+  'blb. blb. bl. :)', 'blblblblbl ??', 'bl… bl… :3',
 ];
 
-function generateBlblbl(input) {
+function blblbl(input) {
   const low = (input || '').toLowerCase();
-  if (['koolkrab','kool krab','krab','koolkrab.gif'].some(k => low.includes(k))) return { type: 'gif' };
-  if (Math.random() < 0.22) return { type: 'gif' };
-  if (Math.random() < 0.4) return { type: 'text', content: moltokPresets[Math.floor(Math.random() * moltokPresets.length)] };
-  const parts = ['bl','blb','bll','lb','blbl','bllb','lbl','b','bl'];
-  const ends  = [' :)', '.', '..', '...', '~', ' !!', ' (:)', '', ' ?', ' :3'];
+  if (['koolkrab', 'kool krab', 'krab'].some(k => low.includes(k))) return { gif: true };
+  if (Math.random() < 0.2) return { gif: true };
+  if (Math.random() < 0.45) return { text: blPresets[Math.floor(Math.random() * blPresets.length)] };
+  const parts = ['bl','blb','bll','lb','blbl','bllb','lbl','b'];
+  const ends  = [' :)', '.', '…', '~', ' !!', '', ' ?', ' :3'];
   let s = '';
-  const n = Math.floor(Math.random() * 7) + 2;
-  for (let i = 0; i < n; i++) { s += parts[Math.floor(Math.random() * parts.length)]; if (Math.random() < 0.12) s += '...'; }
-  return { type: 'text', content: s + ends[Math.floor(Math.random() * ends.length)] };
+  for (let i = 0, n = 2 + Math.floor(Math.random() * 6); i < n; i++) s += parts[Math.floor(Math.random() * parts.length)];
+  return { text: s + ends[Math.floor(Math.random() * ends.length)] };
 }
 
 function toggleMoltok() {
-  const widget = document.getElementById('moltok-widget');
-  const panel  = document.getElementById('moltok-panel');
-  if (!widget || !panel) return;
   moltokOpen = !moltokOpen;
-  widget.classList.toggle('open', moltokOpen);
-  panel.style.display = moltokOpen ? 'flex' : 'none';
+  const panel  = document.getElementById('moltok-panel');
+  const anchor = document.getElementById('moltok-anchor');
+  panel.hidden = !moltokOpen;
+  anchor.setAttribute('aria-expanded', String(moltokOpen));
   if (moltokOpen) {
-    burstSparkles(window.innerWidth - 100, window.innerHeight - 80, 18);
-    if (!moltokGreeted) { moltokGreeted = true; setTimeout(() => addMoltokMsg({ type: 'text', content: 'blblbl :)' }), 480); }
-    const inp = document.getElementById('moltok-input');
-    if (inp) setTimeout(() => inp.focus(), 100);
+    if (!moltokGreeted) {
+      moltokGreeted = true;
+      setTimeout(() => pushMoltok({ text: 'blblbl :)' }), 420);
+    }
+    setTimeout(() => document.getElementById('moltok-input').focus(), 80);
   }
 }
 
 function moltokRespond() {
   const inp = document.getElementById('moltok-input');
-  if (!inp || !inp.value.trim()) return;
-  const text = inp.value.trim(); inp.value = '';
-  _addUserMsg(text);
-  const typing = _addTypingIndicator();
-  const delay  = 720 + Math.random() * 1100;
-  setTimeout(() => { if (typing && typing.parentNode) typing.remove(); addMoltokMsg(generateBlblbl(text)); }, delay);
+  const txt = inp.value.trim();
+  if (!txt) return;
+  inp.value = '';
+  const msgs = document.getElementById('moltok-messages');
+  const u = document.createElement('div');
+  u.className = 'moltok-msg user'; u.textContent = txt;
+  msgs.appendChild(u);
+  const typing = document.createElement('div');
+  typing.className = 'moltok-msg bot moltok-typing';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    typing.remove();
+    pushMoltok(blblbl(txt));
+  }, 650 + Math.random() * 900);
 }
 
-function _addUserMsg(text) {
+function pushMoltok(r) {
   const msgs = document.getElementById('moltok-messages');
-  if (!msgs) return;
   const d = document.createElement('div');
-  d.className = 'moltok-msg user'; d.textContent = text;
-  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
-}
-
-function addMoltokMsg(response) {
-  const msgs = document.getElementById('moltok-messages');
-  if (!msgs) return;
-  const d = document.createElement('div');
-  if (response.type === 'gif') {
-    d.className = 'moltok-msg moltok gif';
+  if (r.gif) {
+    d.className = 'moltok-msg bot gif';
     const img = document.createElement('img');
-    img.src = 'koolkrab.gif'; img.alt = ''; img.className = 'moltok-koolkrab';
+    img.src = 'koolkrab.gif'; img.alt = 'kool krab';
     d.appendChild(img);
   } else {
-    d.className = 'moltok-msg moltok'; d.textContent = response.content;
+    d.className = 'moltok-msg bot';
+    d.textContent = r.text;
   }
-  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
 }
-
-function _addTypingIndicator() {
-  const msgs = document.getElementById('moltok-messages');
-  if (!msgs) return null;
-  const d = document.createElement('div');
-  d.className = 'moltok-msg moltok moltok-typing';
-  d.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
-  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
-  return d;
-}
-
-/* ══════════════════════════════════════════════════════════
-   CLICK FX
-   ══════════════════════════════════════════════════════════ */
-document.addEventListener('mousedown', function(e) {
-  if (e.target.matches('input, textarea')) return;
-  const fx = document.createElement('div');
-  fx.className = 'cursor-click-fx'; fx.style.left = e.clientX + 'px'; fx.style.top = e.clientY + 'px';
-  document.body.appendChild(fx);
-  setTimeout(() => { if (fx.parentNode) fx.remove(); }, 520);
-  if (e.target.closest('button, .nav-item, .nav-sub-item, .email-item, .char-card, .search-result, .moltok-anchor, .demiurge-header, .lang-toggle, .moult-btn, .win-btn-sprite-wrap, .close-btn, .lang-popup-card, .world-vortex-btn, .moult-popup-confirm')) {
-    burstSparkles(e.clientX, e.clientY, 8);
-  }
-});
-
-function burstSparkles(x, y, n) {
-  const types = ['', 'hot', 'cool'];
-  for (let i = 0; i < n; i++) {
-    const sp = document.createElement('div');
-    sp.className = 'sparkle' + (['', ' hot', ' cool'][Math.floor(Math.random() * 3)]);
-    sp.style.left = x + 'px'; sp.style.top = y + 'px';
-    const angle = (Math.PI * 2) * (i / n) + Math.random() * 0.6;
-    const dist  = 30 + Math.random() * 52;
-    sp.style.setProperty('--dx', (Math.cos(angle) * dist) + 'px');
-    sp.style.setProperty('--dy', (Math.sin(angle) * dist) + 'px');
-    document.body.appendChild(sp);
-    setTimeout(() => { if (sp.parentNode) sp.remove(); }, 640);
-  }
-}
-
-/* ══════════════════════════════════════════════════════════
-   BOOT
-   ══════════════════════════════════════════════════════════ */
-window.addEventListener('load', () => { initBgCanvas('bg-canvas', 'en', 'login'); });
