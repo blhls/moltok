@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Le Cartographe — MOULTLOOK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body class="bg-fr theme-fr" data-root="../">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="crt-scanlines" aria-hidden="true"></div>
+<div class="crt-fisheye" aria-hidden="true"></div>
+
+<header class="app-header">
+  <div class="app-header-row">
+    <a class="wordmark-link" href="anemhome.html">
+      <span class="wordmark wordmark-small glitch-title" data-text="MOULTLOOK">MOULTLOOK</span>
+      <span class="wordmark-sub">GASCOGNE OCCUPÉE</span>
+    </a>
+    <div class="header-actions">
+      <a class="hdr-btn" href="../en/anemhome.html" aria-label="Switch superflūdus">
+        <img src="../m_world.png" alt=""><span>INTERLUDAL</span>
+      </a>
+      <button class="hdr-btn hdr-btn-moult" onclick="openMoultConfirm()" aria-label="Moult — return to landing">
+        <img src="../m_moult.png" alt=""><span>MOULT</span>
+      </button>
+    </div>
+  </div>
+  <div class="ticker" aria-hidden="true"><div class="ticker-track"><span class="tk">★</span> MOULTLOOK.COM EST EN LIGNE <span class="tk">★</span> ÉVOLUEZ OU MOUREZ <span class="tk">★</span> LA GASCOGNE VOUS OBSERVE <span class="tk">★</span> LA MUE A COMMENCÉ <span class="tk">★</span> ADISHATZ <span class="tk">★</span> LE NARCISSISME EST L&#x27;OUTIL <span class="tk">★</span> BERYLISM.ORG <span class="tk">★</span> ON EST TOUJOURS DANS LE MOYEN-ÂGE DE QUELQUE-CHOSE <span class="tk">★</span> <span class="tk">★</span> MOULTLOOK.COM EST EN LIGNE <span class="tk">★</span> ÉVOLUEZ OU MOUREZ <span class="tk">★</span> LA GASCOGNE VOUS OBSERVE <span class="tk">★</span> LA MUE A COMMENCÉ <span class="tk">★</span> ADISHATZ <span class="tk">★</span> LE NARCISSISME EST L&#x27;OUTIL <span class="tk">★</span> BERYLISM.ORG <span class="tk">★</span> ON EST TOUJOURS DANS LE MOYEN-ÂGE DE QUELQUE-CHOSE <span class="tk">★</span> </div></div>
+</header>
+
+<div class="app-body">
+  <nav class="rail" aria-label="Sections">
+      <a class="rail-item" href="anemhome.html">
+        <img src="../m_anemhome.png" alt="" class="rail-icon icon-tint">
+        <span class="rail-label">ANEMOSTAU</span>
+      </a>
+      <a class="rail-item active" href="index.html">
+        <img src="../m_inbox.png" alt="" class="rail-icon icon-tint">
+        <span class="rail-label">REÇUS</span>
+      </a>
+      <a class="rail-item" href="shell.html">
+        <img src="../m_shell.png" alt="" class="rail-icon icon-tint">
+        <span class="rail-label">COQUILLE</span>
+      </a>
+    <button class="rail-transmit" onclick="toggleTransmission(this)" aria-expanded="false" aria-controls="rail-extra">
+      <img src="../m_crabsign_detailed.png" alt="">
+      <span>ÉMISSION</span>
+    </button>
+    <div class="rail-extra" id="rail-extra" hidden>
+      <div class="rail-clock" id="rail-clock">00:00:00</div>
+      <a class="rail-borg" href="https://berylism.org" target="_blank" rel="noopener">
+        <img src="../m_borgbanner.png" alt="berylism.org">
+      </a>
+      <img src="../birt.gif" alt="" class="rail-birt" onerror="this.remove()">
+    </div>
+  </nav>
+
+  <main id="main" class="main">
+    <a class="back-btn" href="index.html">← retour</a>
+    <section class="xp-window">
+      <div class="xp-titlebar">
+        <img src="../m_impsign.png" alt="" class="xp-titlebar-icon">
+        <span class="xp-titlebar-text">Le Cartographe</span>
+      </div>
+      <div class="panel-body">
+        <div class="demi-hero">
+          <img src="../avatar_imperialism.png" alt="">
+          <div>
+            <h2>Le Cartographe</h2>
+            <p class="demi-catch">« Ce qui est à vous est à moi, à terme. »</p>
+          </div>
+        </div>
+        <p>A tracé les frontières. Perdu la légende. Insiste encore : les lignes sont naturelles. Réorganise actuellement la boîte de quelqu'un d'autre. Croit que l'unicité est meilleure standardisée.</p>
+        <hr class="panel-divider">
+        <p class="section-label">Correspondance de Le Cartographe</p>
+      </div>
+    </section>
+    <div class="feed-grid">
+<!-- ARTICLE CARD · copy this whole block to add an article to the feed -->
+    <a class="xp-window card" href="ajustement-de-frontiere.html">
+      <span class="xp-titlebar">
+        <img src="../m_impsign.png" alt="" class="xp-titlebar-icon">
+        <span class="xp-titlebar-text">Le Cartographe</span>
+      </span>
+      <span class="card-illu">
+        <!-- replace src with your illustration (add class="is-photo" for a real photo) -->
+        <img src="../m_impsign.png" alt="">
+      </span>
+      <span class="card-body">
+        <span class="card-title">Ajustement de frontière</span>
+        <span class="card-snippet">Nous ajustons la ligne sur laquelle vous vous tenez. Veuillez vous déplacer avant vendredi.…</span>
+        <span class="card-meta">
+          <span class="m-ink">impérialisme</span>
+          <span>2026-04-01</span>
+        </span>
+      </span>
+    </a>
+    </div>
+  </main>
+</div>
+
+<div class="moltok">
+  <button class="moltok-anchor" id="moltok-anchor" onclick="toggleMoltok()" aria-label="Discuter avec Moltok" aria-expanded="false">
+    <img src="../m_anemona_detailed.png" alt="" class="moltok-anemona">
+  </button>
+  <div class="xp-window moltok-panel" id="moltok-panel" hidden>
+    <div class="xp-titlebar">
+      <img src="../m_moltokchat.png" alt="" class="xp-titlebar-icon" onerror="this.src='../m_moltok.png'">
+      <span class="xp-titlebar-text">MOLTOK</span>
+      <button class="xp-close" onclick="toggleMoltok()" aria-label="Close">×</button>
+    </div>
+    <p class="moltok-disclaimer">⚠ MOLTOK est un assistant IA. Tous les sujets sont acceptés. Moltok <em>peut</em> faire des blistakes. Bliz dooubl-chekbl blesponsbl.</p>
+    <div class="moltok-messages" id="moltok-messages" aria-live="polite"></div>
+    <div class="moltok-input-row">
+      <label class="visually-hidden" for="moltok-input">Moltok</label>
+      <input type="text" id="moltok-input" class="moltok-input" placeholder="parler à moltok…"
+             onkeydown="if(event.key==='Enter') moltokRespond()">
+      <button class="moltok-send" onclick="moltokRespond()" aria-label="Send">→</button>
+    </div>
+  </div>
+</div>
+
+<div id="moult-popup" class="popup-overlay" hidden onclick="confirmMoultOutside(event)">
+  <div class="xp-window popup" role="dialog" aria-modal="true" aria-labelledby="moult-popup-title">
+    <span class="xp-titlebar">
+      <img src="../m_moult.png" alt="" class="xp-titlebar-icon">
+      <span class="xp-titlebar-text" id="moult-popup-title">MOULT</span>
+      <button class="xp-close" onclick="closeMoultConfirm()" aria-label="Cancel">×</button>
+    </span>
+    <div class="popup-body">
+      <img src="../session.gif" alt="" class="popup-gif">
+      <p>Quitter la carapace et revenir à l'écran d'accueil ? Tout ce qui n'est pas enregistré dans cette session de lecture sera perdu.</p>
+      <div class="popup-btns">
+        <button class="btn-solid" onclick="confirmMoult()">MUER →</button>
+        <button class="btn-ghost" onclick="closeMoultConfirm()">annuler</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../site.js"></script>
+</body>
+</html>
