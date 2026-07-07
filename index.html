@@ -3,327 +3,186 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOULTLOOK — Berylist Console</title>
+  <meta name="description" content="MOULTLOOK — carcinisation related announcements and berylist sentencings.">
+  <title>MOULTLOOK</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Orbitron:wght@400;500;600;700;800;900&family=Oxanium:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="theme-default">
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- CRT treatment layers -->
+<div class="crt-scanlines" aria-hidden="true"></div>
+<div class="crt-vignette" aria-hidden="true"></div>
 
 <!-- ═══════════════════════════════════════════════
-     LANDING / CHARACTER SELECT
+     LANDING
      ═══════════════════════════════════════════════ -->
-<section id="screen-login" class="screen screen-login">
-  <canvas id="bg-canvas" class="bg-canvas"></canvas>
-  <div class="login-vignette"></div>
-  <div class="login-grain"></div>
+<section id="screen-landing" class="screen screen-landing">
 
-  <div id="login-trigger" class="floating-trigger" onclick="openLoginConsole()">
-    <img src="session.gif" alt="" class="trigger-gif">
-    <div class="trigger-ping"></div>
-    <div class="trigger-label">// CLICK TO INITIALISE //</div>
-  </div>
+  <button id="landing-trigger" class="landing-trigger" onclick="openSelect()" aria-label="Open MOULTLOOK">
+    <img src="session.gif" alt="" class="landing-gif">
+    <span class="landing-trigger-label">// CLICK TO INITIALISE //</span>
+  </button>
 
-  <div id="login-console" class="login-console-wrap" style="display:none;">
+  <div id="landing-select" class="landing-select" hidden>
+    <header class="landing-head">
+      <h1 class="wordmark glitch-title" data-text="MOULTLOOK">MOULTLOOK</h1>
+      <p class="landing-tag">choose your superfl&#363;dus</p>
+    </header>
 
-    <div class="login-banner-wrap">
-      <img src="m_mltlklogo_mainfinal.png" class="login-logo" alt="">
-      <h1 class="login-title">
-        <span class="lt-letter" style="--d:0.00s">M</span><span
-          class="lt-letter" style="--d:0.06s">O</span><span
-          class="lt-letter" style="--d:0.12s">U</span><span
-          class="lt-letter" style="--d:0.18s">L</span><span
-          class="lt-letter" style="--d:0.24s">T</span><span
-          class="lt-letter" style="--d:0.30s">L</span><span
-          class="lt-letter" style="--d:0.36s">O</span><span
-          class="lt-letter" style="--d:0.42s">O</span><span
-          class="lt-letter" style="--d:0.48s">K</span>
-      </h1>
-      <p class="login-tagline">select your operational theatre</p>
+    <div class="flude-cards">
+      <button class="xp-window flude-card" onclick="enter('en')">
+        <span class="xp-titlebar">
+          <img src="m_world.png" alt="" class="xp-titlebar-icon">
+          <span class="xp-titlebar-text">INTERNATIONAL</span>
+        </span>
+        <span class="flude-body">
+          <img src="session.gif" alt="" class="flude-gif">
+          <span class="flude-cta">CHECK MY CRABS<span class="ast">*</span></span>
+          <span class="flude-note"><span class="ast">*</span><strong>CRABS</strong>&nbsp;: carcinisation related announcements &amp; berylist sentencings</span>
+        </span>
+      </button>
+
+      <button class="xp-window flude-card flude-card-fr" onclick="enter('fr')">
+        <span class="xp-titlebar">
+          <img src="m_francogasconha.png" alt="" class="xp-titlebar-icon">
+          <span class="xp-titlebar-text">GASCOGNE OCCUPÉE</span>
+        </span>
+        <span class="flude-body">
+          <img src="session.gif" alt="" class="flude-gif">
+          <span class="flude-cta">CRABE M'A TUER<span class="ast">*</span></span>
+          <span class="flude-note"><span class="ast">*</span><strong>CRABE</strong>&nbsp;: chroniques réquisitoires annonciatrices &amp; brachyoures évocateurs</span>
+        </span>
+      </button>
     </div>
 
-    <div class="char-select-wrap">
-
-      <!-- INT card -->
-      <div class="char-card" onclick="startLoading('en')">
-        <div class="char-card-inner">
-          <div class="char-flag-strip">
-            <img src="m_world.png" class="char-flag" alt="">
-            <span class="char-flag-label">INTERNATIONAL</span>
-          </div>
-          <div class="char-portrait">
-            <img src="session.gif" class="char-dancer-center" alt="">
-            <div class="char-glow"></div>
-          </div>
-          <div class="char-cta">
-            <span class="char-cta-line">CHECK MY CRABS<span class="ast">*</span></span>
-            <span class="char-cta-sub">// english //</span>
-          </div>
-          <div class="char-asterisk">
-            <span class="ast">*</span><strong>CRABS</strong> : carcinisation related announcements &amp; berylist sentencings
-          </div>
-        </div>
-      </div>
-
-      <div class="char-divider"><span>OR</span></div>
-
-      <!-- GASCONY card -->
-      <div class="char-card char-card-fr" onclick="startLoading('fr')">
-        <div class="char-card-inner">
-          <div class="char-flag-strip">
-            <img src="m_francogasconha.png" class="char-flag" alt="">
-            <span class="char-flag-label">GASCOGNE OCCUPÉE</span>
-          </div>
-          <div class="char-portrait">
-            <img src="session.gif" class="char-dancer-center" alt="">
-            <div class="char-glow"></div>
-          </div>
-          <div class="char-cta">
-            <span class="char-cta-line">CRABE M'A TUER<span class="ast">*</span></span>
-            <span class="char-cta-sub">// francogasconha //</span>
-          </div>
-          <div class="char-asterisk">
-            <span class="ast">*</span><strong>CRABE</strong> : chroniques réquisitoires annonciatrices &amp; brachyoures évocateurs
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="login-status-bar">
-      <span class="ls-item">READY</span>
-      <span class="ls-item">[ ENCRYPTED ]</span>
-      <span class="ls-item" id="login-clock">--:--:--</span>
-      <span class="ls-item">v 2.0 // MOULTLOOK</span>
-    </div>
+    <p class="landing-foot">moultlook.com — v3.0</p>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════
-     LOADING
+     LOADING (brief)
      ═══════════════════════════════════════════════ -->
-<section id="screen-loading" class="screen screen-loading" style="display:none;">
-  <canvas id="bg-canvas-loading" class="bg-canvas"></canvas>
-  <div class="login-vignette"></div>
-  <div class="loading-window">
-    <div class="loading-titlebar">
-      <span class="loading-titlebar-text" id="loading-titlebar-text">SYSTEM INITIALISATION — MOULTLOOK v2.0</span>
-      <span class="loading-titlebar-dots"><span></span><span></span><span></span></span>
-    </div>
+<section id="screen-loading" class="screen screen-loading" hidden>
+  <div class="xp-window loading-window" role="status" aria-live="polite">
+    <span class="xp-titlebar">
+      <span class="xp-titlebar-text" id="loading-title">HARDENING…</span>
+    </span>
     <div class="loading-body">
-      <div class="loading-gif-slot">
-        <img src="session.gif" alt="" class="loading-gif">
-      </div>
-      <h2 id="loading-title" class="loading-title-text">HARDENING<span class="dots">...</span></h2>
-      <div class="loading-progress-track">
-        <div class="loading-progress-fill" id="progress-bar"></div>
-        <div class="loading-progress-stripes"></div>
-      </div>
-      <p class="loading-sub" id="loading-sub">loading modules...</p>
-      <ul class="loading-log" id="loading-log"></ul>
+      <img src="session.gif" alt="" class="loading-gif">
+      <div class="loading-track"><div class="loading-fill" id="loading-fill"></div></div>
+      <p class="loading-sub" id="loading-sub">loading modules…</p>
     </div>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════
-     MOULT POPUP — return to landing
+     APP
      ═══════════════════════════════════════════════ -->
-<div id="moult-popup" class="moult-popup-overlay" style="display:none;" onclick="closeMoultPopupOutside(event)">
-  <div class="moult-popup">
-    <img src="session.gif" class="moult-popup-gif" alt="">
-    <div class="moult-popup-title">// MOULT //</div>
-    <p class="moult-popup-text">Shed your shell and return to the landing screen?<br>Your session will be reset.</p>
-    <div class="moult-popup-btns">
-      <button class="moult-popup-confirm" onclick="confirmMoult()">MOULT →</button>
-      <button class="moult-popup-cancel"  onclick="closeMoultPopup()">[ cancel ]</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════
-     LANG SWITCH POPUP
-     ═══════════════════════════════════════════════ -->
-<div id="lang-popup" class="lang-popup-overlay" style="display:none;" onclick="closeLangPopupOutside(event)">
-  <div class="lang-popup">
-    <div class="lang-popup-title">// SWITCH OPERATIONAL THEATRE //</div>
-    <div class="lang-popup-cards">
-      <div class="lang-popup-card" id="lang-popup-en" onclick="confirmLangSwitch('en')">
-        <img src="m_world.png" class="lang-popup-flag" alt="">
-        <div class="lang-popup-card-name">INTERNATIONAL</div>
-        <div class="lang-popup-card-sub">// english //</div>
-      </div>
-      <div class="lang-popup-card lang-popup-card-fr" id="lang-popup-fr" onclick="confirmLangSwitch('fr')">
-        <img src="m_francogasconha.png" class="lang-popup-flag" alt="">
-        <div class="lang-popup-card-name">GASCOGNE OCCUPÉE</div>
-        <div class="lang-popup-card-sub">// francogasconha //</div>
-      </div>
-    </div>
-    <button class="lang-popup-cancel" onclick="closeLangPopup()">[ × cancel ]</button>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════
-     SEARCH OVERLAY
-     ═══════════════════════════════════════════════ -->
-<div id="search-overlay" class="search-overlay" style="display:none;" onclick="closeSearchOutside(event)">
-  <div class="search-overlay-inner">
-    <div class="search-ov-titlebar">
-      <span class="search-ov-title" id="search-ov-title">// SEARCH THE CARAPACE //</span>
-      <button class="search-ov-close" onclick="closeSearchOverlay()">[ × ]</button>
-    </div>
-    <div class="search-ov-input-row">
-      <input type="text" id="search-ov-input" class="search-ov-input"
-             placeholder="query..."
-             onkeydown="if(event.key==='Enter') executeSearchOverlay(); if(event.key==='Escape') closeSearchOverlay()">
-      <button class="search-ov-btn" onclick="executeSearchOverlay()">SEARCH →</button>
-    </div>
-    <div class="search-ov-body">
-      <div class="search-ov-diver-wrap">
-        <img src="m_searchresults.png" class="search-ov-diver" alt=""
-             onerror="this.style.display='none'">
-      </div>
-      <div id="search-ov-results" class="search-ov-results">
-        <p class="search-ov-prompt">type a query and press enter</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════
-     APP — MAIN CONSOLE
-     ═══════════════════════════════════════════════ -->
-<section id="screen-app" class="screen screen-app" style="display:none;">
-  <canvas id="bg-canvas-app" class="bg-canvas"></canvas>
-  <div class="app-vignette"></div>
+<div id="screen-app" class="screen-app" hidden>
 
   <header class="app-header">
-    <div class="app-header-left">
-      <span class="app-header-logo">MOULTLOOK</span>
-      <span class="app-header-sep">//</span>
-      <span class="app-header-sub" id="app-header-sub">INTERNATIONAL</span>
-    </div>
-    <div class="app-header-ticker">
-      <div class="ticker-track" id="ticker-track"></div>
-    </div>
-    <div class="app-header-right">
-      <button class="header-search-btn" onclick="openSearchOverlay()" title="Search">
-        <img src="m_search.png" class="header-search-icon" alt="search">
+    <div class="app-header-row">
+      <button class="wordmark-btn" onclick="go('home')" aria-label="Anemhome">
+        <span class="wordmark wordmark-small glitch-title" data-text="MOULTLOOK">MOULTLOOK</span>
+        <span class="wordmark-sub" id="wordmark-sub">INTERNATIONAL</span>
       </button>
-      <span class="app-header-clock" id="app-header-clock">00:00:00</span>
-      <button class="lang-toggle" onclick="openLangPopup()" title="Switch theatre">
-        <img id="lang-toggle-icon" src="m_francogasconha.png" alt="">
-        <span class="lang-toggle-label" id="lang-toggle-label">FR</span>
-      </button>
+      <div class="header-actions">
+        <button class="hdr-btn" onclick="openLangPopup()" id="lang-btn" aria-label="Switch superflūdus">
+          <img id="lang-btn-icon" src="m_francogasconha.png" alt="">
+          <span id="lang-btn-label">FR</span>
+        </button>
+        <button class="hdr-btn hdr-btn-moult" onclick="openMoultPopup()" aria-label="Moult — reset session">
+          <img src="m_moult.png" alt="">
+          <span>MOULT</span>
+        </button>
+      </div>
     </div>
+    <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker-track"></div></div>
   </header>
 
-  <div id="console-layout" class="console-layout">
-    <div class="app-window" id="app-window">
+  <div class="app-body">
 
-      <div class="app-titlebar">
-        <div class="win-btn-group">
-          <!-- m_buttons.png as background, transparent click zones on top -->
-          <div class="win-btn-sprite-wrap">
-            <button class="win-zone" onclick="moultConfirm()" title="Moult — return to landing"></button>
-            <button class="win-zone" onclick="minimizeConsole()"  title="Minimise"></button>
-            <button class="win-zone" onclick="toggleSidePanel()"  title="Transmission"></button>
-          </div>
-        </div>
-        <span class="app-titlebar-title">
-          <img src="m_moult.png" class="title-crab" alt="">
-          <span id="app-win-title">MOULTLOOK</span>
-        </span>
-        <span class="app-titlebar-meta" id="app-titlebar-meta">// READY //</span>
-      </div>
+    <!-- Nav rail: vertical on desktop, horizontal scroll on mobile -->
+    <nav class="rail" aria-label="Sections">
+      <button class="rail-item" id="rail-home" onclick="go('home')">
+        <img src="m_anemhome.png" alt="" class="rail-icon icon-tint">
+        <span class="rail-label" id="rail-home-label">ANEMHOME</span>
+      </button>
+      <button class="rail-item" id="rail-feed" onclick="go('feed')">
+        <img src="m_inbox.png" alt="" class="rail-icon icon-tint">
+        <span class="rail-label" id="rail-feed-label">CRABS*</span>
+      </button>
+      <button class="rail-item" id="rail-shell" onclick="go('shell')">
+        <img src="m_shell.png" alt="" class="rail-icon icon-tint">
+        <span class="rail-label" id="rail-shell-label">YOUR SHELL</span>
+      </button>
+    </nav>
 
-      <div class="app-layout">
-        <aside id="sidebar" class="sidebar">
-          <div class="sidebar-logo-wrap" id="sidebar-logo-wrap"
-               onclick="toggleMiddleRow()" title="toggle list">
-            <img id="sidebar-logo-img" src="m_mltlklogo_int.png" alt="">
-          </div>
-          <nav class="nav-links" id="sidebar-nav"></nav>
-          <div class="sidebar-footer">
-            <button class="moult-btn" onclick="moultConfirm()">
-              <img src="m_moult.png" class="moult-icon" alt="">
-              <span class="moult-label">MOULT</span>
-            </button>
-          </div>
-        </aside>
-
-        <section class="middle-row" id="email-list"></section>
-        <main class="content-view" id="content-view"></main>
-      </div>
-    </div>
-
-    <div id="side-panel" class="side-panel" style="display:none;">
-      <div class="side-titlebar">
-        <span class="side-title-text">// TRANSMISSION //</span>
-        <button class="side-close-btn" onclick="toggleSidePanel()">[ × ]</button>
-      </div>
-      <div class="side-body">
-        <div class="side-clock-wrap">
-          <div id="side-clock" class="side-clock">00:00:00.000</div>
-          <div id="side-date" class="side-date">---</div>
-        </div>
-        <div class="side-birt-wrap">
-          <img src="birt.gif" alt="" class="side-birt" onerror="this.style.display='none'">
-        </div>
-        <div class="side-quote-wrap">
-          <p class="side-quote">"on est toujours dans le Moyen-Âge de quelque-chose"</p>
-          <p class="side-quote-attr">— Claire Lacombe, 22.9.25</p>
-        </div>
-        <a href="https://berylism.org" target="_blank" rel="noopener" class="borg-banner-link">
-          <img src="m_borgbanner.png" class="borg-banner-img" alt="berylism.org"
-               onerror="this.outerHTML='<span class=side-borg-fallback>BERYLISM.ORG →</span>'">
-        </a>
-      </div>
-    </div>
+    <main id="main" class="main" tabindex="-1"></main>
   </div>
 
-  <div id="app-minimized-gif" class="floating-trigger app-restore-trigger" style="display:none;" onclick="restoreConsole()">
-    <img src="session.gif" alt="" class="trigger-gif">
-    <div class="trigger-label">// CLICK TO RESTORE //</div>
-  </div>
+  <!-- MOLTOK -->
+  <div class="moltok" id="moltok">
+    <button class="moltok-anchor" onclick="toggleMoltok()" aria-label="Chat with Moltok" aria-expanded="false" id="moltok-anchor">
+      <img src="m_anemona_detailed.png" alt="" class="moltok-anemona icon-tint">
+    </button>
 
-  <!-- MOLTOK — bottom right -->
-  <div id="moltok-widget" class="moltok-widget">
-    <div id="moltok-anchor" class="moltok-anchor" onclick="toggleMoltok()">
-      <img src="m_anemona_detailed.png" class="moltok-anemona icon-mono" alt="anemone">
-      <img id="moltok-emerging" src="m_moltok.png" class="moltok-emerging" alt="moltok">
-      <div class="moltok-anchor-glow"></div>
-      <div class="moltok-anchor-ripple"></div>
-      <span class="moltok-anchor-hint">// poke //</span>
-    </div>
-
-    <div id="moltok-panel" class="moltok-panel" style="display:none;">
-      <div class="moltok-titlebar">
-        <span class="moltok-title-text">// MOLTOK //</span>
-        <span class="moltok-title-status">ONLINE</span>
-        <button class="moltok-close" onclick="toggleMoltok()">[ × ]</button>
+    <div class="xp-window moltok-panel" id="moltok-panel" hidden>
+      <div class="xp-titlebar">
+        <img src="m_moltokchat.png" alt="" class="xp-titlebar-icon" onerror="this.src='m_moltok.png'">
+        <span class="xp-titlebar-text">MOLTOK</span>
+        <button class="xp-close" onclick="toggleMoltok()" aria-label="Close chat">×</button>
       </div>
-      <div class="moltok-disclaimer">
-        <span class="moltok-disc-icon">⚠</span>
-        MOLTOK is an AI assistant. All subjects accepted.
-        Moltok <em>may</em> make blistakes. Bliz dooubl-chekbl blesponsbl.
-        By continuing, you acknowledge MOLTOK's nature as a crab.
-      </div>
-      <!-- chat portrait uses m_moltokchat.png -->
-      <div class="moltok-portrait">
-        <img src="m_moltokchat.png" class="moltok-portrait-img" alt="moltok"
-             onerror="this.src='m_moltok.png'">
-      </div>
-      <div id="moltok-messages" class="moltok-messages"></div>
+      <p class="moltok-disclaimer">⚠ MOLTOK is an AI assistant. All subjects accepted. Moltok <em>may</em> make blistakes. Bliz dooubl-chekbl blesponsbl.</p>
+      <div class="moltok-messages" id="moltok-messages" aria-live="polite"></div>
       <div class="moltok-input-row">
-        <input type="text" id="moltok-input" class="moltok-input"
-               placeholder="speak to moltok..."
+        <label class="visually-hidden" for="moltok-input">Message Moltok</label>
+        <input type="text" id="moltok-input" class="moltok-input" placeholder="speak to moltok…"
                onkeydown="if(event.key==='Enter') moltokRespond()">
-        <button class="moltok-send-btn" onclick="moltokRespond()">→</button>
+        <button class="moltok-send" onclick="moltokRespond()" aria-label="Send">→</button>
       </div>
     </div>
   </div>
+</div>
 
-</section>
+<!-- ═══════════════════════════════════════════════
+     POPUPS
+     ═══════════════════════════════════════════════ -->
+<div id="moult-popup" class="popup-overlay" hidden onclick="if(event.target===this) closeMoultPopup()">
+  <div class="xp-window popup" role="dialog" aria-modal="true" aria-labelledby="moult-popup-title">
+    <span class="xp-titlebar">
+      <img src="m_moult.png" alt="" class="xp-titlebar-icon">
+      <span class="xp-titlebar-text" id="moult-popup-title">MOULT</span>
+      <button class="xp-close" onclick="closeMoultPopup()" aria-label="Cancel">×</button>
+    </span>
+    <div class="popup-body">
+      <img src="session.gif" alt="" class="popup-gif">
+      <p id="moult-popup-text">Shed your shell and return to the landing screen?</p>
+      <div class="popup-btns">
+        <button class="btn-solid" onclick="confirmMoult()">MOULT →</button>
+        <button class="btn-ghost" onclick="closeMoultPopup()">cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lang-popup" class="popup-overlay" hidden onclick="if(event.target===this) closeLangPopup()">
+  <div class="xp-window popup" role="dialog" aria-modal="true" aria-labelledby="lang-popup-title">
+    <span class="xp-titlebar">
+      <span class="xp-titlebar-text" id="lang-popup-title">SWITCH SUPERFLŪDUS</span>
+      <button class="xp-close" onclick="closeLangPopup()" aria-label="Cancel">×</button>
+    </span>
+    <div class="popup-body popup-body-row">
+      <button class="btn-solid" onclick="confirmLang('en')"><img src="m_world.png" alt="" class="btn-icon"> INTERNATIONAL</button>
+      <button class="btn-solid" onclick="confirmLang('fr')"><img src="m_francogasconha.png" alt="" class="btn-icon"> GASCOGNE OCC.</button>
+    </div>
+  </div>
+</div>
 
 <script src="data.js"></script>
 <script src="script.js"></script>
