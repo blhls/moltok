@@ -1,23 +1,24 @@
 /* ============================================================
-   MOULTLOOK v3.1 — style.css (shared by every page)
+   MOULTLOOK v3.2 — style.css (shared by every page)
    Faded VHS paper. INTERLUDAL = pale pink · GASCOGNE = pale amber.
    ============================================================ */
 
 /* ── Tokens ─────────────────────────────────────────────── */
 :root {
-  /* INTERLUDAL (EN) — pale pink paper, raspberry ink */
-  --paper:      rgba(247, 230, 237, 0.62);
-  --paper-2:    rgba(240, 213, 224, 0.68);
-  --paper-deep: rgba(236, 200, 214, 0.74);
+  /* INTERLUDAL (EN) — pale pink paper, raspberry ink.
+     v3.2: papers made a touch more opaque for readability. */
+  --paper:      rgba(247, 230, 237, 0.80);
+  --paper-2:    rgba(240, 213, 224, 0.85);
+  --paper-deep: rgba(236, 200, 214, 0.90);
   --ink:        #B0154E;
   --ink-hi:     #E1306C;
   --ink-deep:   #6E0C30;
   --ink-10:     rgba(176, 21, 78, 0.10);
   --ink-20:     rgba(176, 21, 78, 0.20);
   --ink-40:     rgba(176, 21, 78, 0.40);
-  --text:       #33141F;
-  --text-dim:   rgba(51, 20, 31, 0.66);
-  --text-faint: rgba(51, 20, 31, 0.42);
+  --text:       #2C1019;
+  --text-dim:   rgba(44, 16, 25, 0.72);
+  --text-faint: rgba(44, 16, 25, 0.46);
   --moult-red:  #C42B2B;
   --moult-deep: #7A1414;
 
@@ -130,6 +131,9 @@ img { max-width: 100%; }
 .landing-head .wordmark::after  { text-shadow:  3px 0 rgba(38, 200, 255, 0.55); }
 .landing-tag { font-family: var(--font-meta); font-size: 0.95rem; letter-spacing: 0.3em; text-transform: uppercase; color: #FBEAF1; text-shadow: 0 1px 6px rgba(0,0,0,0.65); margin-top: 10px; }
 
+/* Landing logo GIF (replaces the MOULTLOOK title on the landing) */
+.landing-logo { width: min(560px, 92vw); image-rendering: pixelated; display: block; margin: 0 auto; filter: drop-shadow(0 6px 22px rgba(30,10,15,0.55)); }
+
 .flude-cards { display: flex; gap: 22px; width: 100%; justify-content: center; flex-wrap: wrap; }
 .flude-card { flex: 1 1 280px; max-width: 355px; padding: 0; text-decoration: none; color: var(--text); transition: transform 0.18s, box-shadow 0.18s; }
 .flude-card:hover, .flude-card:focus-visible { transform: translate(-3px,-3px); box-shadow: 8px 8px 0 rgba(60,20,35,0.4); }
@@ -146,6 +150,8 @@ img { max-width: 100%; }
 .app-header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 16px; }
 .wordmark-link { display: flex; align-items: baseline; gap: 12px; text-decoration: none; color: var(--text); }
 .wordmark-small { font-size: clamp(1.7rem, 5vw, 2.3rem); }
+/* Header wordmark as a GIF (site.js swaps the text for this) */
+.wordmark-gif { height: clamp(2rem, 6vw, 2.9rem); width: auto; image-rendering: pixelated; align-self: center; display: block; }
 .wordmark-sub { font-family: var(--font-meta); font-size: 0.72rem; letter-spacing: 0.24em; color: var(--ink); }
 .header-actions { display: flex; gap: 10px; }
 .hdr-btn {
@@ -178,7 +184,7 @@ img { max-width: 100%; }
 .rail-icon { width: 52px; height: 52px; object-fit: contain; image-rendering: pixelated; }
 .rail-label { font-family: var(--font-chrome); font-size: 1.05rem; letter-spacing: 0.05em; }
 
-/* Transmission reveal button — clock / berylism / birt stay hidden until clicked */
+/* Transmission reveal button */
 .rail-transmit {
   display: flex; flex-direction: column; align-items: center; gap: 5px;
   padding: 10px 6px; min-height: 48px; margin-top: 4px;
@@ -283,11 +289,8 @@ img { max-width: 100%; }
 .demi-catch { font-style: italic; color: var(--ink); font-size: 1.2rem; }
 .section-label { font-family: var(--font-meta); font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); }
 
-/* ── Moltok ─────────────────────────────────────────────── */
+/* ── Moltok chatbox ─────────────────────────────────────── */
 .moltok { position: fixed; right: 14px; bottom: 14px; z-index: 80; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
-.moltok-anchor { padding: 4px; }
-.moltok-anemona { width: 150px; image-rendering: pixelated; animation: sway 5s ease-in-out infinite; transition: transform 0.2s; filter: drop-shadow(3px 4px 0 rgba(60,20,35,0.3)); }
-.moltok-anchor:hover .moltok-anemona, .moltok-anchor:focus-visible .moltok-anemona { transform: scale(1.08); }
 .moltok-panel { width: min(330px, calc(100vw - 28px)); max-height: min(500px, 70vh); }
 .moltok-disclaimer { padding: 8px 12px; font-family: var(--font-meta); font-size: 0.72rem; color: var(--text-dim); line-height: 1.5; border-bottom: 1px solid var(--ink-40); }
 .moltok-disclaimer em { color: var(--ink); font-style: normal; }
@@ -325,6 +328,164 @@ img { max-width: 100%; }
 .btn-ghost { min-height: 46px; padding: 8px 16px; border: 2px solid var(--ink-40); font-family: var(--font-meta); font-size: 0.88rem; color: var(--text-dim); background: var(--paper); }
 .btn-ghost:hover { border-color: var(--ink); color: var(--text); }
 
+/* ============================================================
+   v3.2 — Anemone stage · glitches · transmission · ulbrine
+   ============================================================ */
+
+/* ── Anemone stage (holds the gif + Moltok hidden behind) ─ */
+.anemone-stage { position: relative; width: 200px; height: 200px; }
+.moltok-behind {
+  position: absolute; right: 12px; bottom: 4px; width: 150px;
+  image-rendering: pixelated; z-index: 1;
+  filter: drop-shadow(3px 4px 0 rgba(60,20,35,0.3));
+  animation: sway 5s ease-in-out infinite;
+}
+.moltok-behind.revealed { z-index: 3; animation: floaty 3.4s ease-in-out infinite; }
+.moltok-behind.revealed:hover { filter: drop-shadow(3px 4px 0 rgba(60,20,35,0.3)) brightness(1.08); }
+.anemone-btn { position: absolute; inset: 0; z-index: 2; padding: 0; display: grid; place-items: end center; background: none; }
+.anemone-gif {
+  width: 200px; image-rendering: pixelated;
+  filter: drop-shadow(3px 4px 0 rgba(60,20,35,0.3));
+  transition: transform 0.18s, filter 0.18s;
+}
+/* Hover: warm yellow glow around the anemone */
+.anemone-btn:hover .anemone-gif, .anemone-btn:focus-visible .anemone-gif {
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 6px rgba(255, 214, 64, 0.95))
+          drop-shadow(0 0 16px rgba(255, 196, 0, 0.8))
+          drop-shadow(0 0 30px rgba(255, 180, 0, 0.55));
+}
+
+/* Moltok vibrate before it disappears */
+.vibrate { animation: vibrate 0.6s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes vibrate {
+  10%,90% { transform: translate3d(-1px,0,0) rotate(-1deg); }
+  20%,80% { transform: translate3d(2px,0,0) rotate(1.5deg); }
+  30%,50%,70% { transform: translate3d(-3px,0,0) rotate(-2deg); }
+  40%,60% { transform: translate3d(3px,0,0) rotate(2deg); }
+}
+
+/* ── Fine glitch in / out (used for reveal, chatbox, tx) ── */
+/* !important so a glitch overrides any resting sway/floaty on the element */
+.fine-glitch-out { animation: fine-out 0.5s steps(1) forwards !important; }
+.fine-glitch-in  { animation: fine-in  0.5s steps(1) forwards !important; }
+@keyframes fine-out {
+  0%   { opacity: 1; clip-path: inset(0 0 0 0); transform: translate(0,0); filter: none; }
+  15%  { clip-path: inset(0 0 62% 0); transform: translate(-4px,0); filter: saturate(2.5); }
+  30%  { clip-path: inset(48% 0 20% 0); transform: translate(5px,0); }
+  45%  { opacity: 0.85; clip-path: inset(80% 0 4% 0); transform: translate(-6px,0); filter: hue-rotate(40deg) saturate(3); }
+  60%  { opacity: 0.6; clip-path: inset(30% 0 55% 0); transform: translate(4px,0); }
+  75%  { opacity: 0.4; clip-path: inset(0 0 90% 0); transform: translate(-3px,0); }
+  90%  { opacity: 0.15; clip-path: inset(95% 0 0 0); transform: translate(2px,0); }
+  100% { opacity: 0; transform: translate(0,0); }
+}
+@keyframes fine-in {
+  0%   { opacity: 0; clip-path: inset(95% 0 0 0); transform: translate(2px,0); }
+  20%  { opacity: 0.2; clip-path: inset(0 0 90% 0); transform: translate(-3px,0); filter: hue-rotate(40deg) saturate(3); }
+  40%  { opacity: 0.5; clip-path: inset(55% 0 20% 0); transform: translate(5px,0); }
+  60%  { opacity: 0.75; clip-path: inset(10% 0 60% 0); transform: translate(-5px,0); }
+  80%  { opacity: 0.9; clip-path: inset(40% 0 8% 0); transform: translate(3px,0); filter: saturate(2); }
+  100% { opacity: 1; clip-path: inset(0 0 0 0); transform: translate(0,0); filter: none; }
+}
+
+/* ── Transmission popup (movable, closable) ─────────────── */
+.tv-gone { visibility: hidden !important; }
+.tx-popup {
+  position: fixed; z-index: 210; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(360px, 92vw);
+}
+.tx-popup.dragging { transition: none; }
+.tx-drag { cursor: url('m_clawpointer.png') 4 0, move; user-select: none; }
+.tx-body { padding: 18px 16px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+/* transmission "screen": bird behind noise + scanlines + fisheye vignette */
+.tx-screen { position: relative; width: min(260px, 78%); background: #0a0410; overflow: hidden; border: 1px solid var(--ink-40); display: flex; align-items: center; justify-content: center; }
+.tx-bird { width: 100%; image-rendering: pixelated; display: block; position: relative; z-index: 0; }
+.tx-noise, .tx-scan, .tx-fisheye { position: absolute; pointer-events: none; }
+.tx-noise {
+  inset: -60%; z-index: 1; opacity: 0.22; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: tx-noise 0.4s steps(3) infinite;
+}
+.tx-scan { inset: 0; z-index: 2; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.30) 0 1px, transparent 1px 3px); }
+.tx-fisheye { inset: 0; z-index: 3; background: radial-gradient(ellipse at 50% 48%, transparent 44%, rgba(10,4,12,0.34) 76%, rgba(6,2,8,0.72) 100%); }
+@keyframes tx-noise {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-6%, 4%); }
+  50%  { transform: translate(5%, -5%); }
+  75%  { transform: translate(-4%, 6%); }
+  100% { transform: translate(6%, 2%); }
+}
+.tx-clock {
+  font-family: var(--font-meta); font-size: 1.15rem; letter-spacing: 0.12em;
+  color: var(--ink-deep); background: var(--paper-2);
+  border: 2px solid var(--ink-40); padding: 8px 14px;
+}
+
+/* ── Ulbrine (end of page) + biabop ─────────────────────── */
+.ulbrine-wrap { width: 100%; display: flex; justify-content: center; padding: 50px 16px 80px; position: relative; z-index: 5; }
+.ulbrine { padding: 6px; display: grid; place-items: center; color: var(--ink-deep); position: relative; }
+.ulbrine-img { width: 96px; height: auto; image-rendering: pixelated; display: block; }
+.theme-fr .ulbrine { color: var(--ink-deep); }
+
+/* permanent slow-but-intense glitch — jitter + chromatic split on the sprite */
+.glitch-perm { --ulb-dur: 4.5s; }
+.glitch-perm .ulbrine-img { position: relative; animation: ulb-jitter var(--ulb-dur) steps(1) infinite; }
+.glitch-perm:hover .ulbrine-img { animation-duration: 1.1s; filter: drop-shadow(2px 0 var(--split-r)) drop-shadow(-2px 0 var(--split-c)); }
+@keyframes ulb-jitter {
+  0%, 60%, 100% { transform: translate(0,0); filter: none; }
+  62% { transform: translate(-3px, 1px); filter: drop-shadow(3px 0 var(--split-r)) drop-shadow(-3px 0 var(--split-c)); }
+  66% { transform: translate(4px, -1px) skewX(-4deg); }
+  70% { transform: translate(-2px, 0) skewX(3deg); filter: drop-shadow(-4px 0 var(--split-c)); }
+  74% { transform: translate(2px, 1px); }
+  78% { transform: translate(0,0); }
+}
+.glitch-perm:hover .ulbrine-img { animation-name: ulb-jitter-intense; }
+@keyframes ulb-jitter-intense {
+  0%, 100% { transform: translate(0,0); }
+  10% { transform: translate(-4px, 2px) skewX(-6deg); filter: drop-shadow(4px 0 var(--split-r)) drop-shadow(-4px 0 var(--split-c)); }
+  25% { transform: translate(5px, -2px) skewX(5deg); }
+  40% { transform: translate(-3px, 1px); filter: hue-rotate(30deg) saturate(2); }
+  55% { transform: translate(4px, 2px) skewX(-4deg); }
+  70% { transform: translate(-5px, -1px); filter: drop-shadow(-5px 0 var(--split-c)); }
+  85% { transform: translate(3px, 1px) skewX(3deg); }
+}
+
+/* biabop — VHS/cathodic window over a blurred, darkened page */
+.biabop-blur .app-header,
+.biabop-blur .app-body,
+.biabop-blur .moltok,
+.biabop-blur .ulbrine-wrap { filter: blur(6px) brightness(0.4); transition: filter 0.4s; pointer-events: none; }
+.biabop-overlay { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(10, 4, 8, 0.5); }
+.biabop-win { width: min(680px, 94vw); }
+.biabop-screen {
+  padding: 0; background: #07030a; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; min-height: 180px;
+}
+.biabop-link { display: block; width: 100%; line-height: 0; }
+.biabop-banner { width: 100%; display: block; image-rendering: pixelated; }
+.biabop-banner.missing {
+  min-height: 160px; display: grid; place-items: center;
+  color: #7CF6D8; font-family: var(--font-chrome); font-size: 2rem;
+  background: repeating-linear-gradient(0deg, #0a0410 0 2px, #12081c 2px 4px);
+}
+/* cathodic power-on + permanent instability */
+.crt.crt-on { animation: crt-on 0.7s ease-out both; }
+.crt.crt-on .biabop-screen { animation: crt-unstable 2.8s steps(1) infinite 0.7s; }
+@keyframes crt-on {
+  0%   { transform: scale(1, 0.004); filter: brightness(6); opacity: 0.9; }
+  40%  { transform: scale(1, 0.02); filter: brightness(4); }
+  60%  { transform: scale(1.02, 0.6); filter: brightness(2.2); }
+  80%  { transform: scale(1, 1.02); filter: brightness(1.3); }
+  100% { transform: scale(1, 1); filter: brightness(1); opacity: 1; }
+}
+@keyframes crt-unstable {
+  0%, 92%, 100% { transform: translate(0,0); filter: none; }
+  93% { transform: translate(-2px, 1px); filter: brightness(1.3) hue-rotate(8deg); }
+  95% { transform: translate(3px, -1px); }
+  97% { transform: translate(-1px, 0); filter: brightness(0.85); }
+}
+
 /* ── Keyframes / motion ─────────────────────────────────── */
 @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
 @keyframes sway { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
@@ -349,7 +510,9 @@ img { max-width: 100%; }
   .demi-row { grid-template-columns: repeat(2, 1fr); }
   .scaphander { width: 70px; }
   .wordmark-sub { display: none; }
-  .moltok-anemona { width: 110px; }
+  .anemone-stage { width: 150px; height: 150px; }
+  .anemone-gif { width: 150px; }
+  .moltok-behind { width: 112px; }
 }
 @media (max-width: 460px) {
   html { font-size: 15px; }
